@@ -1,0 +1,817 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Announcing the 2021 Go Developer Survey - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/survey2021">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>Announcing the 2021 Go Developer Survey</h1>
+      
+      <p class="author">
+      Alice Merrick<br/>
+      26 October 2021
+      </p>
+      
+      <h2 id="help">Help shape the future of Go</h2>
+<p>Today we are launching the 2021 Go Developer Survey.
+We’d love to hear from everyone who uses Go,
+used to use Go, or is interested in using Go,
+to help ensure the language, community, and ecosystem fit the needs of the
+people closest to it.
+Please help us shape Go’s future by participating in this 10-minute survey by November 16th:
+<a href=".//jfe/form/SV_0BwHwKSaeE9Cx2S/index.html" rel="noreferrer" target="_blank">Take the 2021 Go Developer Survey</a>.</p>
+<p>Since 2016, thousands of Gophers around the world have helped the Go project
+by sharing their thoughts via our annual Go Developer Survey.
+Your feedback has played an enormous role in driving changes to our language,
+ecosystem, and community, including the gopls language server,
+the latest generics proposal, the module mirror, and so much more.
+And of course, we publicly share <a href=".//blog/survey2020-results/index.html">each year’s results</a>,
+so we can all benefit from the community’s insights.</p>
+<p>This year we’re rotating in some new questions. The specific questions each person will see are randomly selected, so you won’t see every question we ask. This approach allows us to ask about a wide variety of topics while also reducing the survey’s length.</p>
+<h2 id="spread-the-word">Spread the word!</h2>
+<p>We need as many Gophers as possible to participate in this survey to help
+us better understand our global user base.
+We’d be grateful if you would spread the word by sharing this post on your
+social network feeds,
+around the office, at virtual meet-ups, and in other communities. Thank you!</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/pkgsite-search-redesign/index.html">A new search experience on pkg.go.dev</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/conduct-2021/index.html">Code of Conduct Updates</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

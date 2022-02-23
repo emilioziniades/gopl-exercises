@@ -1,0 +1,392 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Managing module source - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Managing module source</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<p>When you’re developing modules to publish for others to use, you can help ensure
+that your modules are easier for other developers to use by following the
+repository conventions described in this topic.</p>
+<p>This topic describes actions you might take when managing your module
+repository. For information about the sequence of workflow steps you’d take when
+revising from version to version, see <a href=".//doc/modules/release-workflow/index.html">Module release and versioning
+workflow</a>.</p>
+<p>Some of the conventions described here are required in modules, while others are
+best practices. This content assumes you’re familiar with the basic module use
+practices described in <a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</p>
+<p>Go supports the following repositories for publishing modules: Git, Subversion,
+Mercurial, Bazaar, and Fossil.</p>
+<p>For an overview of module development, see <a href=".//doc/modules/developing/index.html">Developing and publishing
+modules</a>.</p>
+<h2 id="tools">How Go tools find your published module</h2>
+<p>In Go’s decentralized system for publishing modules and retrieving their code,
+you can publish your module while leaving the code in your repository. Go tools
+rely on naming rules that have repository paths and repository tags indicating a
+module’s name and version number. When your repository follows these
+requirements, your module code is downloadable from your repository by Go tools
+such as the <a href=".//ref/mod/index.html"><code>go get</code>
+command</a>.</p>
+<p>When a developer uses the <code>go get</code> command to get source code for packages their
+code imports, the command does the following:</p>
+<ol>
+<li>From <code>import</code> statements in Go source code, <code>go get</code> identifies the module
+path within the package path.</li>
+<li>Using a URL derived from the module path, the command locates the module
+source on a module proxy server or at its repository directly.</li>
+<li>Locates source for the module version to download by matching the module’s
+version number to a repository tag to discover the code in the repository.
+When a version number to use is not yet known, <code>go get</code> locates the latest
+release version.</li>
+<li>Retrieves module source and downloads it to the developer’s local module cache.</li>
+</ol>
+<h2 id="repository">Organizing code in the repository</h2>
+<p>You can keep maintenance simple and improve developers&#39; experience with your
+module by following the conventions described here. Getting your module code
+into a repository is generally as simple as with other code.</p>
+<p>The following diagram illustrates a source hierarchy for a simple module with
+two packages.</p>
+<p><img src="images/source-hierarchy.png" alt="Diagram illustrating a module source code hierarchy" style="width: 250px;"/></p>
+<p>Your initial commit should include files listed in the following table:</p>
+<table id="module-files" class="DocTable">
+  <thead>
+    <tr class="DocTable-head">
+      <th class="DocTable-cell" width="20%">File
+      </th><th class="DocTable-cell">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="DocTable-row">
+      <td class="DocTable-cell">LICENSE</td>
+      <td class="DocTable-cell">The module&#39;s license.</td>
+    </tr>
+    <tr class="DocTable-row">
+      <td class="DocTable-cell">go.mod</td>
+      <td class="DocTable-cell"><p>Describes the module, including its module
+        path (in effect, its name) and its dependencies. For more, see the
+        <a href=".//doc/modules/gomod-ref/index.html">go.mod reference</a>.</p>
+      <p>The module path will be given in a module directive, such as:</p>
+      <pre>module example.com/mymodule</pre>
+      <p>For more about choosing a module path, see
+          <a href=".//doc/modules/managing-dependencies/index.html">Managing
+          dependencies</a>.</p>
+      <p>Though you can edit the go.mod file, you&#39;ll find it more reliable to
+          make changes through <code>go</code> commands.</p>
+      </td>
+    </tr>
+    <tr class="DocTable-row">
+      <td class="DocTable-cell">go.sum</td>
+      <td class="DocTable-cell"><p>Contains cryptographic hashes that represent
+        the module&#39;s dependencies. Go tools use these hashes to authenticate
+        downloaded modules, attempting to confirm that the downloaded module is
+        authentic. Where this confirmation fails, Go will display a security error.</p><p>
+      </p><p>The file will be empty or not present when there are no dependencies.
+        You shouldn&#39;t edit this file except by using the <code>go mod tidy</code>
+        command, which removes unneeded entries.</p>
+      </td>
+    </tr>
+    <tr class="DocTable-row">
+      <td class="DocTable-cell">Package directories and .go sources.</td>
+      <td class="DocTable-cell">Directories and .go files that comprise the Go
+      packages and sources in the module.</td>
+    </tr>
+  </tbody>
+</table>
+<p>From the command-line, you can create an empty repository, add the files that
+will be part of your initial commit, and commit with a message. Here’s an
+example using git:</p>
+<pre><code>$ git init
+$ git add --all
+$ git commit -m &#34;mycode: initial commit&#34;
+$ git push
+</code></pre>
+<h2 id="repository-scope">Choosing repository scope</h2>
+<p>You publish code in a module when the code should be versioned independently
+from code in other modules.</p>
+<p>Designing your repository so that it hosts a single module at its root directory
+will help keep maintenance simpler, particularly over time as you publish new
+minor and patch versions, branch into new major versions, and so on. However, if
+your needs require it, you can instead maintain a collection of modules in a
+single repository.</p>
+<h3 id="one-module-source">Sourcing one module per repository</h3>
+<p>You can maintain a repository that has a single module’s source in it. In this
+model, you place your go.mod file at the repository root, with package
+subdirectories containing Go source beneath.</p>
+<p>This is the simplest approach, making your module likely easier to manage over
+time. It helps you avoid the need to prefix a module version number with a
+directory path.</p>
+<p><img src="images/single-module.png" alt="Diagram illustrating a single module&#39;s source in its repository" style="width: 425px;"/></p>
+<h3 id="multiple-module-source">Sourcing multiple modules in a single repository</h3>
+<p>You can publish multiple modules from a single repository. For example, you
+might have code in a single repository that constitutes multiple modules, but
+want to version those modules separately.</p>
+<p>Each subdirectory that is a module root directory must have its own go.mod file.</p>
+<p>Sourcing module code in subdirectories changes the form of the version tag you
+must use when publishing a module. You must prefix the version number part of
+the tag with the name of the subdirectory that is the module root. For more
+about version numbers, see <a href=".//doc/modules/version-numbers/index.html">Module version numbering</a>.</p>
+<p>For example, for module <code>example.com/mymodules/module1</code> below, you would have
+the following for version v1.2.3:</p>
+<ul>
+<li>Module path: <code>example.com/mymodules/module1</code></li>
+<li>Version tag: <code>module1/v1.2.3</code></li>
+<li>Package path imported by a user: <code>example.com/mymodules/module1/package1</code></li>
+<li>Module path as given in a user’s require directive: <code>example.com/mymodules/module1 module1/v1.2.3</code></li>
+</ul>
+<p><img src="images/multiple-modules.png" alt="Diagram illustrating two modules in a single repository" style="width: 480px;"/></p>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

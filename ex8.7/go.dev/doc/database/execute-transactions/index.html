@@ -1,0 +1,431 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Executing transactions - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Executing transactions</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<p>You can execute database transactions using an
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>sql.Tx,</code></a> which represents a transaction.
+In addition to <code>Commit</code> and <code>Rollback</code> methods representing transaction-specific
+semantics, <code>sql.Tx</code> has all of the methods you use to perform common database
+operations. To get the <code>sql.Tx</code>, you call <code>DB.Begin</code> or <code>DB.BeginTx</code>.</p>
+<p>A <a href=".//wiki/Database_transaction/index.html" rel="noreferrer" target="_blank">database transaction</a>
+groups multiple operations as part of a larger goal. All of the operations must
+succeed or none can, with the data’s integrity preserved in either case.
+Typically, a transaction workflow includes:</p>
+<ol>
+<li>Beginning the transaction.</li>
+<li>Performing a set of database operations.</li>
+<li>If no error occurs, committing the transaction to make database changes.</li>
+<li>If an error occurs, rolling back the transaction to leave the database
+unchanged.</li>
+</ol>
+<p>The <code>sql</code> package provides methods for beginning and concluding a transaction,
+as well as methods for performing the intervening database operations. These
+methods correspond to the four steps in the workflow above.</p>
+<ul>
+<li>
+<p>Begin a transaction.</p>
+<p><a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.Begin</code></a> or
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.BeginTx</code></a> begin a new
+database transaction, returning an <code>sql.Tx</code> that represents it.</p>
+</li>
+<li>
+<p>Perform database operations.</p>
+<p>Using an <code>sql.Tx</code>, you can query or update the database in a series of
+operations that use a single connection. To support this, <code>Tx</code> exports the
+following methods:</p>
+<ul>
+<li>
+<p><a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Exec</code></a> and
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>ExecContext</code></a> for making
+database changes through SQL statements such as <code>INSERT</code>, <code>UPDATE</code>, and
+<code>DELETE</code>.</p>
+<p>For more, see <a href=".//doc/database/change-data/index.html">Executing SQL statements that don’t return data</a>.</p>
+</li>
+<li>
+<p><a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Query</code></a>,
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>QueryContext</code></a>,
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>QueryRow</code></a>, and
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>QueryRowContext</code></a>
+for operations that return rows.</p>
+<p>For more, see <a href=".//doc/database/querying/index.html">Querying for data</a>.</p>
+</li>
+<li>
+<p><a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Prepare</code></a>,
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>PrepareContext</code></a>,
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Stmt</code></a>, and
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>StmtContext</code></a> for
+pre-defining prepared statements.</p>
+<p>For more, see <a href=".//doc/database/prepared-statements/index.html">Using prepared statements</a>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>End the transaction with <em>one</em> of the following:</p>
+<ul>
+<li>
+<p>Commit the transaction using
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Tx.Commit</code></a>.</p>
+<p>If <code>Commit</code> succeeds (returns a <code>nil</code> error), then all the query results
+are confirmed as valid and all the executed updates are applied to the
+database as a single atomic change. If <code>Commit</code> fails, then all the
+results from <code>Query</code> and <code>Exec</code> on the <code>Tx</code> should be discarded as
+invalid.</p>
+</li>
+<li>
+<p>Roll back the transaction using
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Tx.Rollback</code></a>.</p>
+<p>Even if <code>Tx.Rollback</code> fails, the transaction will no longer be valid,
+nor will it have been committed to the database.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="best_practices">Best practices</h3>
+<p>Follow the best practices below to better navigate the complicated semantics
+and connection management that transactions sometimes require.</p>
+<ul>
+<li>Use the APIs described in this section to manage transactions. Do <em>not</em>
+use transaction-related SQL statements such as <code>BEGIN</code> and <code>COMMIT</code>
+directly—doing so can leave your database in an unpredictable state,
+especially in concurrent programs.</li>
+<li>When using a transaction, take care not to call the non-transaction
+<code>sql.DB</code> methods directly, too, as those will execute outside the
+transaction, giving your code an inconsistent view of the state of the
+database or even causing deadlocks.</li>
+</ul>
+<h3 id="example">Example</h3>
+<p>Code in the following example uses a transaction to create a new customer order
+for an album. Along the way, the code will:</p>
+<ol>
+<li>Begin a transaction.</li>
+<li>Defer the transaction’s rollback. If the transaction succeeds, it will be
+committed before the function exits, making the deferred rollback call a
+no-op. If the transaction fails it won’t be committed, meaning that the
+rollback will be called as the function exits.</li>
+<li>Confirm that there’s sufficient inventory for the album the customer is
+ordering.</li>
+<li>If there’s enough, update the inventory count, reducing it by the number
+of albums ordered.</li>
+<li>Create a new order and retrieve the new order’s generated ID for the client.</li>
+<li>Commit the transaction and return the ID.</li>
+</ol>
+<p>This example uses <code>Tx</code> methods that take a <code>context.Context</code> argument. This
+makes it possible for the function’s execution – including database operations
+– to be canceled if it runs too long or the client connection closes. For
+more, see <a href=".//doc/database/cancel-operations/index.html">Canceling in-progress operations</a>.</p>
+<pre><code>// CreateOrder creates an order for an album and returns the new order ID.
+func CreateOrder(ctx context.Context, albumID, quantity, custID int) (orderID int64, err error) {
+
+    // Create a helper function for preparing failure results.
+    fail := func(err error) (int64, error) {
+        return fmt.Errorf(&#34;CreateOrder: %v&#34;, err)
+    }
+
+    // Get a Tx for making transaction requests.
+    tx, err := db.BeginTx(ctx, nil)
+    if err != nil {
+        return fail(err)
+    }
+    // Defer a rollback in case anything fails.
+    defer tx.Rollback()
+
+    // Confirm that album inventory is enough for the order.
+    var enough bool
+    if err = tx.QueryRowContext(ctx, &#34;SELECT (quantity &gt;= ?) from album where id = ?&#34;,
+        quantity, albumID).Scan(&amp;enough); err != nil {
+        if err == sql.ErrNoRows {
+            return fail(fmt.Errorf(&#34;no such album&#34;))
+        }
+        return fail(err)
+    }
+    if !enough {
+        return fail(fmt.Errorf(&#34;not enough inventory&#34;))
+    }
+
+    // Update the album inventory to remove the quantity in the order.
+    _, err = tx.ExecContext(ctx, &#34;UPDATE album SET quantity = quantity - ? WHERE id = ?&#34;,
+        quantity, albumID)
+    if err != nil {
+        return fail(err)
+    }
+
+    // Create a new row in the album_order table.
+    result, err := tx.ExecContext(ctx, &#34;INSERT INTO album_order (album_id, cust_id, quantity, date) VALUES (?, ?, ?, ?)&#34;,
+        albumID, custID, quantity, time.Now())
+    if err != nil {
+        return fail(err)
+    }
+    // Get the ID of the order item just created.
+    orderID, err := result.LastInsertId()
+    if err != nil {
+        return fail(err)
+    }
+
+    // Commit the transaction.
+    if err = tx.Commit(); err != nil {
+        return fail(err)
+    }
+
+    // Return the order ID.
+    return orderID, nil
+}
+</code></pre>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Canceling in-progress operations - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Canceling in-progress operations</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<p>You can manage in-progress operations by using Go
+<a href=".//context/index.html" rel="noreferrer" target="_blank"><code>context.Context</code></a>. A <code>Context</code> is a
+standard Go data value that can report whether the overall operation it
+represents has been canceled and is no longer needed. By passing a
+<code>context.Context</code> across function calls and services in your application, those
+can stop working early and return an error when their processing is no longer
+needed. For more about <code>Context</code>, see
+<a href=".//context/index.html" rel="noreferrer" target="_blank">Go Concurrency Patterns: Context</a>.</p>
+<p>For example, you might want to:</p>
+<ul>
+<li>End long-running operations, including database operations that are
+taking too long to complete.</li>
+<li>Propagate cancellation requests from elsewhere, such as when a client
+closes a connection.</li>
+</ul>
+<p>Many APIs for Go developers include methods that take a <code>Context</code> argument,
+making it easier for you to use <code>Context</code> throughout your application.</p>
+<h3 id="timeout_cancel">Canceling database operations after a timeout</h3>
+<p>You can use a <code>Context</code> to set a timeout or deadline after which an operation
+will be canceled. To derive a <code>Context</code> with a timeout or deadline, call
+<a href=".//context/index.html" rel="noreferrer" target="_blank"><code>context.WithTimeout</code></a> or
+<a href=".//context/index.html" rel="noreferrer" target="_blank"><code>context.WithDeadline</code></a>.</p>
+<p>Code in the following timeout example derives a <code>Context</code> and passes it into
+the <code>sql.DB</code> <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>QueryContext</code></a>
+method.</p>
+<pre><code>func QueryWithTimeout(ctx context.Context) {
+    // Create a Context with a timeout.
+    queryCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+    defer cancel()
+
+    // Pass the timeout Context with a query.
+    rows, err := db.QueryContext(queryCtx, &#34;SELECT * FROM album&#34;)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer rows.Close()
+
+    // Handle returned rows.
+}
+</code></pre>
+<p>When one context is derived from an outer context, as <code>queryCtx</code> is derived
+from <code>ctx</code> in this example, if the outer context is canceled, then the derived
+context is automatically canceled as well. For example, in HTTP servers, the
+<code>http.Request.Context</code> method returns a context associated with the request.
+That context is canceled if the HTTP client disconnects or cancels the HTTP
+request (possible in HTTP/2). Passing an HTTP request’s context to
+<code>QueryWithTimeout</code> above would cause the database query to stop early <em>either</em>
+if the overall HTTP request was canceled or if the query took more than five
+seconds.</p>
+<p><strong>Note:</strong> Always defer a call to the <code>cancel</code> function that’s returned when you
+create a new <code>Context</code> with a timeout or deadline. This releases resources held
+by the new <code>Context</code> when the containing function exits. It also cancels
+<code>queryCtx</code>, but by the time the function returns, nothing should be using
+<code>queryCtx</code> anymore.</p>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

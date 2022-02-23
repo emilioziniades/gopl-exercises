@@ -1,0 +1,1008 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Tutorial: Accessing a relational database - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Tutorial: Accessing a relational database</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<p>This tutorial introduces the basics of accessing a relational database with
+Go and the <code>database/sql</code> package in its standard library.</p>
+<p>You’ll get the most out of this tutorial if you have a basic familiarity with
+Go and its tooling. If this is your first exposure to Go, please see
+<a href=".//doc/tutorial/getting-started/index.html">Tutorial: Get started with Go</a>
+for a quick introduction.</p>
+<p>The <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>database/sql</code></a> package you’ll
+be using includes types and functions for connecting to databases, executing
+transactions, canceling an operation in progress, and more. For more details
+on using the package, see
+<a href=".//doc/database/index/index.html">Accessing databases</a>.</p>
+<p>In this tutorial, you’ll create a database, then write code to access the
+database. Your example project will be a repository of data about vintage
+jazz records.</p>
+<p>In this tutorial, you’ll progress through the following sections:</p>
+<ol>
+<li>Create a folder for your code.</li>
+<li>Set up a database.</li>
+<li>Import the database driver.</li>
+<li>Get a database handle and connect.</li>
+<li>Query for multiple rows.</li>
+<li>Query for a single row.</li>
+<li>Add data.</li>
+</ol>
+<p><strong>Note:</strong> For other tutorials, see <a href=".//doc/tutorial/index.html/index.html">Tutorials</a>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><strong>An installation of the <a href=".//doc/mysql-installation-excerpt/5.7/en//index.html" rel="noreferrer" target="_blank">MySQL</a>
+relational database management system (DBMS).</strong></li>
+<li><strong>An installation of Go.</strong> For installation instructions, see
+<a href=".//doc/install/index.html">Installing Go</a>.</li>
+<li><strong>A tool to edit your code.</strong> Any text editor you have will work fine.</li>
+<li><strong>A command terminal.</strong> Go works well using any terminal on Linux and Mac,
+and on PowerShell or cmd in Windows.</li>
+</ul>
+<h2 id="create_folder">Create a folder for your code</h2>
+<p>To begin, create a folder for the code you’ll write.</p>
+<ol>
+<li>
+<p>Open a command prompt and change to your home directory.</p>
+<p>On Linux or Mac:</p>
+<pre><code>$ cd
+</code></pre>
+<p>On Windows:</p>
+<pre><code>C:\&gt; cd %HOMEPATH%
+</code></pre>
+<p>For the rest of the tutorial we will show a $ as the prompt. The
+commands we use will work on Windows too.</p>
+</li>
+<li>
+<p>From the command prompt, create a directory for your code called
+data-access.</p>
+<pre><code>$ mkdir data-access
+$ cd data-access
+</code></pre>
+</li>
+<li>
+<p>Create a module in which you can manage dependencies you will add during
+this tutorial.</p>
+<p>Run the <code>go mod init</code> command, giving it your new code’s module path.</p>
+<pre><code>$ go mod init example/data-access
+go: creating new go.mod: module example/data-access
+</code></pre>
+<p>This command creates a go.mod file in which dependencies you add will be
+listed for tracking. For more, be sure to see
+<a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</p>
+<p><strong>Note:</strong> In actual development, you’d specify a module path that’s
+more specific to your own needs. For more, see
+<a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</p>
+</li>
+</ol>
+<p>Next, you’ll create a database.</p>
+<h2 id="set_up_database">Set up a database</h2>
+<p>In this step, you’ll create the database you’ll be working with. You’ll use
+the CLI for the DBMS itself to create the database and table, as well as to
+add data.</p>
+<p>You’ll be creating a database with data about vintage jazz recordings on vinyl.</p>
+<p>The code here uses the <a href=".//doc/refman/8.0/en/mysql.html/index.html" rel="noreferrer" target="_blank">MySQL CLI</a>,
+but most DBMSes have their own CLI with similar features.</p>
+<ol>
+<li>
+<p>Open a new command prompt.</p>
+</li>
+<li>
+<p>At the command line, log into your DBMS, as in the following example for
+MySQL.</p>
+<pre><code>$ mysql -u root -p
+Enter password:
+
+mysql&gt;
+</code></pre>
+</li>
+<li>
+<p>At the <code>mysql</code> command prompt, create a database.</p>
+<pre><code>mysql&gt; create database recordings;
+</code></pre>
+</li>
+<li>
+<p>Change to the database you just created so you can add tables.</p>
+<pre><code>mysql&gt; use recordings;
+Database changed
+</code></pre>
+</li>
+<li>
+<p>In your text editor, in the data-access folder, create a file called
+create-tables.sql to hold SQL script for adding tables.</p>
+</li>
+<li>
+<p>Into the file, paste the following SQL code, then save the file.</p>
+<pre><code>DROP TABLE IF EXISTS album;
+CREATE TABLE album (
+  id         INT AUTO_INCREMENT NOT NULL,
+  title      VARCHAR(128) NOT NULL,
+  artist     VARCHAR(255) NOT NULL,
+  price      DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+INSERT INTO album
+  (title, artist, price)
+VALUES
+  (&#39;Blue Train&#39;, &#39;John Coltrane&#39;, 56.99),
+  (&#39;Giant Steps&#39;, &#39;John Coltrane&#39;, 63.99),
+  (&#39;Jeru&#39;, &#39;Gerry Mulligan&#39;, 17.99),
+  (&#39;Sarah Vaughan&#39;, &#39;Sarah Vaughan&#39;, 34.98);
+</code></pre>
+<p>In this SQL code, you:</p>
+<ul>
+<li>
+<p>Delete (drop) a table called <code>album</code>. Executing this command first makes
+it easier for you to re-run the script later if you want to start over
+with the table.</p>
+</li>
+<li>
+<p>Create an <code>album</code> table with four columns: <code>title</code>, <code>artist</code>, and <code>price</code>.
+Each row’s <code>id</code> value is created automatically by the DBMS.</p>
+</li>
+<li>
+<p>Add three rows with values.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>From the <code>mysql</code> command prompt, run the script you just created.</p>
+<p>You’ll use the <code>source</code> command in the following form:</p>
+<pre><code>mysql&gt; source /path/to/create-tables.sql
+</code></pre>
+</li>
+<li>
+<p>At your DBMS command prompt, use a <code>SELECT</code> statement to verify you’ve
+successfully created the table with data.</p>
+<pre><code>mysql&gt; select * from album;
++----+---------------+----------------+-------+
+| id | title         | artist         | price |
++----+---------------+----------------+-------+
+|  1 | Blue Train    | John Coltrane  | 56.99 |
+|  2 | Giant Steps   | John Coltrane  | 63.99 |
+|  3 | Jeru          | Gerry Mulligan | 17.99 |
+|  4 | Sarah Vaughan | Sarah Vaughan  | 34.98 |
++----+---------------+----------------+-------+
+4 rows in set (0.00 sec)
+</code></pre>
+</li>
+</ol>
+<p>Next, you’ll write some Go code to connect so you can query.</p>
+<h2 id="import_driver">Find and import a database driver</h2>
+<p>Now that you’ve got a database with some data, get your Go code started.</p>
+<p>Locate and import a database driver that will translate requests you make
+through functions in the <code>database/sql</code> package into requests the database
+understands.</p>
+<ol>
+<li>
+<p>In your browser, visit the <a href=".//golang/go/wiki/SQLDrivers/index.html" rel="noreferrer" target="_blank">SQLDrivers</a>
+wiki page to identify a driver you can use.</p>
+<p>Use the list on the page to identify the driver you’ll use. For accessing
+MySQL in this tutorial, you’ll use
+<a href=".//go-sql-driver/mysql//index.html" rel="noreferrer" target="_blank">Go-MySQL-Driver</a>.</p>
+</li>
+<li>
+<p>Note the package name for the driver – here, <code>github.com/go-sql-driver/mysql</code>.</p>
+</li>
+<li>
+<p>Using your text editor, create a file in which to write your Go code and
+save the file as main.go in the data-access directory you created earlier.</p>
+</li>
+<li>
+<p>Into main.go, paste the following code to import the driver package.</p>
+<pre><code>package main
+
+import &#34;github.com/go-sql-driver/mysql&#34;
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Add your code to a <code>main</code> package so you can execute it independently.</p>
+</li>
+<li>
+<p>Import the MySQL driver <code>github.com/go-sql-driver/mysql</code>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>With the driver imported, you’ll start writing code to access the database.</p>
+<h2 id="get_handle">Get a database handle and connect</h2>
+<p>Now write some Go code that gives you database access with a database handle.</p>
+<p>You’ll use a pointer to an <code>sql.DB</code> struct, which represents access to a
+specific database.</p>
+<h4 id="write-the-code">Write the code</h4>
+<ol>
+<li>
+<p>Into main.go, beneath the <code>import</code> code you just added, paste the following
+Go code to create a database handle.</p>
+<pre><code>var db *sql.DB
+
+func main() {
+    // Capture connection properties.
+    cfg := mysql.Config{
+        User:   os.Getenv(&#34;DBUSER&#34;),
+        Passwd: os.Getenv(&#34;DBPASS&#34;),
+        Net:    &#34;tcp&#34;,
+        Addr:   &#34;127.0.0.1:3306&#34;,
+        DBName: &#34;recordings&#34;,
+    }
+    // Get a database handle.
+    var err error
+    db, err = sql.Open(&#34;mysql&#34;, cfg.FormatDSN())
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    pingErr := db.Ping()
+    if pingErr != nil {
+        log.Fatal(pingErr)
+    }
+    fmt.Println(&#34;Connected!&#34;)
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Declare a <code>db</code> variable of type <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>*sql.DB</code></a>.
+This is your database handle.</p>
+<p>Making <code>db</code> a global variable simplifies this example. In
+production, you’d avoid the global variable, such as by passing the
+variable to functions that need it or by wrapping it in a struct.</p>
+</li>
+<li>
+<p>Use the MySQL driver’s <a href=".//github.com/go-sql-driver/mysql/index.html" rel="noreferrer" target="_blank"><code>Config</code></a>
+– and the type’s <a href=".//github.com/go-sql-driver/mysql/index.html" rel="noreferrer" target="_blank"><code>FormatDSN</code></a>
+-– to collect connection properties and format them into a DSN for a connection string.</p>
+<p>The <code>Config</code> struct makes for code that’s easier to read than a
+connection string would be.</p>
+</li>
+<li>
+<p>Call <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>sql.Open</code></a>
+to initialize the <code>db</code> variable, passing the return value of
+<code>FormatDSN</code>.</p>
+</li>
+<li>
+<p>Check for an error from <code>sql.Open</code>. It could fail if, for
+example, your database connection specifics weren’t well-formed.</p>
+<p>To simplify the code, you’re calling <code>log.Fatal</code> to end
+execution and print the error to the console. In production code, you’ll
+want to handle errors in a more graceful way.</p>
+</li>
+<li>
+<p>Call <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.Ping</code></a> to
+confirm that connecting to the database works. At run time,
+<code>sql.Open</code> might not immediately connect, depending on the
+driver. You’re using <code>Ping</code> here to confirm that the
+<code>database/sql</code> package can connect when it needs to.</p>
+</li>
+<li>
+<p>Check for an error from <code>Ping</code>, in case the connection failed.</p>
+</li>
+<li>
+<p>Print a message if <code>Ping</code> connects successfully.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Near the top of the main.go file, just beneath the package declaration,
+import the packages you’ll need to support the code you’ve just written.</p>
+<p>The top of the file should now look like this:</p>
+<pre><code>package main
+
+import (
+    &#34;database/sql&#34;
+    &#34;fmt&#34;
+    &#34;log&#34;
+    &#34;os&#34;
+
+    &#34;github.com/go-sql-driver/mysql&#34;
+)
+</code></pre>
+</li>
+<li>
+<p>Save main.go.</p>
+</li>
+</ol>
+<h4 id="run-the-code">Run the code</h4>
+<ol>
+<li>
+<p>Begin tracking the MySQL driver module as a dependency.</p>
+<p>Use the <a href=".//cmd/go//index.html"><code>go get</code></a>
+to add the github.com/go-sql-driver/mysql module as a dependency for your
+own module. Use a dot argument to mean “get dependencies for code in the
+current directory.”</p>
+<pre><code>$ go get .
+go get: added github.com/go-sql-driver/mysql v1.6.0
+</code></pre>
+<p>Go downloaded this dependency because you added it to the <code>import</code>
+declaration in the previous step. For more about dependency tracking,
+see <a href=".//doc/modules/managing-dependencies/index.html">Adding a dependency</a>.</p>
+</li>
+<li>
+<p>From the command prompt, set the <code>DBUSER</code> and <code>DBPASS</code> environment variables
+for use by the Go program.</p>
+<p>On Linux or Mac:</p>
+<pre><code>$ export DBUSER=username
+$ export DBPASS=password
+</code></pre>
+<p>On Windows:</p>
+<pre><code>C:\Users\you\data-access&gt; set DBUSER=username
+C:\Users\you\data-access&gt; set DBPASS=password
+</code></pre>
+</li>
+<li>
+<p>From the command line in the directory containing main.go, run the code by
+typing <code>go run</code> with a dot argument to mean “run the package in the
+current directory.”</p>
+<pre><code>$ go run .
+Connected!
+</code></pre>
+</li>
+</ol>
+<p>You can connect! Next, you’ll query for some data.</p>
+<h2 id="multiple_rows">Query for multiple rows</h2>
+<p>In this section, you’ll use Go to execute an SQL query designed to return
+multiple rows.</p>
+<p>For SQL statements that might return multiple rows, you use the <code>Query</code> method
+from the <code>database/sql</code> package, then loop through the rows it returns. (You’ll
+learn how to query for a single row later, in the section
+<a href=".//doc/tutorial/database-access/index.html">Query for a single row</a>.)</p>
+<h4 id="write-the-code-1">Write the code</h4>
+<ol>
+<li>
+<p>Into main.go, immediately above <code>func main</code>, paste the following definition
+of an <code>Album</code> struct. You’ll use this to hold row data returned from the
+query.</p>
+<pre><code>type Album struct {
+    ID     int64
+    Title  string
+    Artist string
+    Price  float32
+}
+</code></pre>
+</li>
+<li>
+<p>Beneath <code>func main</code>, paste the following <code>albumsByArtist</code> function to query
+the database.</p>
+<pre><code>// albumsByArtist queries for albums that have the specified artist name.
+func albumsByArtist(name string) ([]Album, error) {
+    // An albums slice to hold data from returned rows.
+    var albums []Album
+
+    rows, err := db.Query(&#34;SELECT * FROM album WHERE artist = ?&#34;, name)
+    if err != nil {
+        return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+    }
+    defer rows.Close()
+    // Loop through rows, using Scan to assign column data to struct fields.
+    for rows.Next() {
+        var alb Album
+        if err := rows.Scan(&amp;alb.ID, &amp;alb.Title, &amp;alb.Artist, &amp;alb.Price); err != nil {
+            return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+        }
+        albums = append(albums, alb)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+    }
+    return albums, nil
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Declare an <code>albums</code> slice of the <code>Album</code> type you defined. This will hold
+data from returned rows. Struct field names and types correspond to
+database column names and types.</p>
+</li>
+<li>
+<p>Use <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.Query</code></a> to
+execute a <code>SELECT</code> statement to query for albums with the
+specified artist name.</p>
+<p><code>Query</code>’s first parameter is the SQL statement. After the
+parameter, you can pass zero or more parameters of any type. These provide
+a place for you to specify the values for parameters in your SQL statement.
+By separating the SQL statement from parameter values (rather than
+concatenating them with, say, <code>fmt.Sprintf</code>), you enable the
+<code>database/sql</code> package to send the values separate from the SQL
+text, removing any SQL injection risk.</p>
+</li>
+<li>
+<p>Defer closing <code>rows</code> so that any resources it holds will be released when
+the function exits.</p>
+</li>
+<li>
+<p>Loop through the returned rows, using
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Rows.Scan</code></a> to
+assign each row’s column values to <code>Album</code> struct fields.</p>
+<p><code>Scan</code> takes a list of pointers to Go values, where the column
+values will be written. Here, you pass pointers to fields in the
+<code>alb</code> variable, created using the <code>&amp;</code> operator.
+<code>Scan</code> writes through the pointers to update the struct fields.</p>
+</li>
+<li>
+<p>Inside the loop, check for an error from scanning column values into the
+struct fields.</p>
+</li>
+<li>
+<p>Inside the loop, append the new <code>alb</code> to the <code>albums</code> slice.</p>
+</li>
+<li>
+<p>After the loop, check for an error from the overall query, using
+<code>rows.Err</code>. Note that if the query itself fails, checking for an error
+here is the only way to find out that the results are incomplete.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Update your <code>main</code> function to call <code>albumsByArtist</code>.</p>
+<p>To the end of <code>func main</code>, add the following code.</p>
+<pre><code>albums, err := albumsByArtist(&#34;John Coltrane&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;Albums found: %v\n&#34;, albums)
+</code></pre>
+<p>In the new code, you now:</p>
+<ul>
+<li>
+<p>Call the <code>albumsByArtist</code> function you added, assigning its return value to
+a new <code>albums</code> variable.</p>
+</li>
+<li>
+<p>Print the result.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="run-the-code-1">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Connected!
+Albums found: [{1 Blue Train John Coltrane 56.99} {2 Giant Steps John Coltrane 63.99}]
+</code></pre>
+<p>Next, you’ll query for a single row.</p>
+<h2 id="single_row">Query for a single row</h2>
+<p>In this section, you’ll use Go to query for a single row in the database.</p>
+<p>For SQL statements you know will return at most a single row, you can use
+<code>QueryRow</code>, which is simpler than using a <code>Query</code> loop.</p>
+<h4 id="write-the-code-2">Write the code</h4>
+<ol>
+<li>
+<p>Beneath <code>albumsByArtist</code>, paste the following <code>albumByID</code> function.</p>
+<pre><code>// albumByID queries for the album with the specified ID.
+func albumByID(id int64) (Album, error) {
+    // An album to hold data from the returned row.
+    var alb Album
+
+    row := db.QueryRow(&#34;SELECT * FROM album WHERE id = ?&#34;, id)
+    if err := row.Scan(&amp;alb.ID, &amp;alb.Title, &amp;alb.Artist, &amp;alb.Price); err != nil {
+        if err == sql.ErrNoRows {
+            return alb, fmt.Errorf(&#34;albumsById %d: no such album&#34;, id)
+        }
+        return alb, fmt.Errorf(&#34;albumsById %d: %v&#34;, id, err)
+    }
+    return alb, nil
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Use <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.QueryRow</code></a>
+to execute a <code>SELECT</code> statement to query for an album with the
+specified ID.</p>
+<p>It returns an <code>sql.Row</code>. To simplify the calling code
+(your code!), <code>QueryRow</code> doesn’t return an error. Instead,
+it arranges to return any query error (such as <code>sql.ErrNoRows</code>)
+from <code>Rows.Scan</code> later.</p>
+</li>
+<li>
+<p>Use <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Row.Scan</code></a> to copy
+column values into struct fields.</p>
+</li>
+<li>
+<p>Check for an error from <code>Scan</code>.</p>
+<p>The special error <code>sql.ErrNoRows</code> indicates that the query returned no
+rows. Typically that error is worth replacing with more specific text,
+such as “no such album” here.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Update <code>main</code> to call <code>albumByID</code>.</p>
+<p>To the end of <code>func main</code>, add the following code.</p>
+<pre><code>// Hard-code ID 2 here to test the query.
+alb, err := albumByID(2)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;Album found: %v\n&#34;, alb)
+</code></pre>
+<p>In the new code, you now:</p>
+<ul>
+<li>
+<p>Call the <code>albumByID</code> function you added.</p>
+</li>
+<li>
+<p>Print the album ID returned.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="run-the-code-2">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Connected!
+Albums found: [{1 Blue Train John Coltrane 56.99} {2 Giant Steps John Coltrane 63.99}]
+Album found: {2 Giant Steps John Coltrane 63.99}
+</code></pre>
+<p>Next, you’ll add an album to the database.</p>
+<h2 id="add_data">Add data</h2>
+<p>In this section, you’ll use Go to execute an SQL <code>INSERT</code> statement to add a
+new row to the database.</p>
+<p>You’ve seen how to use <code>Query</code> and <code>QueryRow</code> with SQL statements that
+return data. To execute SQL statements that <em>don’t</em> return data, you use <code>Exec</code>.</p>
+<h4 id="write-the-code-3">Write the code</h4>
+<ol>
+<li>
+<p>Beneath <code>albumByID</code>, paste the following <code>addAlbum</code> function to insert a new
+album in the database, then save the main.go.</p>
+<pre><code>// addAlbum adds the specified album to the database,
+// returning the album ID of the new entry
+func addAlbum(alb Album) (int64, error) {
+    result, err := db.Exec(&#34;INSERT INTO album (title, artist, price) VALUES (?, ?, ?)&#34;, alb.Title, alb.Artist, alb.Price)
+    if err != nil {
+        return 0, fmt.Errorf(&#34;addAlbum: %v&#34;, err)
+    }
+    id, err := result.LastInsertId()
+    if err != nil {
+        return 0, fmt.Errorf(&#34;addAlbum: %v&#34;, err)
+    }
+    return id, nil
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Use <a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>DB.Exec</code></a> to
+execute an <code>INSERT</code> statement.</p>
+<p>Like <code>Query</code>, <code>Exec</code> takes an SQL statement followed
+by parameter values for the SQL statement.</p>
+</li>
+<li>
+<p>Check for an error from the attempt to <code>INSERT</code>.</p>
+</li>
+<li>
+<p>Retrieve the ID of the inserted database row using
+<a href=".//database/sql/index.html" rel="noreferrer" target="_blank"><code>Result.LastInsertId</code></a>.</p>
+</li>
+<li>
+<p>Check for an error from the attempt to retrieve the ID.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Update <code>main</code> to call the new <code>addAlbum</code> function.</p>
+<p>To the end of <code>func main</code>, add the following code.</p>
+<pre><code>albID, err := addAlbum(Album{
+    Title:  &#34;The Modern Sound of Betty Carter&#34;,
+    Artist: &#34;Betty Carter&#34;,
+    Price:  49.99,
+})
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;ID of added album: %v\n&#34;, albID)
+</code></pre>
+<p>In the new code, you now:</p>
+<ul>
+<li>Call <code>addAlbum</code> with a new album, assigning the ID of the album you’re
+adding to an <code>albID</code> variable.</li>
+</ul>
+</li>
+</ol>
+<h4 id="run-the-code-3">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Connected!
+Albums found: [{1 Blue Train John Coltrane 56.99} {2 Giant Steps John Coltrane 63.99}]
+Album found: {2 Giant Steps John Coltrane 63.99}
+ID of added album: 5
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Congratulations! You’ve just used Go to perform simple actions with a
+relational database.</p>
+<p>Suggested next topics:</p>
+<ul>
+<li>
+<p>Take a look at the data acccess guide, which includes more information
+about the subjects only touched on here.</p>
+</li>
+<li>
+<p>If you’re new to Go, you’ll find useful best practices described in
+<a href=".//doc/effective_go/index.html">Effective Go</a> and <a href=".//doc/code/index.html">How to write Go code</a>.</p>
+</li>
+<li>
+<p>The <a href=".//tour//index.html">Go Tour</a> is a great step-by-step
+introduction to Go fundamentals.</p>
+</li>
+</ul>
+<h2 id="completed_code">Completed code</h2>
+<p>This section contains the code for the application you build with this tutorial.</p>
+<pre><code>package main
+
+import (
+    &#34;database/sql&#34;
+    &#34;fmt&#34;
+    &#34;log&#34;
+    &#34;os&#34;
+
+    &#34;github.com/go-sql-driver/mysql&#34;
+)
+
+var db *sql.DB
+
+type Album struct {
+    ID     int64
+    Title  string
+    Artist string
+    Price  float32
+}
+
+func main() {
+    // Capture connection properties.
+    cfg := mysql.Config{
+        User:   os.Getenv(&#34;DBUSER&#34;),
+        Passwd: os.Getenv(&#34;DBPASS&#34;),
+        Net:    &#34;tcp&#34;,
+        Addr:   &#34;127.0.0.1:3306&#34;,
+        DBName: &#34;recordings&#34;,
+    }
+    // Get a database handle.
+    var err error
+    db, err = sql.Open(&#34;mysql&#34;, cfg.FormatDSN())
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    pingErr := db.Ping()
+    if pingErr != nil {
+        log.Fatal(pingErr)
+    }
+    fmt.Println(&#34;Connected!&#34;)
+
+    albums, err := albumsByArtist(&#34;John Coltrane&#34;)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf(&#34;Albums found: %v\n&#34;, albums)
+
+    // Hard-code ID 2 here to test the query.
+    alb, err := albumByID(2)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf(&#34;Album found: %v\n&#34;, alb)
+
+    albID, err := addAlbum(Album{
+        Title:  &#34;The Modern Sound of Betty Carter&#34;,
+        Artist: &#34;Betty Carter&#34;,
+        Price:  49.99,
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf(&#34;ID of added album: %v\n&#34;, albID)
+}
+
+// albumsByArtist queries for albums that have the specified artist name.
+func albumsByArtist(name string) ([]Album, error) {
+    // An albums slice to hold data from returned rows.
+    var albums []Album
+
+    rows, err := db.Query(&#34;SELECT * FROM album WHERE artist = ?&#34;, name)
+    if err != nil {
+        return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+    }
+    defer rows.Close()
+    // Loop through rows, using Scan to assign column data to struct fields.
+    for rows.Next() {
+        var alb Album
+        if err := rows.Scan(&amp;alb.ID, &amp;alb.Title, &amp;alb.Artist, &amp;alb.Price); err != nil {
+            return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+        }
+        albums = append(albums, alb)
+    }
+    if err := rows.Err(); err != nil {
+        return nil, fmt.Errorf(&#34;albumsByArtist %q: %v&#34;, name, err)
+    }
+    return albums, nil
+}
+
+// albumByID queries for the album with the specified ID.
+func albumByID(id int64) (Album, error) {
+    // An album to hold data from the returned row.
+    var alb Album
+
+    row := db.QueryRow(&#34;SELECT * FROM album WHERE id = ?&#34;, id)
+    if err := row.Scan(&amp;alb.ID, &amp;alb.Title, &amp;alb.Artist, &amp;alb.Price); err != nil {
+        if err == sql.ErrNoRows {
+            return alb, fmt.Errorf(&#34;albumsById %d: no such album&#34;, id)
+        }
+        return alb, fmt.Errorf(&#34;albumsById %d: %v&#34;, id, err)
+    }
+    return alb, nil
+}
+
+// addAlbum adds the specified album to the database,
+// returning the album ID of the new entry
+func addAlbum(alb Album) (int64, error) {
+    result, err := db.Exec(&#34;INSERT INTO album (title, artist, price) VALUES (?, ?, ?)&#34;, alb.Title, alb.Artist, alb.Price)
+    if err != nil {
+        return 0, fmt.Errorf(&#34;addAlbum: %v&#34;, err)
+    }
+    id, err := result.LastInsertId()
+    if err != nil {
+        return 0, fmt.Errorf(&#34;addAlbum: %v&#34;, err)
+    }
+    return id, nil
+}
+</code></pre>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

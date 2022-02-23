@@ -1,0 +1,1671 @@
+<!DOCTYPE html><html lang="en" data-layout="responsive"><head>
+    
+    <script>
+      window.addEventListener('error', window.__err=function f(e){f.p=f.p||[];f.p.push(e)});
+    </script>
+    <script>
+      (function() {
+        const theme = document.cookie.match(/prefers-color-scheme=(light|dark|auto)/)?.[1]
+        if (theme) {
+          document.querySelector('html').setAttribute('data-theme', theme);
+        }
+      }())
+    </script>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Description" content="Package gob manages streams of gobs - binary values exchanged between an Encoder (transmitter) and a Decoder (receiver)."/>
+    
+    <meta class="js-gtmID" data-gtmid="GTM-W8MVQXG"/>
+    <link rel="shortcut icon" href="/static/shared/icon/favicon.ico"/>
+    
+  <link rel="canonical" href="https://pkg.go.dev/encoding/gob"/>
+
+    <link href="/static/frontend/frontend.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+    
+  <title>gob package - encoding/gob - pkg.go.dev</title>
+
+    
+  <link href="/static/frontend/unit/unit.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+  
+  <link href="/static/frontend/unit/main/main.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+
+
+  </head>
+  <body>
+    
+    <script>
+      function loadScript(src) {
+        let s = document.createElement('script');
+        s.src = src;
+        s.type = 'module';
+        s.async = true;
+        s.defer = true
+        document.head.appendChild(s);
+      }
+      loadScript("/static/frontend/frontend.js");
+    </script>
+    
+  <header class="go-Header go-Header--full js-siteHeader">
+    <div class="go-Header-inner go-Header-inner--dark">
+      <nav class="go-Header-nav">
+        <a href=".///index.html" class="js-headerLogo" data-gtmc="nav link" data-test-id="go-header-logo-link">
+          <img class="go-Header-logo" src="/static/shared/logo/go-white.svg" alt="Go"/>
+        </a>
+        <div class="go-Header-rightContent">
+          
+<div class="go-SearchForm js-searchForm">
+  <form class="go-InputGroup go-ShortcutKey go-SearchForm-form" action="/search" data-shortcut="/" data-shortcut-alt="search" data-gtmc="search form" aria-label="Search for a package" role="search">
+    <input name="q" class="go-Input js-searchFocus" aria-label="Search for a package" type="search" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Search packages or symbols" value=""/>
+    <input name="m" value="" hidden=""/>
+    <button class="go-Button go-Button--inverted" aria-label="Submit search">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/search_gm_grey_24dp.svg" alt=""/>
+    </button>
+  </form>
+  <button class="go-SearchForm-expandSearch js-expandSearch" data-gtmc="nav button" aria-label="Open search" data-test-id="expand-search">
+    <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/search_gm_grey_24dp.svg" alt=""/>
+  </button>
+</div>
+
+          <ul class="go-Header-menu">
+            <li class="go-Header-menuItem">
+              <a href=".//solutions//index.html" data-gtmc="nav link">Why Go</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//learn//index.html" data-gtmc="nav link">Get Started</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//doc//index.html" data-gtmc="nav link">Docs</a>
+            </li>
+            <li class="go-Header-menuItem go-Header-menuItem--active">
+              <a href=".///index.html" data-gtmc="nav link">Packages</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".///index.html" data-gtmc="nav link">Play</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//blog//index.html" data-gtmc="nav link">Blog</a>
+            </li>
+          </ul>
+          <button class="go-Header-navOpen js-headerMenuButton go-Header-navOpen--white" data-gtmc="nav button" aria-label="Open navigation">
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <aside class="go-NavigationDrawer js-header">
+    <nav>
+      <div class="go-NavigationDrawer-header">
+        <a href=".///index.html" tabindex="-1">
+          <img class="go-NavigationDrawer-logo" src="/static/shared/logo/go-blue.svg" alt="Go."/>
+        </a>
+      </div>
+      <ul class="go-NavigationDrawer-list">
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//solutions//index.html" tabindex="-1">Why Go</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//learn//index.html" tabindex="-1">Get Started</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem go-NavigationDrawer-listItem--active">
+            <a href=".///index.html" tabindex="-1">Packages</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//blog/index.html" tabindex="-1">Blog</a>
+          </li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="go-NavigationDrawer-scrim js-scrim" role="presentation"></div>
+
+    
+  <main class="go-Main">
+    <div class="go-Main-banner" role="alert"></div>
+    <header class="go-Main-header js-mainHeader">
+  
+  
+  <nav class="go-Main-headerBreadcrumb go-Breadcrumb" aria-label="Breadcrumb" data-test-id="UnitHeader-breadcrumb">
+    <ol>
+      
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".///index.html" data-gtmc="breadcrumb link">Discover Packages</a>
+          </li>
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".//std/index.html" data-gtmc="breadcrumb link">Standard library</a>
+          </li>
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".//encoding/index.html" data-gtmc="breadcrumb link">encoding</a>
+          </li>
+        
+        <li>
+          <a href=".//encoding/gob@go1.17.5/index.html" data-gtmc="breadcrumb link" aria-current="location" data-test-id="UnitHeader-breadcrumbCurrent">
+            gob
+          </a>
+          
+            <button class="go-Button go-Button--inline go-Clipboard js-clipboard" title="Copy path to clipboard.
+
+encoding/gob" aria-label="Copy Path to Clipboard" data-to-copy="encoding/gob" data-gtmc="breadcrumbs button">
+              <img class="go-Icon go-Icon--accented" height="24" width="24" src="/static/shared/icon/content_copy_gm_grey_24dp.svg" alt=""/>
+            </button>
+          
+        
+      </li>
+    </ol>
+  </nav>
+
+  <div class="go-Main-headerContent">
+    
+  <div class="go-Main-headerTitle js-stickyHeader">
+    <a class="go-Main-headerLogo" href=".///index.html" aria-hidden="true" tabindex="-1" data-gtmc="header link" aria-label="Link to Go Homepage">
+      <img height="78" width="207" src="/static/shared/logo/go-blue.svg" alt="Go"/>
+    </a>
+    <h1 class="UnitHeader-titleHeading" data-test-id="UnitHeader-title">gob</h1>
+    
+      <span class="go-Chip go-Chip--inverted">package</span>
+    
+      <span class="go-Chip go-Chip--inverted">standard library</span>
+    
+    
+      
+        <button class="go-Button go-Button--inline go-Clipboard js-clipboard" title="Copy path to clipboard.
+
+encoding/gob" aria-label="Copy Path to Clipboard" data-to-copy="encoding/gob" data-gtmc="title button" tabindex="-1">
+          <img class="go-Icon go-Icon--accented" height="24" width="24" src="/static/shared/icon/content_copy_gm_grey_24dp.svg" alt=""/>
+        </button>
+      
+    
+  </div>
+
+    
+  <div class="go-Main-headerDetails">
+    
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-version">
+    <a href=".//encoding/gob/index.html" aria-label="Go to Versions" data-gtmc="header link"><span class="go-textSubtle">Version: </span>go1.17.5</a>
+    
+    <span class="DetailsHeader-badge--latest" data-test-id="UnitHeader-minorVersionBanner">
+      <span class="go-Chip DetailsHeader-span--latest">Latest</span>
+      <span class="go-Chip DetailsHeader-span--notAtLatest">
+        Latest
+        
+  <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+    <summary>
+      <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/alert_gm_grey_24dp.svg" alt="Warning"/>
+    </summary>
+    <p>This package is not in the latest version of its module.</p>
+  </details>
+
+      </span>
+      <a href=".//encoding/gob/index.html" aria-label="Go to Latest Version" data-gtmc="header link">
+        <span class="go-Chip go-Chip--alert DetailsHeader-span--goToLatest">Go to latest</span>
+      </a>
+    </span>
+  </span>
+
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-commitTime">
+    Published: Dec  9, 2021
+  </span>
+
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-licenses">
+    License: <a href=".//encoding/gob/index.html" data-test-id="UnitHeader-license" aria-label="Go to Licenses" data-gtmc="header link">BSD-3-Clause</a>
+      
+    
+  </span>
+
+      
+        
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-imports">
+    <a href=".//encoding/gob/index.html" aria-label="Go to Imports" data-gtmc="header link">
+      <span class="go-textSubtle">Imports: </span>14
+    </a>
+  </span>
+
+        
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-importedby">
+    <a href=".//encoding/gob/index.html" aria-label="Go to Imported By" data-gtmc="header link">
+       <span class="go-textSubtle">Imported by: </span>16,105
+    </a>
+  </span>
+
+      
+    
+  </div>
+  
+  <div class="UnitHeader-overflowContainer">
+    <svg class="UnitHeader-overflowImage" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+      <path d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+    </svg>
+    <select class="UnitHeader-overflowSelect js-selectNav" tabindex="-1">
+      <option value="/">Main</option>
+      <option value="/encoding/gob?tab=versions">
+        Versions
+      </option>
+      <option value="/encoding/gob?tab=licenses">
+        Licenses
+      </option>
+      
+        <option value="/encoding/gob?tab=imports">
+          Imports
+        </option>
+        <option value="/encoding/gob?tab=importedby">
+          Imported By
+        </option>
+      
+    </select>
+  </div>
+
+
+  </div>
+
+</header>
+    <aside class="go-Main-aside  js-mainAside">
+  
+  <div class="UnitMeta">
+    <h2 class="go-textLabel">Details</h2>
+    
+  <ul class="UnitMeta-details">
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Valid <a href=".//go/go/+/go1.17.5:src/go.mod/index.html" target="_blank" rel="noopener">go.mod</a> file
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>
+          The Go module system was introduced in Go 1.11 and is the official dependency management
+          solution for Go.
+        </p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Redistributable license
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>
+          Redistributable licenses place minimal restrictions on how software can be used,
+          modified, and redistributed.
+        </p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Tagged version
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>Modules with tagged versions give importers more predictable builds.</p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Stable version
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>When a project reaches major version v1 it is considered stable.</p>
+      </details>
+    </li>
+    <li class="UnitMeta-detailsLearn">
+      <a href=".//about/index.html" data-gtmc="meta link">Learn more</a>
+    </li>
+  </ul>
+
+    <h2 class="go-textLabel">Repository</h2>
+    <div class="UnitMeta-repo">
+      
+        <a href=".//go/go/index.html" title="https://cs.opensource.google/go/go" target="_blank" rel="noopener">
+          cs.opensource.google/go/go
+        </a>
+      
+    </div>
+    
+  </div>
+
+</aside>
+    <nav class="go-Main-nav go-Main-nav--sticky js-mainNav" aria-label="Outline">
+  <div class="go-Main-navDesktop">
+    
+  <div class="UnitOutline-jumpTo">
+    <button class="UnitOutline-jumpToInput go-ShortcutKey js-jumpToInput" aria-controls="jump-to-modal" aria-label="Open Jump to Identifier" data-shortcut="f" data-shortcut-alt="find" data-test-id="jump-to-button" data-gtmc="outline button">
+      Jump to ...
+    </button>
+  </div>
+  <ul class="go-Tree js-tree" role="tree" aria-label="Outline">
+    
+    
+      <li>
+        <a href=".//encoding/gob/index.html" data-gtmc="outline link">
+          Documentation
+        </a>
+        
+<ul role="group" id="doc-outline">
+  
+    <li role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" data-gtmc="doc outline link">Overview</a>
+    </li>
+  <li class="DocNav-overview" role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" aria-owns="nav-group-index" aria-expanded="false" data-gtmc="doc outline link">
+        Index
+      </a>
+      
+        <ul role="group" id="nav-group-index">
+          <li role="none">
+            <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" data-gtmc="doc outline link">
+              Examples
+            </a>
+          </li>
+        </ul>
+      
+    </li>
+    <li class="DocNav-constants" role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" data-gtmc="doc outline link">
+        Constants
+      </a>
+    </li>
+    <li class="DocNav-variables" role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" data-gtmc="doc outline link">
+        Variables
+      </a>
+    </li>
+    <li class="DocNav-functions" role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" aria-owns="nav-group-functions" aria-expanded="false" data-gtmc="doc outline link">
+        Functions
+      </a>
+      <ul role="group" id="nav-group-functions">
+        
+            <li role="none">
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" title="Register(value)" data-gtmc="doc outline link">
+                Register(value)
+              </a>
+            </li>
+        
+            <li role="none">
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" title="RegisterName(name, value)" data-gtmc="doc outline link">
+                RegisterName(name, value)
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    <li class="DocNav-types" role="none">
+      <a href=".//encoding/gob/index.html" role="treeitem" aria-level="2" tabindex="-1" aria-owns="nav-group-types" aria-expanded="false" data-gtmc="doc outline link">
+        Types
+      </a>
+      <ul role="group" id="nav-group-types">
+        
+          
+          <li role="none">
+            
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" title="type CommonType" data-gtmc="doc outline link">
+                type CommonType
+              </a>
+             
+          </li>
+        
+          
+          <li role="none">
+            
+              
+              
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-expanded="false" aria-level="3" tabindex="-1" data-aria-owns="nav.group.Decoder" title="type Decoder" data-gtmc="doc outline link">
+                type Decoder
+              </a>
+              <ul role="group" id="nav.group.Decoder">
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="NewDecoder(r)" data-gtmc="doc outline link">
+                      NewDecoder(r)
+                    </a>
+                  </li>
+                
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="(dec) Decode(e)" data-gtmc="doc outline link">
+                      (dec) Decode(e)
+                    </a>
+                  </li>
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="(dec) DecodeValue(v)" data-gtmc="doc outline link">
+                      (dec) DecodeValue(v)
+                    </a>
+                  </li>
+                
+              </ul>
+             
+          </li>
+        
+          
+          <li role="none">
+            
+              
+              
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-expanded="false" aria-level="3" tabindex="-1" data-aria-owns="nav.group.Encoder" title="type Encoder" data-gtmc="doc outline link">
+                type Encoder
+              </a>
+              <ul role="group" id="nav.group.Encoder">
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="NewEncoder(w)" data-gtmc="doc outline link">
+                      NewEncoder(w)
+                    </a>
+                  </li>
+                
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="(enc) Encode(e)" data-gtmc="doc outline link">
+                      (enc) Encode(e)
+                    </a>
+                  </li>
+                
+                  <li role="none">
+                    <a href=".//encoding/gob/index.html" role="treeitem" aria-level="4" tabindex="-1" title="(enc) EncodeValue(value)" data-gtmc="doc outline link">
+                      (enc) EncodeValue(value)
+                    </a>
+                  </li>
+                
+              </ul>
+             
+          </li>
+        
+          
+          <li role="none">
+            
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" title="type GobDecoder" data-gtmc="doc outline link">
+                type GobDecoder
+              </a>
+             
+          </li>
+        
+          
+          <li role="none">
+            
+              <a href=".//encoding/gob/index.html" role="treeitem" aria-level="3" tabindex="-1" title="type GobEncoder" data-gtmc="doc outline link">
+                type GobEncoder
+              </a>
+             
+          </li>
+         
+      </ul>
+    </li>
+  
+  
+</ul>
+
+      </li>
+    
+    
+      <li>
+        <a href=".//encoding/gob/index.html" data-gtmc="outline link">
+          Source Files
+        </a>
+      </li>
+    
+    
+  </ul>
+
+  </div>
+  <div class="go-Main-navMobile js-mainNavMobile">
+    <label class="go-Label">
+      <select class="go-Select">
+        
+          <option selected="" disabled="">Documentation</option>
+        
+      </select>
+    </label>
+  </div>
+</nav>
+    <article class="go-Main-article js-mainContent">
+  <div class="UnitDetails" data-test-id="UnitDetails" style="display: block;">
+    <div class="UnitDetails-content js-unitDetailsContent" data-test-id="UnitDetails-content">
+      
+      
+        
+          
+  <div class="UnitDoc">
+    <h2 class="UnitDoc-title" id="section-documentation">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/code_gm_grey_24dp.svg" alt=""/>
+      Documentation
+      <a class="UnitDoc-idLink" href=".//encoding/gob/index.html">¶</a>
+    </h2>
+    
+  
+    
+  
+
+    <div class="Documentation js-documentation">
+      
+        
+<div class="Documentation-content js-docContent"> <section class="Documentation-overview">
+    <h3 tabindex="-1" id="pkg-overview" class="Documentation-overviewHeader">Overview <a href=".//encoding/gob/index.html">¶</a></h3>
+
+<div role="navigation" aria-label="Table of Contents">
+    <ul class="Documentation-toc "><li class="Documentation-tocItem">
+		  <a href=".//encoding/gob/index.html">Basics</a>
+		</li><li class="Documentation-tocItem">
+		  <a href=".//encoding/gob/index.html">Types and Values</a>
+		</li><li class="Documentation-tocItem">
+		  <a href=".//encoding/gob/index.html">Encoding Details</a>
+		</li></ul>
+  </div><p>Package gob manages streams of gobs - binary values exchanged between an
+Encoder (transmitter) and a Decoder (receiver). A typical use is transporting
+arguments and results of remote procedure calls (RPCs) such as those provided by
+package &#34;net/rpc&#34;.
+</p><p>The implementation compiles a custom codec for each data type in the stream and
+is most efficient when a single Encoder is used to transmit a stream of values,
+amortizing the cost of compilation.
+</p><h4 id="hdr-Basics">Basics <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></h4><p>A stream of gobs is self-describing. Each data item in the stream is preceded by
+a specification of its type, expressed in terms of a small set of predefined
+types. Pointers are not transmitted, but the things they point to are
+transmitted; that is, the values are flattened. Nil pointers are not permitted,
+as they have no value. Recursive types work fine, but
+recursive values (data with cycles) are problematic. This may change.
+</p><p>To use gobs, create an Encoder and present it with a series of data items as
+values or addresses that can be dereferenced to values. The Encoder makes sure
+all type information is sent before it is needed. At the receive side, a
+Decoder retrieves values from the encoded stream and unpacks them into local
+variables.
+</p><h4 id="hdr-Types_and_Values">Types and Values <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></h4><p>The source and destination values/types need not correspond exactly. For structs,
+fields (identified by name) that are in the source but absent from the receiving
+variable will be ignored. Fields that are in the receiving variable but missing
+from the transmitted type or value will be ignored in the destination. If a field
+with the same name is present in both, their types must be compatible. Both the
+receiver and transmitter will do all necessary indirection and dereferencing to
+convert between gobs and actual Go values. For instance, a gob type that is
+schematically,
+</p><pre>struct { A, B int }
+</pre><p>can be sent from or received into any of these Go types:
+</p><pre>struct { A, B int }	// the same
+*struct { A, B int }	// extra indirection of the struct
+struct { *A, **B int }	// extra indirection of the fields
+struct { A, B int64 }	// different concrete value type; see below
+</pre><p>It may also be received into any of these:
+</p><pre>struct { A, B int }	// the same
+struct { B, A int }	// ordering doesn&#39;t matter; matching is by name
+struct { A, B, C int }	// extra field (C) ignored
+struct { B int }	// missing field (A) ignored; data will be dropped
+struct { B, C int }	// missing field (A) ignored; extra field (C) ignored.
+</pre><p>Attempting to receive into these types will draw a decode error:
+</p><pre>struct { A int; B uint }	// change of signedness for B
+struct { A int; B float }	// change of type for B
+struct { }			// no field names in common
+struct { C, D int }		// no field names in common
+</pre><p>Integers are transmitted two ways: arbitrary precision signed integers or
+arbitrary precision unsigned integers. There is no int8, int16 etc.
+discrimination in the gob format; there are only signed and unsigned integers. As
+described below, the transmitter sends the value in a variable-length encoding;
+the receiver accepts the value and stores it in the destination variable.
+Floating-point numbers are always sent using IEEE-754 64-bit precision (see
+below).
+</p><p>Signed integers may be received into any signed integer variable: int, int16, etc.;
+unsigned integers may be received into any unsigned integer variable; and floating
+point values may be received into any floating point variable. However,
+the destination variable must be able to represent the value or the decode
+operation will fail.
+</p><p>Structs, arrays and slices are also supported. Structs encode and decode only
+exported fields. Strings and arrays of bytes are supported with a special,
+efficient representation (see below). When a slice is decoded, if the existing
+slice has capacity the slice will be extended in place; if not, a new array is
+allocated. Regardless, the length of the resulting slice reports the number of
+elements decoded.
+</p><p>In general, if allocation is required, the decoder will allocate memory. If not,
+it will update the destination variables with values read from the stream. It does
+not initialize them first, so if the destination is a compound value such as a
+map, struct, or slice, the decoded values will be merged elementwise into the
+existing variables.
+</p><p>Functions and channels will not be sent in a gob. Attempting to encode such a value
+at the top level will fail. A struct field of chan or func type is treated exactly
+like an unexported field and is ignored.
+</p><p>Gob can encode a value of any type implementing the GobEncoder or
+encoding.BinaryMarshaler interfaces by calling the corresponding method,
+in that order of preference.
+</p><p>Gob can decode a value of any type implementing the GobDecoder or
+encoding.BinaryUnmarshaler interfaces by calling the corresponding method,
+again in that order of preference.
+</p><h4 id="hdr-Encoding_Details">Encoding Details <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></h4><p>This section documents the encoding, details that are not important for most
+users. Details are presented bottom-up.
+</p><p>An unsigned integer is sent one of two ways. If it is less than 128, it is sent
+as a byte with that value. Otherwise it is sent as a minimal-length big-endian
+(high byte first) byte stream holding the value, preceded by one byte holding the
+byte count, negated. Thus 0 is transmitted as (00), 7 is transmitted as (07) and
+256 is transmitted as (FE 01 00).
+</p><p>A boolean is encoded within an unsigned integer: 0 for false, 1 for true.
+</p><p>A signed integer, i, is encoded within an unsigned integer, u. Within u, bits 1
+upward contain the value; bit 0 says whether they should be complemented upon
+receipt. The encode algorithm looks like this:
+</p><pre>var u uint
+if i &lt; 0 {
+	u = (^uint(i) &lt;&lt; 1) | 1 // complement i, bit 0 is 1
+} else {
+	u = (uint(i) &lt;&lt; 1) // do not complement i, bit 0 is 0
+}
+encodeUnsigned(u)
+</pre><p>The low bit is therefore analogous to a sign bit, but making it the complement bit
+instead guarantees that the largest negative integer is not a special case. For
+example, -129=^128=(^256&gt;&gt;1) encodes as (FE 01 01).
+</p><p>Floating-point numbers are always sent as a representation of a float64 value.
+That value is converted to a uint64 using math.Float64bits. The uint64 is then
+byte-reversed and sent as a regular unsigned integer. The byte-reversal means the
+exponent and high-precision part of the mantissa go first. Since the low bits are
+often zero, this can save encoding bytes. For instance, 17.0 is encoded in only
+three bytes (FE 31 40).
+</p><p>Strings and slices of bytes are sent as an unsigned count followed by that many
+uninterpreted bytes of the value.
+</p><p>All other slices and arrays are sent as an unsigned count followed by that many
+elements using the standard gob encoding for their type, recursively.
+</p><p>Maps are sent as an unsigned count followed by that many key, element
+pairs. Empty but non-nil maps are sent, so if the receiver has not allocated
+one already, one will always be allocated on receipt unless the transmitted map
+is nil and not at the top level.
+</p><p>In slices and arrays, as well as maps, all elements, even zero-valued elements,
+are transmitted, even if all the elements are zero.
+</p><p>Structs are sent as a sequence of (field number, field value) pairs. The field
+value is sent using the standard gob encoding for its type, recursively. If a
+field has the zero value for its type (except for arrays; see above), it is omitted
+from the transmission. The field number is defined by the type of the encoded
+struct: the first field of the encoded type is field 0, the second is field 1,
+etc. When encoding a value, the field numbers are delta encoded for efficiency
+and the fields are always sent in order of increasing field number; the deltas are
+therefore unsigned. The initialization for the delta encoding sets the field
+number to -1, so an unsigned integer field 0 with value 7 is transmitted as unsigned
+delta = 1, unsigned value = 7 or (01 07). Finally, after all the fields have been
+sent a terminating mark denotes the end of the struct. That mark is a delta=0
+value, which has representation (00).
+</p><p>Interface types are not checked for compatibility; all interface types are
+treated, for transmission, as members of a single &#34;interface&#34; type, analogous to
+int or []byte - in effect they&#39;re all treated as interface{}. Interface values
+are transmitted as a string identifying the concrete type being sent (a name
+that must be pre-defined by calling Register), followed by a byte count of the
+length of the following data (so the value can be skipped if it cannot be
+stored), followed by the usual encoding of concrete (dynamic) value stored in
+the interface value. (A nil interface value is identified by the empty string
+and transmits no value.) Upon receipt, the decoder verifies that the unpacked
+concrete item satisfies the interface of the receiving variable.
+</p><p>If a value is passed to Encode and the type is not a struct (or pointer to struct,
+etc.), for simplicity of processing it is represented as a struct of one field.
+The only visible effect of this is to encode a zero byte after the value, just as
+after the last field of an encoded struct, so that the decode algorithm knows when
+the top-level value is complete.
+</p><p>The representation of types is described below. When a type is defined on a given
+connection between an Encoder and Decoder, it is assigned a signed integer type
+id. When Encoder.Encode(v) is called, it makes sure there is an id assigned for
+the type of v and all its elements and then it sends the pair (typeid, encoded-v)
+where typeid is the type id of the encoded type of v and encoded-v is the gob
+encoding of the value v.
+</p><p>To define a type, the encoder chooses an unused, positive type id and sends the
+pair (-type id, encoded-type) where encoded-type is the gob encoding of a wireType
+description, constructed from these types:
+</p><pre>type wireType struct {
+	ArrayT           *ArrayType
+	SliceT           *SliceType
+	StructT          *StructType
+	MapT             *MapType
+	GobEncoderT      *gobEncoderType
+	BinaryMarshalerT *gobEncoderType
+	TextMarshalerT   *gobEncoderType
+
+}
+type arrayType struct {
+	CommonType
+	Elem typeId
+	Len  int
+}
+type CommonType struct {
+	Name string // the name of the struct type
+	Id  int    // the id of the type, repeated so it&#39;s inside the type
+}
+type sliceType struct {
+	CommonType
+	Elem typeId
+}
+type structType struct {
+	CommonType
+	Field []*fieldType // the fields of the struct.
+}
+type fieldType struct {
+	Name string // the name of the field.
+	Id   int    // the type id of the field, which must be already defined
+}
+type mapType struct {
+	CommonType
+	Key  typeId
+	Elem typeId
+}
+type gobEncoderType struct {
+	CommonType
+}
+</pre><p>If there are nested type ids, the types for all inner type ids must be defined
+before the top-level type id is used to describe an encoded-v.
+</p><p>For simplicity in setup, the connection is defined to understand these types a
+priori, as well as the basic gob types int, uint, etc. Their ids are:
+</p><pre>bool        1
+int         2
+uint        3
+float       4
+[]byte      5
+string      6
+complex     7
+interface   8
+// gap for reserved ids.
+WireType    16
+ArrayType   17
+CommonType  18
+SliceType   19
+StructType  20
+FieldType   21
+// 22 is slice of fieldType.
+MapType     23
+</pre><p>Finally, each message created by a call to Encode is preceded by an encoded
+unsigned integer count of the number of bytes remaining in the message. After
+the initial type name, interface values are wrapped the same way; in effect, the
+interface value acts like a recursive invocation of Encode.
+</p><p>In summary, a gob stream looks like
+</p><pre>(byteCount (-type id, encoding of a wireType)* (type id, encoding of a value))*
+</pre><p>where * signifies zero or more repetitions and the type id of a value must
+be predefined or be defined before the value in the stream.
+</p><p>Compatibility: Any future changes to the package will endeavor to maintain
+compatibility with streams encoded using previous versions. That is, any released
+version of this package should be able to decode data written with any previously
+released version, subject to issues such as security fixes. See the Go compatibility
+document for background: <a href=".//doc/go1compat/index.html">https://golang.org/doc/go1compat</a>
+</p><p>See &#34;Gobs of data&#34; for a design discussion of the gob wire format:
+<a href=".//gobs-of-data/index.html">https://blog.golang.org/gobs-of-data</a>
+</p>
+<details tabindex="-1" id="example-package-Basic" class="Documentation-exampleDetails js-exampleContainer">
+<summary class="Documentation-exampleDetailsHeader">Example (Basic) <a href=".//encoding/gob/index.html">¶</a></summary>
+<div class="Documentation-exampleDetailsBody">
+<p>This example shows the basic usage of the package: Create an encoder,
+transmit some values, receive them with a decoder.
+</p>
+
+<pre class="Documentation-exampleCode">package main
+
+import (
+	&#34;bytes&#34;
+	&#34;encoding/gob&#34;
+	&#34;fmt&#34;
+	&#34;log&#34;
+)
+
+type P struct {
+	X, Y, Z int
+	Name    string
+}
+
+type Q struct {
+	X, Y *int32
+	Name string
+}
+
+// This example shows the basic usage of the package: Create an encoder,
+// transmit some values, receive them with a decoder.
+func main() {
+	// Initialize the encoder and decoder. Normally enc and dec would be
+	// bound to network connections and the encoder and decoder would
+	// run in different processes.
+	var network bytes.Buffer        // Stand-in for a network connection
+	enc := gob.NewEncoder(&amp;network) // Will write to network.
+	dec := gob.NewDecoder(&amp;network) // Will read from network.
+
+	// Encode (send) some values.
+	err := enc.Encode(P{3, 4, 5, &#34;Pythagoras&#34;})
+	if err != nil {
+		log.Fatal(&#34;encode error:&#34;, err)
+	}
+	err = enc.Encode(P{1782, 1841, 1922, &#34;Treehouse&#34;})
+	if err != nil {
+		log.Fatal(&#34;encode error:&#34;, err)
+	}
+
+	// Decode (receive) and print the values.
+	var q Q
+	err = dec.Decode(&amp;q)
+	if err != nil {
+		log.Fatal(&#34;decode error 1:&#34;, err)
+	}
+	fmt.Printf(&#34;%q: {%d, %d}\n&#34;, q.Name, *q.X, *q.Y)
+	err = dec.Decode(&amp;q)
+	if err != nil {
+		log.Fatal(&#34;decode error 2:&#34;, err)
+	}
+	fmt.Printf(&#34;%q: {%d, %d}\n&#34;, q.Name, *q.X, *q.Y)
+
+}
+</pre>
+
+<pre><span class="Documentation-exampleOutputLabel">Output:</span>
+
+<span class="Documentation-exampleOutput">&#34;Pythagoras&#34;: {3, 4}
+&#34;Treehouse&#34;: {1782, 1841}
+</span></pre>
+</div>
+<div class="Documentation-exampleButtonsContainer">
+        <p class="Documentation-exampleError" role="alert" aria-atomic="true"></p>
+        <button class="Documentation-exampleShareButton" aria-label="Share Code">Share</button>
+        <button class="Documentation-exampleFormatButton" aria-label="Format Code">Format</button>
+        <button class="Documentation-exampleRunButton" aria-label="Run Code">Run</button>
+      </div></details>
+
+<details tabindex="-1" id="example-package-EncodeDecode" class="Documentation-exampleDetails js-exampleContainer">
+<summary class="Documentation-exampleDetailsHeader">Example (EncodeDecode) <a href=".//encoding/gob/index.html">¶</a></summary>
+<div class="Documentation-exampleDetailsBody">
+<p>This example transmits a value that implements the custom encoding and decoding methods.
+</p>
+
+<pre class="Documentation-exampleCode">package main
+
+import (
+	&#34;bytes&#34;
+	&#34;encoding/gob&#34;
+	&#34;fmt&#34;
+	&#34;log&#34;
+)
+
+// The Vector type has unexported fields, which the package cannot access.
+// We therefore write a BinaryMarshal/BinaryUnmarshal method pair to allow us
+// to send and receive the type with the gob package. These interfaces are
+// defined in the &#34;encoding&#34; package.
+// We could equivalently use the locally defined GobEncode/GobDecoder
+// interfaces.
+type Vector struct {
+	x, y, z int
+}
+
+func (v Vector) MarshalBinary() ([]byte, error) {
+	// A simple encoding: plain text.
+	var b bytes.Buffer
+	fmt.Fprintln(&amp;b, v.x, v.y, v.z)
+	return b.Bytes(), nil
+}
+
+// UnmarshalBinary modifies the receiver so it must take a pointer receiver.
+func (v *Vector) UnmarshalBinary(data []byte) error {
+	// A simple encoding: plain text.
+	b := bytes.NewBuffer(data)
+	_, err := fmt.Fscanln(b, &amp;v.x, &amp;v.y, &amp;v.z)
+	return err
+}
+
+// This example transmits a value that implements the custom encoding and decoding methods.
+func main() {
+	var network bytes.Buffer // Stand-in for the network.
+
+	// Create an encoder and send a value.
+	enc := gob.NewEncoder(&amp;network)
+	err := enc.Encode(Vector{3, 4, 5})
+	if err != nil {
+		log.Fatal(&#34;encode:&#34;, err)
+	}
+
+	// Create a decoder and receive a value.
+	dec := gob.NewDecoder(&amp;network)
+	var v Vector
+	err = dec.Decode(&amp;v)
+	if err != nil {
+		log.Fatal(&#34;decode:&#34;, err)
+	}
+	fmt.Println(v)
+
+}
+</pre>
+
+<pre><span class="Documentation-exampleOutputLabel">Output:</span>
+
+<span class="Documentation-exampleOutput">{3 4 5}
+</span></pre>
+</div>
+<div class="Documentation-exampleButtonsContainer">
+        <p class="Documentation-exampleError" role="alert" aria-atomic="true"></p>
+        <button class="Documentation-exampleShareButton" aria-label="Share Code">Share</button>
+        <button class="Documentation-exampleFormatButton" aria-label="Format Code">Format</button>
+        <button class="Documentation-exampleRunButton" aria-label="Run Code">Run</button>
+      </div></details>
+
+<details tabindex="-1" id="example-package-Interface" class="Documentation-exampleDetails js-exampleContainer">
+<summary class="Documentation-exampleDetailsHeader">Example (Interface) <a href=".//encoding/gob/index.html">¶</a></summary>
+<div class="Documentation-exampleDetailsBody">
+<p>This example shows how to encode an interface value. The key
+distinction from regular types is to register the concrete type that
+implements the interface.
+</p>
+
+<pre class="Documentation-exampleCode">package main
+
+import (
+	&#34;bytes&#34;
+	&#34;encoding/gob&#34;
+	&#34;fmt&#34;
+	&#34;log&#34;
+	&#34;math&#34;
+)
+
+type Point struct {
+	X, Y int
+}
+
+func (p Point) Hypotenuse() float64 {
+	return math.Hypot(float64(p.X), float64(p.Y))
+}
+
+type Pythagoras interface {
+	Hypotenuse() float64
+}
+
+// This example shows how to encode an interface value. The key
+// distinction from regular types is to register the concrete type that
+// implements the interface.
+func main() {
+	var network bytes.Buffer // Stand-in for the network.
+
+	// We must register the concrete type for the encoder and decoder (which would
+	// normally be on a separate machine from the encoder). On each end, this tells the
+	// engine which concrete type is being sent that implements the interface.
+	gob.Register(Point{})
+
+	// Create an encoder and send some values.
+	enc := gob.NewEncoder(&amp;network)
+	for i := 1; i &lt;= 3; i++ {
+		interfaceEncode(enc, Point{3 * i, 4 * i})
+	}
+
+	// Create a decoder and receive some values.
+	dec := gob.NewDecoder(&amp;network)
+	for i := 1; i &lt;= 3; i++ {
+		result := interfaceDecode(dec)
+		fmt.Println(result.Hypotenuse())
+	}
+
+}
+
+// interfaceEncode encodes the interface value into the encoder.
+func interfaceEncode(enc *gob.Encoder, p Pythagoras) {
+	// The encode will fail unless the concrete type has been
+	// registered. We registered it in the calling function.
+
+	// Pass pointer to interface so Encode sees (and hence sends) a value of
+	// interface type. If we passed p directly it would see the concrete type instead.
+	// See the blog post, &#34;The Laws of Reflection&#34; for background.
+	err := enc.Encode(&amp;p)
+	if err != nil {
+		log.Fatal(&#34;encode:&#34;, err)
+	}
+}
+
+// interfaceDecode decodes the next interface value from the stream and returns it.
+func interfaceDecode(dec *gob.Decoder) Pythagoras {
+	// The decode will fail unless the concrete type on the wire has been
+	// registered. We registered it in the calling function.
+	var p Pythagoras
+	err := dec.Decode(&amp;p)
+	if err != nil {
+		log.Fatal(&#34;decode:&#34;, err)
+	}
+	return p
+}
+</pre>
+
+<pre><span class="Documentation-exampleOutputLabel">Output:</span>
+
+<span class="Documentation-exampleOutput">5
+10
+15
+</span></pre>
+</div>
+<div class="Documentation-exampleButtonsContainer">
+        <p class="Documentation-exampleError" role="alert" aria-atomic="true"></p>
+        <button class="Documentation-exampleShareButton" aria-label="Share Code">Share</button>
+        <button class="Documentation-exampleFormatButton" aria-label="Format Code">Format</button>
+        <button class="Documentation-exampleRunButton" aria-label="Run Code">Run</button>
+      </div></details>
+
+</section><section class="Documentation-index">
+    <h3 id="pkg-index" class="Documentation-indexHeader">Index <a href=".//encoding/gob/index.html">¶</a></h3>
+
+<ul class="Documentation-indexList">
+<li class="Documentation-indexFunction">
+        <a href=".//encoding/gob/index.html">func Register(value interface{})</a></li>
+<li class="Documentation-indexFunction">
+        <a href=".//encoding/gob/index.html">func RegisterName(name string, value interface{})</a></li>
+<li class="Documentation-indexType">
+          <a href=".//encoding/gob/index.html">type CommonType</a></li>
+<li class="Documentation-indexType">
+          <a href=".//encoding/gob/index.html">type Decoder</a></li>
+<li><ul class="Documentation-indexTypeFunctions">
+<li>
+            <a href=".//encoding/gob/index.html">func NewDecoder(r io.Reader) *Decoder</a></li>
+</ul></li>
+<li><ul class="Documentation-indexTypeMethods">
+<li>
+            <a href=".//encoding/gob/index.html">func (dec *Decoder) Decode(e interface{}) error</a></li>
+<li>
+            <a href=".//encoding/gob/index.html">func (dec *Decoder) DecodeValue(v reflect.Value) error</a></li>
+</ul></li>
+<li class="Documentation-indexType">
+          <a href=".//encoding/gob/index.html">type Encoder</a></li>
+<li><ul class="Documentation-indexTypeFunctions">
+<li>
+            <a href=".//encoding/gob/index.html">func NewEncoder(w io.Writer) *Encoder</a></li>
+</ul></li>
+<li><ul class="Documentation-indexTypeMethods">
+<li>
+            <a href=".//encoding/gob/index.html">func (enc *Encoder) Encode(e interface{}) error</a></li>
+<li>
+            <a href=".//encoding/gob/index.html">func (enc *Encoder) EncodeValue(value reflect.Value) error</a></li>
+</ul></li>
+<li class="Documentation-indexType">
+          <a href=".//encoding/gob/index.html">type GobDecoder</a></li>
+<li class="Documentation-indexType">
+          <a href=".//encoding/gob/index.html">type GobEncoder</a></li>
+</ul>
+</section><section class="Documentation-examples">
+    <h4 tabindex="-1" id="pkg-examples" class="Documentation-examplesHeader">Examples <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></h4>
+<ul class="Documentation-examplesList">
+<li><a href=".//encoding/gob/index.html" class="js-exampleHref">Package (Basic)</a></li>
+<li><a href=".//encoding/gob/index.html" class="js-exampleHref">Package (EncodeDecode)</a></li>
+<li><a href=".//encoding/gob/index.html" class="js-exampleHref">Package (Interface)</a></li>
+</ul>
+</section><h3 tabindex="-1" id="pkg-constants" class="Documentation-constantsHeader">Constants <a href=".//encoding/gob/index.html">¶</a></h3>
+
+  <section class="Documentation-constants"><p class="Documentation-empty">This section is empty.</p></section>
+
+  <h3 tabindex="-1" id="pkg-variables" class="Documentation-variablesHeader">Variables <a href=".//encoding/gob/index.html">¶</a></h3>
+
+  <section class="Documentation-variables"><p class="Documentation-empty">This section is empty.</p></section>
+
+  <h3 tabindex="-1" id="pkg-functions" class="Documentation-functionsHeader">Functions <a href=".//encoding/gob/index.html">¶</a></h3>
+
+  <section class="Documentation-functions"><div class="Documentation-function">
+	  
+  
+  
+    <h4 tabindex="-1" id="Register" data-kind="function" class="Documentation-functionHeader">
+      <span>func <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/type.go;l=836/index.html">Register</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func Register(value interface{})</pre>
+    </div>
+  <p>Register records a type, identified by a value for that type, under its
+internal type name. That name will identify the concrete type of a value
+sent or received as an interface variable. Only types that will be
+transferred as implementations of interface values need to be registered.
+Expecting to be used only during initialization, it panics if the mapping
+between types and names is not a bijection.
+</p>
+
+  
+
+        </div><div class="Documentation-function">
+	  
+  
+  
+    <h4 tabindex="-1" id="RegisterName" data-kind="function" class="Documentation-functionHeader">
+      <span>func <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/type.go;l=807/index.html">RegisterName</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func RegisterName(name <a href=".//builtin/index.html">string</a>, value interface{})</pre>
+    </div>
+  <p>RegisterName is like Register but uses the provided name rather than the
+type&#39;s default.
+</p>
+
+  
+
+        </div></section>
+
+  <h3 tabindex="-1" id="pkg-types" class="Documentation-typesHeader">Types <a href=".//encoding/gob/index.html">¶</a></h3>
+
+  <section class="Documentation-types"><div class="Documentation-type">
+      
+  
+  
+    <h4 tabindex="-1" id="CommonType" data-kind="type" class="Documentation-typeHeader">
+      <span>type <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/type.go;l=216/index.html">CommonType</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>type CommonType struct {
+<span id="CommonType.Name" data-kind="field">	Name <a href=".//builtin/index.html">string</a>
+</span><span id="CommonType.Id" data-kind="field">	Id   typeId
+</span>}</pre>
+    </div>
+  <p>CommonType holds elements of all types.
+It is a historical artifact, kept for binary compatibility and exported
+only for the benefit of the package&#39;s encoding of type descriptors. It is
+not intended for direct use by clients.
+</p>
+
+  
+
+    </div><div class="Documentation-type">
+      
+  
+  
+    <h4 tabindex="-1" id="Decoder" data-kind="type" class="Documentation-typeHeader">
+      <span>type <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/decoder.go;l=27/index.html">Decoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>type Decoder struct {
+	<span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+    </div>
+  <p>A Decoder manages the receipt of type and data information read from the
+remote side of a connection.  It is safe for concurrent use by multiple
+goroutines.
+</p><p>The Decoder does only basic sanity checking on decoded input sizes,
+and its limits are not configurable. Take caution when decoding gob data
+from untrusted sources.
+</p>
+<div class="Documentation-typeFunc">
+    
+  
+  
+    <h4 tabindex="-1" id="NewDecoder" data-kind="function" class="Documentation-typeFuncHeader">
+      <span>func <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/decoder.go;l=42/index.html">NewDecoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func NewDecoder(r <a href=".//io/index.html">io</a>.<a href=".//io/index.html">Reader</a>) *<a href=".//encoding/gob/index.html">Decoder</a></pre>
+    </div>
+  <p>NewDecoder returns a new decoder that reads from the io.Reader.
+If r does not also implement io.ByteReader, it will be wrapped in a
+bufio.Reader.
+</p>
+
+  
+
+  </div><div class="Documentation-typeMethod">
+    
+  
+  
+    <h4 tabindex="-1" id="Decoder.Decode" data-kind="method" class="Documentation-typeMethodHeader">
+      <span>func (*Decoder) <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/decoder.go;l=180/index.html">Decode</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func (dec *<a href=".//encoding/gob/index.html">Decoder</a>) Decode(e interface{}) <a href=".//builtin/index.html">error</a></pre>
+    </div>
+  <p>Decode reads the next value from the input stream and stores
+it in the data represented by the empty interface value.
+If e is nil, the value will be discarded. Otherwise,
+the value underlying e must be a pointer to the
+correct type for the next data item received.
+If the input is at EOF, Decode returns io.EOF and
+does not modify e.
+</p>
+
+  
+
+  </div><div class="Documentation-typeMethod">
+    
+  
+  
+    <h4 tabindex="-1" id="Decoder.DecodeValue" data-kind="method" class="Documentation-typeMethodHeader">
+      <span>func (*Decoder) <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/decoder.go;l=200/index.html">DecodeValue</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func (dec *<a href=".//encoding/gob/index.html">Decoder</a>) DecodeValue(v <a href=".//reflect/index.html">reflect</a>.<a href=".//reflect/index.html">Value</a>) <a href=".//builtin/index.html">error</a></pre>
+    </div>
+  <p>DecodeValue reads the next value from the input stream.
+If v is the zero reflect.Value (v.Kind() == Invalid), DecodeValue discards the value.
+Otherwise, it stores the value into v. In that case, v must represent
+a non-nil pointer to data or be an assignable reflect.Value (v.CanSet())
+If the input is at EOF, DecodeValue returns io.EOF and
+does not modify v.
+</p>
+
+  
+
+  </div>
+  
+
+    </div><div class="Documentation-type">
+      
+  
+  
+    <h4 tabindex="-1" id="Encoder" data-kind="type" class="Documentation-typeHeader">
+      <span>type <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/encoder.go;l=17/index.html">Encoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>type Encoder struct {
+	<span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+    </div>
+  <p>An Encoder manages the transmission of type and data information to the
+other side of a connection.  It is safe for concurrent use by multiple
+goroutines.
+</p>
+<div class="Documentation-typeFunc">
+    
+  
+  
+    <h4 tabindex="-1" id="NewEncoder" data-kind="function" class="Documentation-typeFuncHeader">
+      <span>func <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/encoder.go;l=34/index.html">NewEncoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func NewEncoder(w <a href=".//io/index.html">io</a>.<a href=".//io/index.html">Writer</a>) *<a href=".//encoding/gob/index.html">Encoder</a></pre>
+    </div>
+  <p>NewEncoder returns a new encoder that will transmit on the io.Writer.
+</p>
+
+  
+
+  </div><div class="Documentation-typeMethod">
+    
+  
+  
+    <h4 tabindex="-1" id="Encoder.Encode" data-kind="method" class="Documentation-typeMethodHeader">
+      <span>func (*Encoder) <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/encoder.go;l=175/index.html">Encode</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func (enc *<a href=".//encoding/gob/index.html">Encoder</a>) Encode(e interface{}) <a href=".//builtin/index.html">error</a></pre>
+    </div>
+  <p>Encode transmits the data item represented by the empty interface value,
+guaranteeing that all necessary type information has been transmitted first.
+Passing a nil pointer to Encoder will panic, as they cannot be transmitted by gob.
+</p>
+
+  
+
+  </div><div class="Documentation-typeMethod">
+    
+  
+  
+    <h4 tabindex="-1" id="Encoder.EncodeValue" data-kind="method" class="Documentation-typeMethodHeader">
+      <span>func (*Encoder) <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/encoder.go;l=218/index.html">EncodeValue</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>func (enc *<a href=".//encoding/gob/index.html">Encoder</a>) EncodeValue(value <a href=".//reflect/index.html">reflect</a>.<a href=".//reflect/index.html">Value</a>) <a href=".//builtin/index.html">error</a></pre>
+    </div>
+  <p>EncodeValue transmits the data item represented by the reflection value,
+guaranteeing that all necessary type information has been transmitted first.
+Passing a nil pointer to EncodeValue will panic, as they cannot be transmitted by gob.
+</p>
+
+  
+
+  </div>
+  
+
+    </div><div class="Documentation-type">
+      
+  
+  
+    <h4 tabindex="-1" id="GobDecoder" data-kind="type" class="Documentation-typeHeader">
+      <span>type <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/type.go;l=793/index.html">GobDecoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>type GobDecoder interface {
+<span id="GobDecoder.GobDecode" data-kind="method">	<span class="comment">// GobDecode overwrites the receiver, which must be a pointer,</span>
+</span>	<span class="comment">// with the value represented by the byte slice, which was written</span>
+	<span class="comment">// by GobEncode, usually for the same concrete type.</span>
+	GobDecode([]<a href=".//builtin/index.html">byte</a>) <a href=".//builtin/index.html">error</a>
+}</pre>
+    </div>
+  <p>GobDecoder is the interface describing data that provides its own
+routine for decoding transmitted values sent by a GobEncoder.
+</p>
+
+  
+
+    </div><div class="Documentation-type">
+      
+  
+  
+    <h4 tabindex="-1" id="GobEncoder" data-kind="type" class="Documentation-typeHeader">
+      <span>type <a class="Documentation-source" href=".//go/go/+/go1.17.5:src/encoding/gob/type.go;l=784/index.html">GobEncoder</a> <a class="Documentation-idLink" href=".//encoding/gob/index.html">¶</a></span>
+  <span class="Documentation-sinceVersion">
+    
+  </span>
+</h4>
+
+    
+    <div class="Documentation-declaration">
+      <pre>type GobEncoder interface {
+<span id="GobEncoder.GobEncode" data-kind="method">	<span class="comment">// GobEncode returns a byte slice representing the encoding of the</span>
+</span>	<span class="comment">// receiver for transmission to a GobDecoder, usually of the same</span>
+	<span class="comment">// concrete type.</span>
+	GobEncode() ([]<a href=".//builtin/index.html">byte</a>, <a href=".//builtin/index.html">error</a>)
+}</pre>
+    </div>
+  <p>GobEncoder is the interface describing data that provides its own
+representation for encoding values for transmission to a GobDecoder.
+A type that implements GobEncoder and GobDecoder has complete
+control over the representation of its data and may therefore
+contain things such as private fields, channels, and functions,
+which are not usually transmissible in gob streams.
+</p><p>Note: Since gobs can be stored permanently, it is good design
+to guarantee the encoding used by a GobEncoder is stable as the
+software evolves. For instance, it might make sense for GobEncode
+to include a version number in the encoding.
+</p>
+
+  
+
+    </div></section></div> 
+
+
+
+
+      
+    </div>
+  </div>
+
+        
+      
+      
+        
+  <div class="UnitFiles js-unitFiles">
+    <h2 class="UnitFiles-title" id="section-sourcefiles">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/insert_drive_file_gm_grey_24dp.svg" alt=""/>
+      Source Files
+      <a class="UnitFiles-idLink" href=".//encoding/gob/index.html">¶</a>
+    </h2>
+    <div class="UnitFiles-titleLink">
+      <a href=".//go/go/+/go1.17.5:src/encoding/gob/index.html" target="_blank" rel="noopener">View all</a>
+    </div>
+    <div>
+      <ul class="UnitFiles-fileList"><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/dec_helpers.go/index.html" target="_blank" rel="noopener" title="dec_helpers.go">dec_helpers.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/decode.go/index.html" target="_blank" rel="noopener" title="decode.go">decode.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/decoder.go/index.html" target="_blank" rel="noopener" title="decoder.go">decoder.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/doc.go/index.html" target="_blank" rel="noopener" title="doc.go">doc.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/enc_helpers.go/index.html" target="_blank" rel="noopener" title="enc_helpers.go">enc_helpers.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/encode.go/index.html" target="_blank" rel="noopener" title="encode.go">encode.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/encoder.go/index.html" target="_blank" rel="noopener" title="encoder.go">encoder.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/error.go/index.html" target="_blank" rel="noopener" title="error.go">error.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/encoding/gob/type.go/index.html" target="_blank" rel="noopener" title="type.go">type.go</a>
+          </li></ul>
+    </div>
+  </div>
+
+      
+      
+    </div>
+  </div>
+</article>
+    <footer class="go-Main-footer"></footer>
+  </main>
+
+    
+  <footer class="go-Footer">
+    
+    <div class="go-Footer-links">
+      <div class="go-Footer-linkColumn">
+        <a href=".//solutions/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Why Go
+        </a>
+        <a href=".//solutions/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Use Cases
+        </a>
+        <a href=".//solutions/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Case Studies
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".///index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Get Started
+        </a>
+        <a href=".//index.html" class="go-Footer-link" data-gtmc="footer link">
+          Playground
+        </a>
+        <a href=".//index.html" class="go-Footer-link" data-gtmc="footer link">
+          Tour
+        </a>
+        <a href=".//questions/tagged/go/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Stack Overflow
+        </a>
+        <a href=".//help/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Help
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Packages
+        </a>
+        <a href=".//std/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Standard Library
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//project/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          About
+        </a>
+        <a href=".//dl//index.html" class="go-Footer-link" data-gtmc="footer link">Download</a>
+        <a href=".//blog/index.html" class="go-Footer-link" data-gtmc="footer link">Blog</a>
+        <a href=".//golang/go/issues/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Issue Tracker
+        </a>
+        <a href=".//doc/devel/release.html/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Release Notes
+        </a>
+        <a href=".//go-brand/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Brand Guidelines
+        </a>
+        <a href=".//conduct/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Code of Conduct
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//golang/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Connect
+        </a>
+        <a href=".//golang/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Twitter
+        </a>
+        <a href=".//golang/index.html" class="go-Footer-link" data-gtmc="footer link">GitHub</a>
+        <a href=".///index.html" class="go-Footer-link" data-gtmc="footer link">
+          Slack
+        </a>
+        <a href=".//r/golang/index.html" class="go-Footer-link" data-gtmc="footer link">
+          r/golang
+        </a>
+        <a href=".//pro/go/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Meetup
+        </a>
+        <a href=".///index.html" class="go-Footer-link" data-gtmc="footer link">
+          Golang Weekly
+        </a>
+      </div>
+    </div>
+    <div class="go-Footer-bottom">
+      <img class="go-Footer-gopher" width="1431" height="901" src="/static/shared/gopher/pilot-bust-1431x901.svg" alt="Gopher in flight goggles"/>
+      <ul class="go-Footer-listRow">
+        <li class="go-Footer-listItem">
+          <a href=".//copyright/index.html" data-gtmc="footer link">Copyright</a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//tos/index.html" data-gtmc="footer link">Terms of Service</a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//intl/en/policies/privacy//index.html" data-gtmc="footer link" target="_blank" rel="noopener">
+            Privacy Policy
+          </a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//s/pkgsite-feedback/index.html" target="_blank" rel="noopener" data-gtmc="footer link">
+            Report an Issue
+          </a>
+        </li>
+        <li class="go-Footer-listItem">
+          <button class="go-Button go-Button--text go-Footer-toggleTheme js-toggleTheme" aria-label="Toggle theme">
+            <img data-value="auto" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/brightness_6_gm_grey_24dp.svg" alt="System theme"/>
+            <img data-value="dark" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/brightness_2_gm_grey_24dp.svg" alt="Dark theme"/>
+            <img data-value="light" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/light_mode_gm_grey_24dp.svg" alt="Light theme"/>
+          </button>
+          <button class="go-Button go-Button--text go-Footer-keyboard js-openShortcuts" aria-label="Open shorcuts modal">
+            <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/keyboard_grey_24dp.svg" alt=""/>
+          </button>
+        </li>
+      </ul>
+      <a class="go-Footer-googleLogo" href=".//index.html" target="_blank" rel="noopener" data-gtmc="footer link">
+        <img class="go-Footer-googleLogoImg" height="24" width="72" src="/static/shared/logo/google-white.svg" alt="Google logo"/>
+      </a>
+    </div>
+  </footer>
+
+    
+  <dialog id="jump-to-modal" class="JumpDialog go-Modal go-Modal--md js-modal">
+    <form method="dialog" data-gmtc="jump to form" aria-label="Jump to Identifier">
+      <div class="Dialog-title go-Modal-header">
+        <h2>Jump to</h2>
+        <button class="go-Button go-Button--inline" type="button" data-modal-close="" data-gtmc="modal button" aria-label="Close">
+          <img class="go-Icon" height="24" width="24" src="/static/shared/icon/close_gm_grey_24dp.svg" alt=""/>
+        </button>
+      </div>
+      <div class="JumpDialog-filter">
+        <input class="JumpDialog-input go-Input" autocomplete="off" type="text"/>
+      </div>
+      <div class="JumpDialog-body go-Modal-body">
+        <div class="JumpDialog-list"></div>
+      </div>
+      <div class="go-Modal-actions">
+        <button class="go-Button" data-test-id="close-dialog">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="ShortcutsDialog go-Modal go-Modal--sm js-modal">
+    <form method="dialog">
+      <div class="go-Modal-header">
+        <h2>Keyboard shortcuts</h2>
+        <button class="go-Button go-Button--inline" type="button" data-modal-close="" data-gtmc="modal button" aria-label="Close">
+          <img class="go-Icon" height="24" width="24" src="/static/shared/icon/close_gm_grey_24dp.svg" alt=""/>
+        </button>
+      </div>
+      <div class="go-Modal-body">
+        <table>
+          <tbody>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>?</strong></td><td> : This menu</td>
+            </tr>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>/</strong></td><td> : Search site</td>
+            </tr>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>f</strong> or <strong>F</strong></td><td> : Jump to</td>
+            </tr>
+            <tr>
+              <td class="ShortcutsDialog-key"><strong>y</strong> or <strong>Y</strong></td>
+              <td> : Canonical URL</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="go-Modal-actions">
+        <button class="go-Button" data-test-id="close-dialog">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+    
+      <script>
+        // this will throw if the querySelector can’t find the element
+        const gtmId = document.querySelector('.js-gtmID').dataset.gtmid;
+        if (!gtmId) {
+          throw new Error('Google Tag Manager ID not found');
+        }
+        loadScript(`https://www.googletagmanager.com/gtm.js?id=${gtmId}`);
+      </script>
+      <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+                height="0" width="0" style="display:none;visibility:hidden">
+        </iframe>
+      </noscript>
+    
+    
+  
+  <div class="js-canonicalURLPath" data-canonical-url-path="/encoding/gob@go1.17.5" hidden=""></div>
+  <script>
+    loadScript('/static/frontend/unit/main/main.js')
+  </script>
+
+  <script>
+    loadScript('/static/frontend/unit/unit.js')
+  </script>
+
+  
+</body></html>

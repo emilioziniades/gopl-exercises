@@ -1,0 +1,946 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Code of Conduct Updates - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/conduct-2021">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>Code of Conduct Updates</h1>
+      
+      <p class="author">
+      Carmen Andoh, Russ Cox,  and Steve Francia<br/>
+      16 September 2021
+      </p>
+      
+      <p>Although the details of <a href=".//conduct/index.html">our Code of Conduct</a> have been
+<a href=".//blog/conduct-2018/index.html">adjusted</a> over time, <a href=".//blog/open-source/index.html">our goals</a> have not.
+We want the Go community to be as inclusive, welcoming, helpful, and respectful as possible.
+If you want to use or discuss Go, we want you to feel welcome here.</p>
+<p>The community is large enough that,
+instead of assuming everyone knows what is expected of them,
+our Code of Conduct serves as an agreement,
+setting explicit expectations for our behavior in both online and offline interactions.
+If we don’t live up to the agreement,
+people can point that out and we can correct our behavior.</p>
+<p>In this post we want to provide two updates:
+first, an update about how we approach enforcement of the Code of Conduct,
+and second, an update to the Gopher Values themselves.</p>
+<h2 id="enforcement">Enforcement</h2>
+<p>We want everyone to feel welcome here.
+What happens when members of our community make others feel unwelcome?
+Those behaviors can be reported to the Project Steward,
+who works with a committee from Google’s Open Source Programs Office
+to determine what to do about each report.</p>
+<p>Since the <a href=".//blog/conduct-2018/index.html">May 2018 revision to the Code of Conduct</a>, community members have submitted more than 300 conduct reports,
+an average between one and two a week.
+A typical outcome is to meet with the person whose conduct was reported
+and help them understand how to take responsibility for and correct their actions moving forward.</p>
+<p>But what about people who do worse than make others feel unwelcome,
+or who refuse to correct their behavior?
+The <a href=".//wiki/Paradox_of_tolerance/index.html" rel="noreferrer" target="_blank">paradox of tolerance</a>
+is that the one group of people we can’t welcome are those who make others feel unwelcome.
+We have to choose between them and the people they would drive away.
+We choose to side with people who are friendly, welcoming, patient, thoughtful,
+respectful, charitable, and constructive—those who behave according to the Gopher Values
+and make our community a better place.</p>
+<p>When someone who makes others feel unwelcome must be excluded,
+specific channels or places may block individuals based on their own observations,
+without waiting on conduct reports.
+For example, the Go release team,
+which has primary responsibility for tending to the Go issue tracker,
+can quickly block users who are acting inappropriately (typically verbally abusive)
+without involving any of us. To date, they’ve blocked around a dozen accounts.</p>
+<p>Reported conduct can also (but only rarely does) rise to a level
+where we would consider the serious step of expelling a community member,
+either temporarily or permanently, from all the spaces we host:
+our mailing lists, issue tracker, invited events, and so on.</p>
+<p>Examples of the kind of misconduct that could merit community-wide expulsion include:</p>
+<ol>
+<li>Threatening others.</li>
+<li>Abusing or assaulting others.</li>
+<li>Brigading or otherwise encouraging or coordinating abusive online behavior.</li>
+<li>Making false conduct reports about others.</li>
+<li>Harassing others.
+Harassment can be one severe incident or a running series of smaller incidents.</li>
+<li>Persistent borderline behavior.
+Infractions may seem insignificant in isolation,
+but repeated over time they create a pattern of behavior
+that doesn’t match our Gopher Values
+and that adds up to substantial harm.</li>
+</ol>
+<p>Expulsion is not something to consider lightly.
+To date, only a small (single digit) number of individuals
+have been expelled entirely from Go spaces.</p>
+<h2 id="a-new-gopher-value">A New Gopher Value</h2>
+<p>A recurring theme we have seen in reports of minor problems
+is people not accepting that their words and actions affect others.
+In extreme cases, people say things like “but this is the internet.”
+We aspire to be far more welcoming than the internet overall.
+To this end, we are adding one more Gopher value to the Code of Conduct:
+“Be responsible.”</p>
+<p>The entire “<a href=".//conduct/index.html">Gopher Values</a>”
+section of the Code of Conduct now reads:</p>
+<ul>
+<li>
+<p><strong>Be friendly and welcoming.</strong></p>
+</li>
+<li>
+<p><strong>Be patient.</strong></p>
+<ul>
+<li>Remember that people have varying communication styles and that not
+everyone is using their native language.
+(Meaning and tone can be lost in translation.)</li>
+</ul>
+</li>
+<li>
+<p><strong>Be thoughtful.</strong></p>
+<ul>
+<li>Productive communication requires effort.
+Think about how your words will be interpreted.</li>
+<li>Remember that sometimes it is best to refrain entirely from commenting.</li>
+</ul>
+</li>
+<li>
+<p><strong>Be respectful.</strong></p>
+<ul>
+<li>In particular, respect differences of opinion.</li>
+</ul>
+</li>
+<li>
+<p><strong>Be charitable.</strong></p>
+<ul>
+<li>Interpret the arguments of others in good faith, do not seek to disagree.</li>
+<li>When we do disagree, try to understand why.</li>
+</ul>
+</li>
+<li>
+<p><strong>Be constructive.</strong></p>
+<ul>
+<li>Avoid derailing: stay on topic; if you want to talk about something else,
+start a new conversation.</li>
+<li>Avoid unconstructive criticism: don’t merely decry the current state of affairs;
+offer—or at least solicit—suggestions as to how things may be improved.</li>
+<li>Avoid snarking (pithy, unproductive, sniping comments)</li>
+<li>Avoid discussing potentially offensive or sensitive issues;
+this all too often leads to unnecessary conflict.</li>
+<li>Avoid microaggressions (brief and commonplace verbal, behavioral and
+environmental indignities that communicate hostile, derogatory or negative
+slights and insults to a person or group).</li>
+</ul>
+</li>
+<li>
+<p><strong>Be responsible.</strong></p>
+<ul>
+<li>What you say and do matters.
+Take responsibility for your words and actions, including their consequences,
+whether intended or otherwise.</li>
+</ul>
+</li>
+</ul>
+<p>The last two years have been very difficult:
+the world is incredibly uncertain and likely to remain that way for the foreseeable future.
+People are stressed out and burned out.
+In times like these, it’s more important than ever to keep the Gopher Values in mind.</p>
+<p>As we continue to grow Go, it’s critical to foster and maintain a sense of <em>collective responsibility</em>.
+As members of the Go community, we must all be conscious
+of how our actions and behaviors affect the groups and spaces where we collaborate.
+We must take responsibility for our behavior, its impact,
+and how it might encourage others towards (or away from) constructive collaboration.</p>
+<p>It is also our collective responsibility to speak up, to ensure a group dynamic
+that allows for productive exchange of ideas and opinions.
+Our Code of Conduct states that we must be “respectful of differing viewpoints and experiences.”
+When disagreement turns into discord or disrespect, we must speak out.
+Regardless of our views, we are responsible for our actions and their impact.</p>
+<p>When we commit to these values,
+we provide a safe and welcoming environment for all that meets our shared community goals:
+collaboration and constructive communication to make Go successful.</p>
+<p>Thank you to everyone who has joined us in being part of the Go community.
+We hope you feel welcome, and we will continue to work
+to include as many people as possible.
+If you have any questions or concerns,
+please feel free to reach out to any of us over email:
+<em>carmen@golang.org</em> (Carmen),
+<em>rsc@golang.org</em> (Russ),
+and
+<em>spf@golang.org</em> (Steve).</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/survey2021/index.html">Announcing the 2021 Go Developer Survey</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/tls-cipher-suites/index.html">Automatic cipher suite ordering in crypto/tls</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

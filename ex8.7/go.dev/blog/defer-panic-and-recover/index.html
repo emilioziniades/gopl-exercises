@@ -1,0 +1,988 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Defer, Panic, and Recover - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/defer-panic-and-recover">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>Defer, Panic, and Recover</h1>
+      
+      <p class="author">
+      Andrew Gerrand<br/>
+      4 August 2010
+      </p>
+      
+      <p>Go has the usual mechanisms for control flow:
+if, for, switch, goto.
+It also has the go statement to run code in a separate goroutine.
+Here I’d like to discuss some of the less common ones:
+defer, panic, and recover.</p>
+<p>A <strong>defer statement</strong> pushes a function call onto a list.
+The list of saved calls is executed after the surrounding function returns.
+Defer is commonly used to simplify functions that perform various clean-up actions.</p>
+<p>For example, let’s look at a function that opens two files and copies the contents of one file to the other:</p>
+<pre><code>func CopyFile(dstName, srcName string) (written int64, err error) {
+    src, err := os.Open(srcName)
+    if err != nil {
+        return
+    }
+
+    dst, err := os.Create(dstName)
+    if err != nil {
+        return
+    }
+
+    written, err = io.Copy(dst, src)
+    dst.Close()
+    src.Close()
+    return
+}
+</code></pre>
+<p>This works, but there is a bug. If the call to os.Create fails,
+the function will return without closing the source file.
+This can be easily remedied by putting a call to src.Close before the second return statement,
+but if the function were more complex the problem might not be so easily
+noticed and resolved.
+By introducing defer statements we can ensure that the files are always closed:</p>
+<pre><code>func CopyFile(dstName, srcName string) (written int64, err error) {
+    src, err := os.Open(srcName)
+    if err != nil {
+        return
+    }
+    defer src.Close()
+
+    dst, err := os.Create(dstName)
+    if err != nil {
+        return
+    }
+    defer dst.Close()
+
+    return io.Copy(dst, src)
+}
+</code></pre>
+<p>Defer statements allow us to think about closing each file right after opening it,
+guaranteeing that, regardless of the number of return statements in the function,
+the files <em>will</em> be closed.</p>
+<p>The behavior of defer statements is straightforward and predictable. There are three simple rules:</p>
+<ol>
+<li><em>A deferred function’s arguments are evaluated when the defer statement is evaluated.</em></li>
+</ol>
+<p>In this example, the expression “i” is evaluated when the Println call is deferred.
+The deferred call will print “0” after the function returns.</p>
+<pre><code>func a() {
+    i := 0
+    defer fmt.Println(i)
+    i++
+    return
+}
+</code></pre>
+<ol start="2">
+<li><em>Deferred function calls are executed in Last In First Out order after the surrounding function returns.</em></li>
+</ol>
+<p>This function prints “3210”:</p>
+<pre><code>func b() {
+    for i := 0; i &lt; 4; i++ {
+        defer fmt.Print(i)
+    }
+}
+</code></pre>
+<ol start="3">
+<li><em>Deferred functions may read and assign to the returning function’s named return values.</em></li>
+</ol>
+<p>In this example, a deferred function increments the return value i <em>after</em>
+the surrounding function returns.
+Thus, this function returns 2:</p>
+<pre><code>func c() (i int) {
+    defer func() { i++ }()
+    return 1
+}
+</code></pre>
+<p>This is convenient for modifying the error return value of a function; we will see an example of this shortly.</p>
+<p><strong>Panic</strong> is a built-in function that stops the ordinary flow of control and begins <em>panicking</em>.
+When the function F calls panic, execution of F stops,
+any deferred functions in F are executed normally,
+and then F returns to its caller.
+To the caller, F then behaves like a call to panic.
+The process continues up the stack until all functions in the current goroutine have returned,
+at which point the program crashes.
+Panics can be initiated by invoking panic directly.
+They can also be caused by runtime errors,
+such as out-of-bounds array accesses.</p>
+<p><strong>Recover</strong> is a built-in function that regains control of a panicking goroutine.
+Recover is only useful inside deferred functions.
+During normal execution, a call to recover will return nil and have no other effect.
+If the current goroutine is panicking, a call to recover will capture the
+value given to panic and resume normal execution.</p>
+<p>Here’s an example program that demonstrates the mechanics of panic and defer:</p>
+<pre><code>package main
+
+import &#34;fmt&#34;
+
+func main() {
+    f()
+    fmt.Println(&#34;Returned normally from f.&#34;)
+}
+
+func f() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println(&#34;Recovered in f&#34;, r)
+        }
+    }()
+    fmt.Println(&#34;Calling g.&#34;)
+    g(0)
+    fmt.Println(&#34;Returned normally from g.&#34;)
+}
+
+func g(i int) {
+    if i &gt; 3 {
+        fmt.Println(&#34;Panicking!&#34;)
+        panic(fmt.Sprintf(&#34;%v&#34;, i))
+    }
+    defer fmt.Println(&#34;Defer in g&#34;, i)
+    fmt.Println(&#34;Printing in g&#34;, i)
+    g(i + 1)
+}
+</code></pre>
+<p>The function g takes the int i, and panics if i is greater than 3,
+or else it calls itself with the argument i+1.
+The function f defers a function that calls recover and prints the recovered
+value (if it is non-nil).
+Try to picture what the output of this program might be before reading on.</p>
+<p>The program will output:</p>
+<pre><code>Calling g.
+Printing in g 0
+Printing in g 1
+Printing in g 2
+Printing in g 3
+Panicking!
+Defer in g 3
+Defer in g 2
+Defer in g 1
+Defer in g 0
+Recovered in f 4
+Returned normally from f.
+</code></pre>
+<p>If we remove the deferred function from f the panic is not recovered and
+reaches the top of the goroutine’s call stack,
+terminating the program.
+This modified program will output:</p>
+<pre><code>Calling g.
+Printing in g 0
+Printing in g 1
+Printing in g 2
+Printing in g 3
+Panicking!
+Defer in g 3
+Defer in g 2
+Defer in g 1
+Defer in g 0
+panic: 4
+
+panic PC=0x2a9cd8
+[stack trace omitted]
+</code></pre>
+<p>For a real-world example of <strong>panic</strong> and <strong>recover</strong>,
+see the <a href=".//pkg/encoding/json//index.html">json package</a> from the
+Go standard library.
+It encodes an interface with a set of recursive functions.
+If an error occurs when traversing the value,
+panic is called to unwind the stack to the top-level function call,
+which recovers from the panic and returns an appropriate error value (see
+the ‘error’ and ‘marshal’ methods of the encodeState type in <a href=".//src/pkg/encoding/json/encode.go/index.html">encode.go</a>).</p>
+<p>The convention in the Go libraries is that even when a package uses panic internally,
+its external API still presents explicit error return values.</p>
+<p>Other uses of <strong>defer</strong> (beyond the file.Close example given earlier) include releasing a mutex:</p>
+<pre><code>mu.Lock()
+defer mu.Unlock()
+</code></pre>
+<p>printing a footer:</p>
+<pre><code>printHeader()
+defer printFooter()
+</code></pre>
+<p>and more.</p>
+<p>In summary, the defer statement (with or without panic and recover) provides
+an unusual and powerful mechanism for control flow.
+It can be used to model a number of features implemented by special-purpose
+structures in other programming languages. Try it out.</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/bossie/index.html">Go Wins 2010 Bossie Award</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/codelab-share/index.html">Share Memory By Communicating</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,876 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Fuzzing is Beta Ready - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/fuzz-beta">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>Fuzzing is Beta Ready</h1>
+      
+      <p class="author">
+      Katie Hockman and Jay Conrod<br/>
+      3 June 2021
+      </p>
+      
+      <p>We are excited to announce that native fuzzing is ready for beta testing on tip!</p>
+<p>Fuzzing is a type of automated testing which continuously manipulates inputs to
+a program to find issues such as panics or bugs. These semi-random data
+mutations can discover new code coverage that existing unit tests may miss, and
+uncover edge case bugs which would otherwise go unnoticed. Since fuzzing can
+reach these edge cases, fuzz testing is particularly valuable for finding
+security exploits and vulnerabilities.</p>
+<p>See
+<a href=".//s/draft-fuzzing-design/index.html">golang.org/s/draft-fuzzing-design</a>
+for more details about this feature.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>To get started, you may run the following</p>
+<pre><code>$ go install golang.org/dl/gotip@latest
+$ gotip download
+</code></pre>
+<p>This builds the Go toolchain from the master branch. After running this, <code>gotip</code>
+can act as a drop-in replacement for the <code>go</code> command. You can now run commands
+like</p>
+<pre><code>$ gotip test -fuzz=Fuzz
+</code></pre>
+<h2 id="writing-a-fuzz-test">Writing a fuzz test</h2>
+<p>A fuzz test must be in a *_test.go file as a function in the form <code>FuzzXxx</code>.
+This function must be passed a<code> *testing.F</code> argument, much like a <code>*testing.T</code>
+argument is passed to a <code>TestXxx</code> function.</p>
+<p>Below is an example of a fuzz test that’s testing the behavior of the <a href=".//net/url/index.html" rel="noreferrer" target="_blank">net/url
+package</a>.</p>
+<pre><code>//go:build go1.18
+// +build go1.18
+
+package fuzz
+
+import (
+    &#34;net/url&#34;
+    &#34;reflect&#34;
+    &#34;testing&#34;
+)
+
+func FuzzParseQuery(f *testing.F) {
+    f.Add(&#34;x=1&amp;y=2&#34;)
+    f.Fuzz(func(t *testing.T, queryStr string) {
+        query, err := url.ParseQuery(queryStr)
+        if err != nil {
+            t.Skip()
+        }
+        queryStr2 := query.Encode()
+        query2, err := url.ParseQuery(queryStr2)
+        if err != nil {
+            t.Fatalf(&#34;ParseQuery failed to decode a valid encoded query %s: %v&#34;, queryStr2, err)
+        }
+        if !reflect.DeepEqual(query, query2) {
+            t.Errorf(&#34;ParseQuery gave different query after being encoded\nbefore: %v\nafter: %v&#34;, query, query2)
+        }
+    })
+}
+</code></pre>
+<p>You can read more about fuzzing at pkg.go.dev, including <a href=".//testing@master/index.html" rel="noreferrer" target="_blank">an overview
+of fuzzing with Go</a> and the
+<a href=".//testing@master/index.html" rel="noreferrer" target="_blank">godoc for the new <code>testing.F</code> type</a>.</p>
+<h2 id="expectations">Expectations</h2>
+<p>This is a new feature that’s still in beta, so you should expect some bugs
+and an incomplete feature set. Check the <a href=".//golang/go/issues/index.html" rel="noreferrer" target="_blank">issue tracker for issues labelled
+“fuzz”</a>
+to stay up-to-date on existing bugs and missing features.</p>
+<p>Please be aware that fuzzing can consume a lot of memory and may impact your
+machine’s performance while it runs. <code>go test -fuzz</code> defaults to running fuzzing
+in <code>$GOMAXPROCS</code> processes in parallel. You may lower the number of processes
+used while fuzzing by explicitly setting the <code>-parallel</code> flag with <code>go test</code>.
+Read the documentation for the <code>go test</code> command by running <code>gotip help testflag</code> if you want more information.</p>
+<p>Also be aware that the fuzzing engine writes values that expand test coverage to
+a fuzz cache directory within <code>$GOCACHE/fuzz</code> while it runs. There is currently
+no limit to the number of files or total bytes that may be written to the fuzz
+cache, so it may occupy a large amount of storage (ie. several GBs). You can
+clear the fuzz cache by running <code>gotip clean -fuzzcache</code>.</p>
+<h2 id="whats-next">What’s next?</h2>
+<p>This feature will become available starting in Go 1.18.</p>
+<p>If you experience any problems or have an idea for a feature, please <a href=".//golang/go/issues/new//index.html" rel="noreferrer" target="_blank">file an
+issue</a>.</p>
+<p>For discussion and general feedback about the feature, you can also participate
+in the <a href=".//archives/CH5KV1AKE/index.html" rel="noreferrer" target="_blank">#fuzzing channel</a> in
+Gophers Slack.</p>
+<p>Happy fuzzing!</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/stackoverflow/index.html">The Go Collective on Stack Overflow</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/survey2020-results/index.html">Go Developer Survey 2020 Results</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

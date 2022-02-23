@@ -1,0 +1,703 @@
+<!DOCTYPE html><html lang="en" data-layout="responsive"><head>
+    
+    <script>
+      window.addEventListener('error', window.__err=function f(e){f.p=f.p||[];f.p.push(e)});
+    </script>
+    <script>
+      (function() {
+        const theme = document.cookie.match(/prefers-color-scheme=(light|dark|auto)/)?.[1]
+        if (theme) {
+          document.querySelector('html').setAttribute('data-theme', theme);
+        }
+      }())
+    </script>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Description" content="Vet examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string."/>
+    
+    <meta class="js-gtmID" data-gtmid="GTM-W8MVQXG"/>
+    <link rel="shortcut icon" href="/static/shared/icon/favicon.ico"/>
+    
+  <link rel="canonical" href="https://pkg.go.dev/cmd/vet"/>
+
+    <link href="/static/frontend/frontend.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+    
+  <title>vet command - cmd/vet - pkg.go.dev</title>
+
+    
+  <link href="/static/frontend/unit/unit.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+  
+  <link href="/static/frontend/unit/main/main.min.css?version=prod-frontend-00020-raf" rel="stylesheet"/>
+
+
+  </head>
+  <body>
+    
+    <script>
+      function loadScript(src) {
+        let s = document.createElement('script');
+        s.src = src;
+        s.type = 'module';
+        s.async = true;
+        s.defer = true
+        document.head.appendChild(s);
+      }
+      loadScript("/static/frontend/frontend.js");
+    </script>
+    
+  <header class="go-Header go-Header--full js-siteHeader">
+    <div class="go-Header-inner go-Header-inner--dark">
+      <nav class="go-Header-nav">
+        <a href=".///index.html" class="js-headerLogo" data-gtmc="nav link" data-test-id="go-header-logo-link">
+          <img class="go-Header-logo" src="/static/shared/logo/go-white.svg" alt="Go"/>
+        </a>
+        <div class="go-Header-rightContent">
+          
+<div class="go-SearchForm js-searchForm">
+  <form class="go-InputGroup go-ShortcutKey go-SearchForm-form" action="/search" data-shortcut="/" data-shortcut-alt="search" data-gtmc="search form" aria-label="Search for a package" role="search">
+    <input name="q" class="go-Input js-searchFocus" aria-label="Search for a package" type="search" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Search packages or symbols" value=""/>
+    <input name="m" value="" hidden=""/>
+    <button class="go-Button go-Button--inverted" aria-label="Submit search">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/search_gm_grey_24dp.svg" alt=""/>
+    </button>
+  </form>
+  <button class="go-SearchForm-expandSearch js-expandSearch" data-gtmc="nav button" aria-label="Open search" data-test-id="expand-search">
+    <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/search_gm_grey_24dp.svg" alt=""/>
+  </button>
+</div>
+
+          <ul class="go-Header-menu">
+            <li class="go-Header-menuItem">
+              <a href=".//solutions//index.html" data-gtmc="nav link">Why Go</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//learn//index.html" data-gtmc="nav link">Get Started</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//doc//index.html" data-gtmc="nav link">Docs</a>
+            </li>
+            <li class="go-Header-menuItem go-Header-menuItem--active">
+              <a href=".///index.html" data-gtmc="nav link">Packages</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".///index.html" data-gtmc="nav link">Play</a>
+            </li>
+            <li class="go-Header-menuItem">
+              <a href=".//blog//index.html" data-gtmc="nav link">Blog</a>
+            </li>
+          </ul>
+          <button class="go-Header-navOpen js-headerMenuButton go-Header-navOpen--white" data-gtmc="nav button" aria-label="Open navigation">
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <aside class="go-NavigationDrawer js-header">
+    <nav>
+      <div class="go-NavigationDrawer-header">
+        <a href=".///index.html" tabindex="-1">
+          <img class="go-NavigationDrawer-logo" src="/static/shared/logo/go-blue.svg" alt="Go."/>
+        </a>
+      </div>
+      <ul class="go-NavigationDrawer-list">
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//solutions//index.html" tabindex="-1">Why Go</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//learn//index.html" tabindex="-1">Get Started</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem go-NavigationDrawer-listItem--active">
+            <a href=".///index.html" tabindex="-1">Packages</a>
+          </li>
+          <li class="go-NavigationDrawer-listItem">
+            <a href=".//blog/index.html" tabindex="-1">Blog</a>
+          </li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="go-NavigationDrawer-scrim js-scrim" role="presentation"></div>
+
+    
+  <main class="go-Main">
+    <div class="go-Main-banner" role="alert"></div>
+    <header class="go-Main-header js-mainHeader">
+  
+  
+  <nav class="go-Main-headerBreadcrumb go-Breadcrumb" aria-label="Breadcrumb" data-test-id="UnitHeader-breadcrumb">
+    <ol>
+      
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".///index.html" data-gtmc="breadcrumb link">Discover Packages</a>
+          </li>
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".//std/index.html" data-gtmc="breadcrumb link">Standard library</a>
+          </li>
+        
+          <li data-test-id="UnitHeader-breadcrumbItem">
+            <a href=".//cmd/index.html" data-gtmc="breadcrumb link">cmd</a>
+          </li>
+        
+        <li>
+          <a href=".//cmd/vet@go1.17.5/index.html" data-gtmc="breadcrumb link" aria-current="location" data-test-id="UnitHeader-breadcrumbCurrent">
+            vet
+          </a>
+          
+            <button class="go-Button go-Button--inline go-Clipboard js-clipboard" title="Copy path to clipboard.
+
+cmd/vet" aria-label="Copy Path to Clipboard" data-to-copy="cmd/vet" data-gtmc="breadcrumbs button">
+              <img class="go-Icon go-Icon--accented" height="24" width="24" src="/static/shared/icon/content_copy_gm_grey_24dp.svg" alt=""/>
+            </button>
+          
+        
+      </li>
+    </ol>
+  </nav>
+
+  <div class="go-Main-headerContent">
+    
+  <div class="go-Main-headerTitle js-stickyHeader">
+    <a class="go-Main-headerLogo" href=".///index.html" aria-hidden="true" tabindex="-1" data-gtmc="header link" aria-label="Link to Go Homepage">
+      <img height="78" width="207" src="/static/shared/logo/go-blue.svg" alt="Go"/>
+    </a>
+    <h1 class="UnitHeader-titleHeading" data-test-id="UnitHeader-title">vet</h1>
+    
+      <span class="go-Chip go-Chip--inverted">command</span>
+    
+      <span class="go-Chip go-Chip--inverted">standard library</span>
+    
+    
+      
+        <button class="go-Button go-Button--inline go-Clipboard js-clipboard" title="Copy path to clipboard.
+
+cmd/vet" aria-label="Copy Path to Clipboard" data-to-copy="cmd/vet" data-gtmc="title button" tabindex="-1">
+          <img class="go-Icon go-Icon--accented" height="24" width="24" src="/static/shared/icon/content_copy_gm_grey_24dp.svg" alt=""/>
+        </button>
+      
+    
+  </div>
+
+    
+  <div class="go-Main-headerDetails">
+    
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-version">
+    <a href=".//cmd/vet/index.html" aria-label="Go to Versions" data-gtmc="header link"><span class="go-textSubtle">Version: </span>go1.17.5</a>
+    
+    <span class="DetailsHeader-badge--latest" data-test-id="UnitHeader-minorVersionBanner">
+      <span class="go-Chip DetailsHeader-span--latest">Latest</span>
+      <span class="go-Chip DetailsHeader-span--notAtLatest">
+        Latest
+        
+  <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+    <summary>
+      <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/alert_gm_grey_24dp.svg" alt="Warning"/>
+    </summary>
+    <p>This package is not in the latest version of its module.</p>
+  </details>
+
+      </span>
+      <a href=".//cmd/vet/index.html" aria-label="Go to Latest Version" data-gtmc="header link">
+        <span class="go-Chip go-Chip--alert DetailsHeader-span--goToLatest">Go to latest</span>
+      </a>
+    </span>
+  </span>
+
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-commitTime">
+    Published: Dec  9, 2021
+  </span>
+
+      
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-licenses">
+    License: <a href=".//cmd/vet/index.html" data-test-id="UnitHeader-license" aria-label="Go to Licenses" data-gtmc="header link">BSD-3-Clause</a>
+      
+    
+  </span>
+
+      
+        
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-imports">
+    <a href=".//cmd/vet/index.html" aria-label="Go to Imports" data-gtmc="header link">
+      <span class="go-textSubtle">Imports: </span>29
+    </a>
+  </span>
+
+        
+  <span class="go-Main-headerDetailItem" data-test-id="UnitHeader-importedby">
+    <a href=".//cmd/vet/index.html" aria-label="Go to Imported By" data-gtmc="header link">
+       <span class="go-textSubtle">Imported by: </span>0
+    </a>
+  </span>
+
+      
+    
+  </div>
+  
+  <div class="UnitHeader-overflowContainer">
+    <svg class="UnitHeader-overflowImage" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+      <path d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+    </svg>
+    <select class="UnitHeader-overflowSelect js-selectNav" tabindex="-1">
+      <option value="/">Main</option>
+      <option value="/cmd/vet?tab=versions">
+        Versions
+      </option>
+      <option value="/cmd/vet?tab=licenses">
+        Licenses
+      </option>
+      
+        <option value="/cmd/vet?tab=imports">
+          Imports
+        </option>
+        <option value="/cmd/vet?tab=importedby">
+          Imported By
+        </option>
+      
+    </select>
+  </div>
+
+
+  </div>
+
+</header>
+    <aside class="go-Main-aside  js-mainAside">
+  
+  <div class="UnitMeta">
+    <h2 class="go-textLabel">Details</h2>
+    
+  <ul class="UnitMeta-details">
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Valid <a href=".//go/go/+/go1.17.5:src/go.mod/index.html" target="_blank" rel="noopener">go.mod</a> file
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>
+          The Go module system was introduced in Go 1.11 and is the official dependency management
+          solution for Go.
+        </p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Redistributable license
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>
+          Redistributable licenses place minimal restrictions on how software can be used,
+          modified, and redistributed.
+        </p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Tagged version
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>Modules with tagged versions give importers more predictable builds.</p>
+      </details>
+    </li>
+    <li>
+      <details class="go-Tooltip js-tooltip" data-gtmc="tooltip">
+        <summary class="go-textSubtle">
+          
+  <img class="go-Icon go-Icon--accented" src="/static/shared/icon/check_circle_gm_grey_24dp.svg" alt="checked" height="24" width="24"/>
+
+          Stable version
+          <img class="go-Icon" src="/static/shared/icon/help_gm_grey_24dp.svg" alt="" height="24" width="24"/>
+        </summary>
+        <p>When a project reaches major version v1 it is considered stable.</p>
+      </details>
+    </li>
+    <li class="UnitMeta-detailsLearn">
+      <a href=".//about/index.html" data-gtmc="meta link">Learn more</a>
+    </li>
+  </ul>
+
+    <h2 class="go-textLabel">Repository</h2>
+    <div class="UnitMeta-repo">
+      
+        <a href=".//go/go/index.html" title="https://cs.opensource.google/go/go" target="_blank" rel="noopener">
+          cs.opensource.google/go/go
+        </a>
+      
+    </div>
+    
+  </div>
+
+</aside>
+    <nav class="go-Main-nav go-Main-nav--sticky js-mainNav" aria-label="Outline">
+  <div class="go-Main-navDesktop">
+    
+  <div class="UnitOutline-jumpTo">
+    <button class="UnitOutline-jumpToInput go-ShortcutKey js-jumpToInput" aria-controls="jump-to-modal" aria-label="Open Jump to Identifier" data-shortcut="f" data-shortcut-alt="find" data-test-id="jump-to-button" data-gtmc="outline button">
+      Jump to ...
+    </button>
+  </div>
+  <ul class="go-Tree js-tree" role="tree" aria-label="Outline">
+    
+    
+      <li>
+        <a href=".//cmd/vet/index.html" data-gtmc="outline link">
+          Documentation
+        </a>
+        
+<ul role="group" id="doc-outline">
+  
+    <li role="none">
+      <a href=".//cmd/vet/index.html" role="treeitem" aria-level="2" tabindex="-1" data-gtmc="doc outline link">Overview</a>
+    </li>
+  
+  
+</ul>
+
+      </li>
+    
+    
+      <li>
+        <a href=".//cmd/vet/index.html" data-gtmc="outline link">
+          Source Files
+        </a>
+      </li>
+    
+    
+  </ul>
+
+  </div>
+  <div class="go-Main-navMobile js-mainNavMobile">
+    <label class="go-Label">
+      <select class="go-Select">
+        
+          <option selected="" disabled="">Documentation</option>
+        
+      </select>
+    </label>
+  </div>
+</nav>
+    <article class="go-Main-article js-mainContent">
+  <div class="UnitDetails" data-test-id="UnitDetails" style="display: block;">
+    <div class="UnitDetails-content js-unitDetailsContent" data-test-id="UnitDetails-content">
+      
+      
+        
+          
+  <div class="UnitDoc">
+    <h2 class="UnitDoc-title" id="section-documentation">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/code_gm_grey_24dp.svg" alt=""/>
+      Documentation
+      <a class="UnitDoc-idLink" href=".//cmd/vet/index.html">¶</a>
+    </h2>
+    
+  
+    
+  
+
+    <div class="Documentation js-documentation">
+      
+        
+<div class="Documentation-content js-docContent"> <section class="Documentation-overview">
+    <h3 tabindex="-1" id="pkg-overview" class="Documentation-overviewHeader">Overview <a href=".//cmd/vet/index.html">¶</a></h3>
+
+<p>Vet examines Go source code and reports suspicious constructs, such as Printf
+calls whose arguments do not align with the format string. Vet uses heuristics
+that do not guarantee all reports are genuine problems, but it can find errors
+not caught by the compilers.
+</p><p>Vet is normally invoked through the go command.
+This command vets the package in the current directory:
+</p><pre>go vet
+</pre><p>whereas this one vets the packages whose path is provided:
+</p><pre>go vet my/project/...
+</pre><p>Use &#34;go help packages&#34; to see other ways of specifying which packages to vet.
+</p><p>Vet&#39;s exit code is non-zero for erroneous invocation of the tool or if a
+problem was reported, and 0 otherwise. Note that the tool does not
+check every possible problem and depends on unreliable heuristics,
+so it should be used as guidance only, not as a firm indicator of
+program correctness.
+</p><p>To list the available checks, run &#34;go tool vet help&#34;:
+</p><pre>asmdecl      report mismatches between assembly files and Go declarations
+assign       check for useless assignments
+atomic       check for common mistakes using the sync/atomic package
+bools        check for common mistakes involving boolean operators
+buildtag     check that +build tags are well-formed and correctly located
+cgocall      detect some violations of the cgo pointer passing rules
+composites   check for unkeyed composite literals
+copylocks    check for locks erroneously passed by value
+httpresponse check for mistakes using HTTP responses
+loopclosure  check references to loop variables from within nested functions
+lostcancel   check cancel func returned by context.WithCancel is called
+nilfunc      check for useless comparisons between functions and nil
+printf       check consistency of Printf format strings and arguments
+shift        check for shifts that equal or exceed the width of the integer
+stdmethods   check signature of methods of well-known interfaces
+structtag    check that struct field tags conform to reflect.StructTag.Get
+tests        check for common mistaken usages of tests and examples
+unmarshal    report passing non-pointer or non-interface values to unmarshal
+unreachable  check for unreachable code
+unsafeptr    check for invalid conversions of uintptr to unsafe.Pointer
+unusedresult check for unused results of calls to some functions
+</pre><p>For details and flags of a particular check, such as printf, run &#34;go tool vet help printf&#34;.
+</p><p>By default, all checks are performed.
+If any flags are explicitly set to true, only those tests are run.
+Conversely, if any flag is explicitly set to false, only those tests are disabled.
+Thus -printf=true runs the printf check,
+and -printf=false runs all checks except the printf check.
+</p><p>For information on writing a new check, see golang.org/x/tools/go/analysis.
+</p><p>Core flags:
+</p><pre>-c=N
+  	display offending line plus N lines of surrounding context
+-json
+  	emit analysis diagnostics (and errors) in JSON format
+</pre>
+</section></div> 
+
+
+
+
+      
+    </div>
+  </div>
+
+        
+      
+      
+        
+  <div class="UnitFiles js-unitFiles">
+    <h2 class="UnitFiles-title" id="section-sourcefiles">
+      <img class="go-Icon" height="24" width="24" src="/static/shared/icon/insert_drive_file_gm_grey_24dp.svg" alt=""/>
+      Source Files
+      <a class="UnitFiles-idLink" href=".//cmd/vet/index.html">¶</a>
+    </h2>
+    <div class="UnitFiles-titleLink">
+      <a href=".//go/go/+/go1.17.5:src/cmd/vet/index.html" target="_blank" rel="noopener">View all</a>
+    </div>
+    <div>
+      <ul class="UnitFiles-fileList"><li>
+            <a href=".//go/go/+/go1.17.5:src/cmd/vet/doc.go/index.html" target="_blank" rel="noopener" title="doc.go">doc.go</a>
+          </li><li>
+            <a href=".//go/go/+/go1.17.5:src/cmd/vet/main.go/index.html" target="_blank" rel="noopener" title="main.go">main.go</a>
+          </li></ul>
+    </div>
+  </div>
+
+      
+      
+    </div>
+  </div>
+</article>
+    <footer class="go-Main-footer"></footer>
+  </main>
+
+    
+  <footer class="go-Footer">
+    
+    <div class="go-Footer-links">
+      <div class="go-Footer-linkColumn">
+        <a href=".//solutions/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Why Go
+        </a>
+        <a href=".//solutions/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Use Cases
+        </a>
+        <a href=".//solutions/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Case Studies
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".///index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Get Started
+        </a>
+        <a href=".//index.html" class="go-Footer-link" data-gtmc="footer link">
+          Playground
+        </a>
+        <a href=".//index.html" class="go-Footer-link" data-gtmc="footer link">
+          Tour
+        </a>
+        <a href=".//questions/tagged/go/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Stack Overflow
+        </a>
+        <a href=".//help/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Help
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Packages
+        </a>
+        <a href=".//std/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Standard Library
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//project/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          About
+        </a>
+        <a href=".//dl//index.html" class="go-Footer-link" data-gtmc="footer link">Download</a>
+        <a href=".//blog/index.html" class="go-Footer-link" data-gtmc="footer link">Blog</a>
+        <a href=".//golang/go/issues/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Issue Tracker
+        </a>
+        <a href=".//doc/devel/release.html/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Release Notes
+        </a>
+        <a href=".//go-brand/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Brand Guidelines
+        </a>
+        <a href=".//conduct/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Code of Conduct
+        </a>
+      </div>
+      <div class="go-Footer-linkColumn">
+        <a href=".//golang/index.html" class="go-Footer-link go-Footer-link--primary" data-gtmc="footer link">
+          Connect
+        </a>
+        <a href=".//golang/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Twitter
+        </a>
+        <a href=".//golang/index.html" class="go-Footer-link" data-gtmc="footer link">GitHub</a>
+        <a href=".///index.html" class="go-Footer-link" data-gtmc="footer link">
+          Slack
+        </a>
+        <a href=".//r/golang/index.html" class="go-Footer-link" data-gtmc="footer link">
+          r/golang
+        </a>
+        <a href=".//pro/go/index.html" class="go-Footer-link" data-gtmc="footer link">
+          Meetup
+        </a>
+        <a href=".///index.html" class="go-Footer-link" data-gtmc="footer link">
+          Golang Weekly
+        </a>
+      </div>
+    </div>
+    <div class="go-Footer-bottom">
+      <img class="go-Footer-gopher" width="1431" height="901" src="/static/shared/gopher/pilot-bust-1431x901.svg" alt="Gopher in flight goggles"/>
+      <ul class="go-Footer-listRow">
+        <li class="go-Footer-listItem">
+          <a href=".//copyright/index.html" data-gtmc="footer link">Copyright</a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//tos/index.html" data-gtmc="footer link">Terms of Service</a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//intl/en/policies/privacy//index.html" data-gtmc="footer link" target="_blank" rel="noopener">
+            Privacy Policy
+          </a>
+        </li>
+        <li class="go-Footer-listItem">
+          <a href=".//s/pkgsite-feedback/index.html" target="_blank" rel="noopener" data-gtmc="footer link">
+            Report an Issue
+          </a>
+        </li>
+        <li class="go-Footer-listItem">
+          <button class="go-Button go-Button--text go-Footer-toggleTheme js-toggleTheme" aria-label="Toggle theme">
+            <img data-value="auto" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/brightness_6_gm_grey_24dp.svg" alt="System theme"/>
+            <img data-value="dark" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/brightness_2_gm_grey_24dp.svg" alt="Dark theme"/>
+            <img data-value="light" class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/light_mode_gm_grey_24dp.svg" alt="Light theme"/>
+          </button>
+          <button class="go-Button go-Button--text go-Footer-keyboard js-openShortcuts" aria-label="Open shorcuts modal">
+            <img class="go-Icon go-Icon--inverted" height="24" width="24" src="/static/shared/icon/keyboard_grey_24dp.svg" alt=""/>
+          </button>
+        </li>
+      </ul>
+      <a class="go-Footer-googleLogo" href=".//index.html" target="_blank" rel="noopener" data-gtmc="footer link">
+        <img class="go-Footer-googleLogoImg" height="24" width="72" src="/static/shared/logo/google-white.svg" alt="Google logo"/>
+      </a>
+    </div>
+  </footer>
+
+    
+  <dialog id="jump-to-modal" class="JumpDialog go-Modal go-Modal--md js-modal">
+    <form method="dialog" data-gmtc="jump to form" aria-label="Jump to Identifier">
+      <div class="Dialog-title go-Modal-header">
+        <h2>Jump to</h2>
+        <button class="go-Button go-Button--inline" type="button" data-modal-close="" data-gtmc="modal button" aria-label="Close">
+          <img class="go-Icon" height="24" width="24" src="/static/shared/icon/close_gm_grey_24dp.svg" alt=""/>
+        </button>
+      </div>
+      <div class="JumpDialog-filter">
+        <input class="JumpDialog-input go-Input" autocomplete="off" type="text"/>
+      </div>
+      <div class="JumpDialog-body go-Modal-body">
+        <div class="JumpDialog-list"></div>
+      </div>
+      <div class="go-Modal-actions">
+        <button class="go-Button" data-test-id="close-dialog">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="ShortcutsDialog go-Modal go-Modal--sm js-modal">
+    <form method="dialog">
+      <div class="go-Modal-header">
+        <h2>Keyboard shortcuts</h2>
+        <button class="go-Button go-Button--inline" type="button" data-modal-close="" data-gtmc="modal button" aria-label="Close">
+          <img class="go-Icon" height="24" width="24" src="/static/shared/icon/close_gm_grey_24dp.svg" alt=""/>
+        </button>
+      </div>
+      <div class="go-Modal-body">
+        <table>
+          <tbody>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>?</strong></td><td> : This menu</td>
+            </tr>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>/</strong></td><td> : Search site</td>
+            </tr>
+            <tr><td class="ShortcutsDialog-key">
+              <strong>f</strong> or <strong>F</strong></td><td> : Jump to</td>
+            </tr>
+            <tr>
+              <td class="ShortcutsDialog-key"><strong>y</strong> or <strong>Y</strong></td>
+              <td> : Canonical URL</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="go-Modal-actions">
+        <button class="go-Button" data-test-id="close-dialog">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+    
+      <script>
+        // this will throw if the querySelector can’t find the element
+        const gtmId = document.querySelector('.js-gtmID').dataset.gtmid;
+        if (!gtmId) {
+          throw new Error('Google Tag Manager ID not found');
+        }
+        loadScript(`https://www.googletagmanager.com/gtm.js?id=${gtmId}`);
+      </script>
+      <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+                height="0" width="0" style="display:none;visibility:hidden">
+        </iframe>
+      </noscript>
+    
+    
+  
+  <div class="js-canonicalURLPath" data-canonical-url-path="/cmd/vet@go1.17.5" hidden=""></div>
+  <script>
+    loadScript('/static/frontend/unit/main/main.js')
+  </script>
+
+  <script>
+    loadScript('/static/frontend/unit/unit.js')
+  </script>
+
+  
+</body></html>

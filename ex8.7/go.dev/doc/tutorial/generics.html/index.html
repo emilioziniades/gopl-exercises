@@ -1,0 +1,768 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Tutorial: Getting started with generics - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Tutorial: Getting started with generics</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<blockquote>
+<p><strong>Note: This is beta content.</strong></p>
+</blockquote>
+<p>This tutorial introduces the basics of generics in Go. With generics, you can
+declare and use functions or types that are written to work with any of a set
+of types provided by calling code.</p>
+<p>In this tutorial, you’ll declare two simple non-generic functions, then capture
+the same logic in a single generic function.</p>
+<p>You’ll progress through the following sections:</p>
+<ol>
+<li>Create a folder for your code.</li>
+<li>Add non-generic functions.</li>
+<li>Add a generic function to handle multiple types.</li>
+<li>Remove type arguments when calling the generic function.</li>
+<li>Declare a type constraint.</li>
+</ol>
+<p><strong>Note:</strong> For other tutorials, see <a href=".//doc/tutorial/index.html/index.html">Tutorials</a>.</p>
+<p><strong>Note:</strong> If you prefer, you can use
+<a href=".//play//index.html" rel="noreferrer" target="_blank">the Go playground in “Go dev branch” mode</a>
+to edit and run your program instead.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><strong>An installation of Go 1.18 Beta 1 or later.</strong> For installation
+instructions, see <a href=".//doc/tutorial/generics/index.html">Installing and using the beta</a>.</li>
+<li><strong>A tool to edit your code.</strong> Any text editor you have will work fine.</li>
+<li><strong>A command terminal.</strong> Go works well using any terminal on Linux and Mac,
+and on PowerShell or cmd in Windows.</li>
+</ul>
+<h4 id="installing_beta">Installing and using the beta</h4>
+<p>This tutorial requires the generics feature available in Beta 1. To install
+the beta, following these steps:</p>
+<ol>
+<li>
+<p>Run the following command to install the beta.</p>
+<pre><code>$ go install golang.org/dl/go1.18beta1@latest
+</code></pre>
+</li>
+<li>
+<p>Run the following command to download updates.</p>
+<pre><code>$ go1.18beta1 download
+</code></pre>
+</li>
+<li>
+<p>Run <code>go</code> commands using the beta instead of a released version of Go (if you
+have one).</p>
+<p>You can run commands with the beta either by using the beta name or by
+aliasing the beta to another name.</p>
+<ul>
+<li>
+<p>Using the beta name, you can run commands by invoking <code>go1.18beta1</code>
+instead of <code>go</code>:</p>
+<pre><code>$ go1.18beta1 version
+</code></pre>
+</li>
+<li>
+<p>By aliasing the beta name to another name, you can simplify the command:</p>
+<pre><code>$ alias go=go1.18beta1
+$ go version
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<p>Commands in this tutorial will assume you have aliased the beta name.</p>
+<h2 id="create_folder">Create a folder for your code</h2>
+<p>To begin, create a folder for the code you’ll write.</p>
+<ol>
+<li>
+<p>Open a command prompt and change to your home directory.</p>
+<p>On Linux or Mac:</p>
+<pre><code>$ cd
+</code></pre>
+<p>On Windows:</p>
+<pre><code>C:\&gt; cd %HOMEPATH%
+</code></pre>
+<p>The rest of the tutorial will show a $ as the prompt. The commands you use
+will work on Windows too.</p>
+</li>
+<li>
+<p>From the command prompt, create a directory for your code called generics.</p>
+<pre><code>$ mkdir generics
+$ cd generics
+</code></pre>
+</li>
+<li>
+<p>Create a module to hold your code.</p>
+<p>Run the <code>go mod init</code> command, giving it your new code’s module path.</p>
+<pre><code>$ go mod init example/generics
+go: creating new go.mod: module example/generics
+</code></pre>
+<p><strong>Note:</strong> For production code, you’d specify a module path that’s more specific
+to your own needs. For more, be sure to see
+<a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</p>
+</li>
+</ol>
+<p>Next, you’ll add some simple code to work with maps.</p>
+<h2 id="non_generic_functions">Add non-generic functions</h2>
+<p>In this step, you’ll add two functions that each add together the values of a
+map and return the total.</p>
+<p>You’re declaring two functions instead of one because you’re working with two
+different types of maps: one that stores <code>int64</code> values, and one that stores <code>float64</code> values.</p>
+<h4 id="write-the-code">Write the code</h4>
+<ol>
+<li>
+<p>Using your text editor, create a file called main.go in the generics
+directory. You’ll write your Go code in this file.</p>
+</li>
+<li>
+<p>Into main.go, at the top of the file, paste the following package
+declaration.</p>
+<pre><code>package main
+</code></pre>
+<p>A standalone program (as opposed to a library) is always in package <code>main</code>.</p>
+</li>
+<li>
+<p>Beneath the package declaration, paste the following two function
+declarations.</p>
+<pre><code>// SumInts adds together the values of m.
+func SumInts(m map[string]int64) int64 {
+    var s int64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+
+// SumFloats adds together the values of m.
+func SumFloats(m map[string]float64) float64 {
+    var s float64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>Declare two functions to add together the values of a map and return
+the sum.
+<ul>
+<li><code>SumFloats</code> takes a map of <code>string</code> to <code>float64</code> values.</li>
+<li><code>SumInts</code> takes a map of <code>string</code> to <code>int64</code> values.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>At the top of main.go, beneath the package declaration, paste the following
+<code>main</code> function to initialize the two maps and use them as arguments when
+calling the functions you declared in the preceding step.</p>
+<pre><code>func main() {
+// Initialize a map for the integer values
+ints := map[string]int64{
+    &#34;first&#34;: 34,
+    &#34;second&#34;: 12,
+}
+
+// Initialize a map for the float values
+floats := map[string]float64{
+    &#34;first&#34;: 35.98,
+    &#34;second&#34;: 26.99,
+}
+
+fmt.Printf(&#34;Non-Generic Sums: %v and %v\n&#34;,
+    SumInts(ints),
+    SumFloats(floats))
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>Initialize a map of <code>float64</code> values and a map of <code>int64</code> values, each
+with two entries.</li>
+<li>Call the two functions you declared earlier to find the sum of each
+map’s values.</li>
+<li>Print the result.</li>
+</ul>
+</li>
+<li>
+<p>Near the top of main.go, just beneath the package declaration, import the
+package you’ll need to support the code you’ve just written.</p>
+<p>The first lines of code should look like this:</p>
+<pre><code>package main
+
+import &#34;fmt&#34;
+</code></pre>
+</li>
+<li>
+<p>Save main.go.</p>
+</li>
+</ol>
+<h4 id="run-the-code">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Non-Generic Sums: 46 and 62.97
+</code></pre>
+<p>With generics, you can write one function here instead of two. Next, you’ll
+add a single generic function for maps containing either integer or float values.</p>
+<h2 id="add_generic_function">Add a generic function to handle multiple types</h2>
+<p>In this section, you’ll add a single generic function that can receive a map
+containing either integer or float values, effectively replacing the two
+functions you just wrote with a single function.</p>
+<p>To support values of either type, that single function will need a way to
+declare what types it supports. Calling code, on the other hand, will need a
+way to specify whether it is calling with an integer or float map.</p>
+<p>To support this, you’ll write a function that declares <em>type parameters</em> in
+addition to its ordinary function parameters. These type parameters make the
+function generic, enabling it to work with arguments of different types. You’ll
+call the function with <em>type arguments</em> and ordinary function arguments.</p>
+<p>Each type parameter has a <em>type constraint</em> that acts as a kind of meta-type
+for the type parameter. Each type constraint specifies the permissible type
+arguments that calling code can use for the respective type parameter.</p>
+<p>While a type parameter’s constraint typically represents a set of types, at
+compile time the type parameter stands for a single type – the type provided
+as a type argument by the calling code. If the type argument’s type isn’t
+allowed by the type parameter’s constraint, the code won’t compile.</p>
+<p>Keep in mind that a type parameter must support all the operations the generic
+code is performing on it. For example, if your function’s code were to try to
+perform <code>string</code> operations (such as indexing) on a type parameter whose
+constraint included numeric types, the code wouldn’t compile.</p>
+<p>In the code you’re about to write, you’ll use a constraint that allows either
+integer or float types.</p>
+<h4 id="write-the-code-1">Write the code</h4>
+<ol>
+<li>
+<p>Beneath the two functions you added previously, paste the following generic
+function.</p>
+<pre><code>// SumIntsOrFloats sums the values of map m. It supports both int64 and float64
+// as types for map values.
+func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>Declare a <code>SumIntsOrFloats</code> function with two type parameters (inside
+the square brackets), <code>K</code> and <code>V</code>, and one argument that uses the type
+parameters, <code>m</code> of type <code>map[K]V</code>. The function returns a value of
+type <code>V</code>.</li>
+<li>Specify for the <code>K</code> type parameter the type constraint <code>comparable</code>.
+Intended specifically for cases like these, the <code>comparable</code> constraint
+is predeclared in Go. It allows any type whose values may be used as an
+operand of the comparison operators <code>==</code> and <code>!=</code>. Go requires that map
+keys be comparable. So declaring <code>K</code> as <code>comparable</code> is necessary so you
+can use <code>K</code> as the key in the map variable. It also ensures that calling
+code uses an allowable type for map keys.</li>
+<li>Specify for the <code>V</code> type parameter a constraint that is a union of two
+types: <code>int64</code> and <code>float64</code>. Using <code>|</code> specifies a union of the two
+types, meaning that this constraint allows either type. Either type
+will be permitted by the compiler as an argument in the calling code.</li>
+<li>Specify that the <code>m</code> argument is of type <code>map[K]V</code>, where <code>K</code> and <code>V</code>
+are the types already specified for the type parameters. Note that we
+know <code>map[K]V</code> is a valid map type because <code>K</code> is a comparable type. If
+we hadn’t declared <code>K</code> comparable, the compiler would reject the
+reference to <code>map[K]V</code>.</li>
+</ul>
+</li>
+<li>
+<p>In main.go, beneath the code you already have, paste the following code.</p>
+<pre><code>fmt.Printf(&#34;Generic Sums: %v and %v\n&#34;,
+    SumIntsOrFloats[string, int64](ints),
+    SumIntsOrFloats[string, float64](floats))
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Call the generic function you just declared, passing each of the maps
+you created.</p>
+</li>
+<li>
+<p>Specify type arguments – the type names in square brackets – to be
+clear about the types that should replace type parameters in the
+function you’re calling.</p>
+<p>As you’ll see in the next section, you can often omit the type
+arguments in the function call. Go can often infer them from your code.</p>
+</li>
+<li>
+<p>Print the sums returned by the function.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="run-the-code-1">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Non-Generic Sums: 46 and 62.97
+Generic Sums: 46 and 62.97
+</code></pre>
+<p>To run your code, in each call the compiler replaced the type parameters with
+the concrete types specified in that call.</p>
+<p>In calling the generic function you wrote, you specified type arguments that
+told the compiler what types to use in place of the function’s type parameters.
+As you’ll see in the next section, in many cases you can omit these type
+arguments because the compiler can infer them.</p>
+<h2 id="remove_type_arguments">Remove type arguments when calling the generic function</h2>
+<p>In this section, you’ll add a modified version of the generic function call,
+making a small change to simplify the calling code. You’ll remove the type
+arguments, which aren’t needed in this case.</p>
+<p>You can omit type arguments in calling code when the Go compiler can infer the
+types you want to use. The compiler infers type arguments from the types of
+function arguments.</p>
+<p>Note that this isn’t always possible. For example, if you needed to call a
+generic function that had no arguments, you would need to include the type
+arguments in the function call.</p>
+<h4 id="write-the-code-2">Write the code</h4>
+<ul>
+<li>
+<p>In main.go, beneath the code you already have, paste the following code.</p>
+<pre><code>fmt.Printf(&#34;Generic Sums, type parameters inferred: %v and %v\n&#34;,
+    SumIntsOrFloats(ints),
+    SumIntsOrFloats(floats))
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>Call the generic function, omitting the type arguments.</li>
+</ul>
+</li>
+</ul>
+<h4 id="run-the-code-2">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Non-Generic Sums: 46 and 62.97
+Generic Sums: 46 and 62.97
+Generic Sums, type parameters inferred: 46 and 62.97
+</code></pre>
+<p>Next, you’ll further simplify the function by capturing the union of integers
+and floats into a type constraint you can reuse, such as from other code.</p>
+<h2 id="declare_type_constraint">Declare a type constraint</h2>
+<p>In this last section, you’ll move the constraint you defined earlier into its
+own interface so that you can reuse it in multiple places. Declaring
+constraints in this way helps streamline code, such as when a constraint is
+more complex.</p>
+<p>You declare a <em>type constraint</em> as an interface. The constraint allows any
+type implementing the interface. For example, if you declare a type constraint
+interface with three methods, then use it with a type parameter in a generic
+function, type arguments used to call the function must have all of those
+methods.</p>
+<p>Constraint interfaces can also refer to specific types, as you’ll see in this
+section.</p>
+<h4 id="write-the-code-3">Write the code</h4>
+<ol>
+<li>
+<p>Just above <code>main</code>, immediately after the import statements, paste the
+following code to declare a type constraint.</p>
+<pre><code>type Number interface {
+    int64 | float64
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Declare the <code>Number</code> interface type to use as a type constraint.</p>
+</li>
+<li>
+<p>Declare a union of <code>int64</code> and <code>float64</code> inside the interface.</p>
+<p>Essentially, you’re moving the union from the function declaration
+into a new type constraint. That way, when you want to constrain a type
+parameter to either <code>int64</code> or <code>float64</code>, you can use this <code>Number</code>
+type constraint instead of writing out <code>int64 | float64</code>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Beneath the functions you already have, paste the following generic
+<code>SumNumbers</code> function.</p>
+<pre><code>// SumNumbers sums the values of map m. Its supports both integers
+// and floats as map values.
+func SumNumbers[K comparable, V Number](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>Declare a generic function with the same logic as the generic function
+you declared previously, but with the new interface type instead of the
+union as the type constraint. As before, you use the type parameters
+for the argument and return types.</li>
+</ul>
+</li>
+<li>
+<p>In main.go, beneath the code you already have, paste the following code.</p>
+<pre><code>fmt.Printf(&#34;Generic Sums with Constraint: %v and %v\n&#34;,
+    SumNumbers(ints),
+    SumNumbers(floats))
+</code></pre>
+<p>In this code, you:</p>
+<ul>
+<li>
+<p>Call <code>SumNumbers</code> with each map, printing the sum from the values of
+each.</p>
+<p>As in the preceding section, you omit the type arguments (the type
+names in square brackets) in calls to the generic function. The Go
+compiler can infer the type argument from other arguments.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="run-the-code-3">Run the code</h4>
+<p>From the command line in the directory containing main.go, run the code.</p>
+<pre><code>$ go run .
+Non-Generic Sums: 46 and 62.97
+Generic Sums: 46 and 62.97
+Generic Sums, type parameters inferred: 46 and 62.97
+Generic Sums with Constraint: 46 and 62.97
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Nicely done! You’ve just introduced yourself to generics in Go.</p>
+<p>If you want to keep experimenting, you can try writing the <code>Number</code> interface
+in terms of <code>constraints.Integer</code> and <code>constraints.Float</code>, to allow more
+numeric types.</p>
+<p>Suggested next topics:</p>
+<ul>
+<li>The <a href=".//welcome/1/index.html" rel="noreferrer" target="_blank">Go Tour</a> is a great step-by-step
+introduction to Go fundamentals.</li>
+<li>You’ll find useful Go best practices described in
+<a href=".//doc/effective_go/index.html">Effective Go</a> and
+<a href=".//doc/code/index.html">How to write Go code</a>.</li>
+</ul>
+<h2 id="completed_code">Completed code</h2>
+<p>You can run this program in the
+<a href=".//play/p/apNmfVwogK0/index.html" rel="noreferrer" target="_blank">Go playground</a>. On the
+playground simply click the <strong>Run</strong> button.</p>
+<pre><code>package main
+
+import &#34;fmt&#34;
+
+type Number interface {
+    int64 | float64
+}
+
+func main() {
+    // Initialize a map for the integer values
+    ints := map[string]int64{
+        &#34;first&#34;: 34,
+        &#34;second&#34;: 12,
+    }
+
+    // Initialize a map for the float values
+    floats := map[string]float64{
+        &#34;first&#34;: 35.98,
+        &#34;second&#34;: 26.99,
+    }
+
+    fmt.Printf(&#34;Non-Generic Sums: %v and %v\n&#34;,
+        SumInts(ints),
+        SumFloats(floats))
+
+    fmt.Printf(&#34;Generic Sums: %v and %v\n&#34;,
+        SumIntsOrFloats[string, int64](ints),
+        SumIntsOrFloats[string, float64](floats))
+
+    fmt.Printf(&#34;Generic Sums, type parameters inferred: %v and %v\n&#34;,
+        SumIntsOrFloats(ints),
+        SumIntsOrFloats(floats))
+
+    fmt.Printf(&#34;Generic Sums with Constraint: %v and %v\n&#34;,
+        SumNumbers(ints),
+        SumNumbers(floats))
+}
+
+// SumInts adds together the values of m.
+func SumInts(m map[string]int64) int64 {
+    var s int64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+
+// SumFloats adds together the values of m.
+func SumFloats(m map[string]float64) float64 {
+    var s float64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+
+// SumIntsOrFloats sums the values of map m. It supports both floats and integers
+// as map values.
+func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+
+// SumNumbers sums the values of map m. Its supports both integers
+// and floats as map values.
+func SumNumbers[K comparable, V Number](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+</code></pre>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

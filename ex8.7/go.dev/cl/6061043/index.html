@@ -1,0 +1,800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>
+    
+    
+      
+    
+    
+      Issue 6061043: code review 6061043: cmd/gc: fix addresses escaping through closures called ... -
+    
+    Code Review
+  </title>
+  <link rel="icon" href="/static/favicon.ico"/>
+  <link type="text/css" rel="stylesheet" href="/static/styles.css?v=f62528b
+"/>
+  <script type="text/javascript" src="/static/script.js?v=f62528b
+"></script>
+  <link rel="alternate" type="application/atom+xml" title="Recent Issues" href="/rss/all"/>
+   
+   
+     <link rel="alternate" type="application/atom+xml" title="Issue 6061043" href="/rss/issue/6061043"/>
+   
+
+   <!-- head block to insert js/css for forms processing -->
+   
+   <!-- /head -->
+</head>
+<body onunload="M_unloadPage();">
+
+<!-- Begin help window -->
+<script type="text/javascript"><!--
+var xsrfToken = '';
+var helpDisplayed = false;
+document.onclick = M_clickCommon;
+var media_url = "/static/";
+var base_url = "/";
+
+var publish_link = "/6061043/publish";
+
+// -->
+</script>
+<div id="help" style="display: none;">
+
+<div style="font-size: medium; text-align: center;">Keyboard Shortcuts</div>
+<hr/>
+<table class="shortcuts">
+  <tbody><tr valign="top">
+    <td>
+      <table>
+        <tbody><tr>
+          <td></td><th>File</th>
+        </tr>
+        <tr>
+          <td><span>u</span> <b>:</b></td><td>up to issue</td>
+        </tr>
+        <tr>
+          <td><span>m</span> <b>:</b></td><td>publish + mail comments</td>
+        </tr>
+	<tr>
+	  <td><span>M</span> <b>:</b></td><td>edit review message</td>
+	</tr>
+        <tr>
+          <td><span>j</span> / <span>k</span> <b>:</b></td><td>jump to file after / before current file</td>
+        </tr>
+        <tr>
+          <td><span>J</span> / <span>K</span> <b>:</b></td><td>jump to next file with a comment after / before current file</td>
+        </tr>
+        <tr>
+          <td></td><th>Side-by-side diff</th>
+        </tr>
+        <tr>
+          <td><span>i</span> <b>:</b></td><td>toggle intra-line diffs</td>
+        </tr>
+        <tr>
+          <td><span>e</span> <b>:</b></td><td>expand all comments</td>
+        </tr>
+        <tr>
+          <td><span>c</span> <b>:</b></td><td>collapse all comments</td>
+        </tr>
+        <tr>
+          <td><span>s</span> <b>:</b></td><td>toggle showing all comments</td>
+        </tr>
+        <tr>
+          <td><span>n</span> / <span>p</span> <b>:</b></td><td>next / previous diff chunk or comment</td>
+        </tr>
+        <tr>
+          <td><span>N</span> / <span>P</span> <b>:</b></td><td>next / previous comment</td>
+        </tr>
+        <tr>
+          <td><span>&lt;Up&gt;</span> / <span>&lt;Down&gt;</span> <b>:</b></td><td>next / previous line</td>
+        </tr>
+        <tr>
+          <td><span>&lt;Enter&gt;</span> <b>:</b></td><td>respond to / edit current comment</td>
+        </tr>
+        <tr>
+          <td><span>d</span> <b>:</b></td><td>mark current comment as done</td>
+        </tr>
+      </tbody></table>
+    </td>
+    <td>
+      <table>
+        <tbody><tr>
+         <td></td><th>Issue</th>
+        </tr>
+        <tr>
+          <td><span>u</span> <b>:</b></td><td>up to list of issues</td>
+        </tr>
+        <tr>
+          <td><span>m</span> <b>:</b></td><td>publish + mail comments</td>
+        </tr>
+	<tr>
+	  <td><span>j</span> / <span>k</span> <b>:</b></td><td>jump to patch after / before current patch</td>
+	</tr>
+	<tr>
+	  <td><span>o</span> / <span>&lt;Enter&gt;</span> <b>:</b></td><td>open current patch in side-by-side view</td>
+	</tr>
+	<tr>
+	  <td><span>i</span> <b>:</b></td><td>open current patch in unified diff view</td>
+	</tr>
+        <tr><td> </td></tr>
+        <tr><td></td><th>Issue List</th></tr>
+        <tr>
+          <td><span>j</span> / <span>k</span> <b>:</b></td><td>jump to issue after / before current issue</td>
+        </tr>
+        <tr>
+          <td><span>o</span> / <span>&lt;Enter&gt;</span> <b>:</b></td><td>open current issue</td>
+        </tr>
+        <tr>
+	  <td><span>#</span> <b>:</b></td>
+	  <td>close issue</td>
+	</tr>
+        <tr><td> </td></tr>
+        <tr>
+          <td></td><th>Comment/message editing</th>
+        </tr>
+        <tr>
+          <td><span>&lt;Ctrl&gt;</span> + <span>s</span> or <span>&lt;Ctrl&gt;</span> + <span>Enter</span> <b>:</b></td><td>save comment</td>
+        </tr>
+        <tr>
+          <td><span>&lt;Esc&gt;</span> <b>:</b></td><td>cancel edit</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+
+</tbody></table>
+</div>
+<!-- End help window -->
+
+<div align="right">
+
+<div style="float:left; font-weight:bold"><i>Rietveld</i> Code Review Tool</div>
+
+
+
+
+
+<a class="novisit" target="_blank" href=".//rietveld-codereview/rietveld/wiki/index.html">Help</a>
+|
+<a class="novisit" target="_blank" href=".//rietveld-codereview/rietveld/issues/index.html">Bug tracker</a>
+|
+<a class="novisit" target="_blank" href=".//group/codereview-discuss/index.html">Discussion group</a>
+|
+<a class="novisit" target="_blank" href=".//rietveld-codereview/rietveld/index.html">Source code</a>
+|
+
+<a class="novisit" href=".//ServiceLogin/index.html">Sign in</a>
+
+</div>
+
+<div class="counter">(2744)</div>
+<div class="mainmenu">
+  
+  <a href=".///index.html" class="active">Issues</a>
+  <a href=".//repos/index.html">Repositories</a>
+  <a href=".//search/index.html">Search</a>
+
+</div>
+<div class="mainmenu2">
+  
+  
+    <a class="novisit" href=".///index.html">Open Issues</a>
+    |
+    <a class="novisit" href=".///index.html">Closed Issues</a>
+    |
+    <a class="novisit" href=".//all/index.html">All Issues</a>
+    |
+    <a class="novisit" href=".//ServiceLogin/index.html">Sign in</a>
+    with your <a href=".//accounts/NewAccount/index.html">Google
+    Account</a> to create issues and add comments
+  
+
+</div>
+
+<div>
+
+  <h2>
+    <span id="issue-star-6061043">
+  
+    
+  
+</span>
+
+
+    Issue <a href=".//6061043//index.html" onmouseover="M_showPopUp(this, &#39;popup-issue&#39;);">
+            6061043</a>:
+    code review 6061043: cmd/gc: fix addresses escaping through closures called ...  (Closed) 
+  </h2>
+
+  <table class="issue-details" border="0" width="100%">
+    <tbody><tr valign="top">
+
+      <td class="meta" width="20%">
+        
+          <div>
+            
+              <span class="disabled">Can&#39;t Edit</span>
+            
+            <br/>
+            
+              <span class="disabled">Can&#39;t Publish+Mail</span>
+            
+            
+              <br/>
+              <a class="novisit" href=".//6061043/diff/4001/src/cmd/gc/esc.c/index.html">
+                <b>Start Review</b>
+              </a>
+            
+          </div>
+        
+        <div class="issue_details_sidebar">
+          <div><b>Created:</b><br/>
+            9 years, 8 months ago by <a href=".//user/lvd/index.html" onmouseover="M_showUserInfoPopup(this)">lvd</a>
+          </div>
+          <div><b>Modified:</b><br/>
+            9 years, 8 months ago
+          </div>
+          <div><b>Reviewers:</b><br/>
+            
+          </div>
+          
+          <div><b>CC:</b><br/>
+            rsc, golang-dev
+          </div>
+          
+          
+          <div><b>Visibility:</b><br/>
+            
+                Public.
+            
+          </div>
+          
+        </div>
+      </td>
+
+      <td style="padding-left: .8em; padding-right: .8em;" width="80%">
+        
+
+
+
+
+  <h3><a id="issue-description-pointer" href=".//index.html" class="toggled-section opentriangle">
+    Description</a></h3>
+  <div id="issue-description">cmd/gc: fix addresses escaping through closures called in-place.
+
+Fixes issue 3545.
+  </div>
+
+
+
+
+  <h3>
+    <a id="ps-1-pointer" href=".//6061043//index.html" onclick="M_toggleSectionForPS(&#39;6061043&#39;, &#39;1&#39;)" class="toggled-section ">
+      Patch Set 1
+      
+      <span class="anchor">#</span>
+    </a>
+    
+  </h3>
+
+  
+
+  <div id="ps-1" style="display:none">
+  
+  </div>
+  
+
+  <h3>
+    <a id="ps-2001-pointer" href=".//6061043//index.html" onclick="M_toggleSectionForPS(&#39;6061043&#39;, &#39;2001&#39;)" class="toggled-section ">
+      Patch Set 2
+      : diff -r 762426ee0cca https://go.googlecode.com/hg/
+      <span class="anchor">#</span>
+    </a>
+    
+  </h3>
+
+  
+
+  <div id="ps-2001" style="display:none">
+  
+  </div>
+  
+
+  <h3>
+    <a id="ps-4001-pointer" href=".//6061043//index.html" onclick="M_toggleSectionForPS(&#39;6061043&#39;, &#39;4001&#39;)" class="toggled-section opentriangle">
+      Patch Set 3
+      : diff -r 316890203045 https://go.googlecode.com/hg/
+      <span class="anchor">#</span>
+    </a>
+    
+  </h3>
+
+  
+    <div>
+      <i>Total comments:</i> 3
+      
+    </div>
+  
+
+  <div id="ps-4001" style="">
+    
+<div class="issue-list">
+
+  <div class="pagination">
+    <div style="float: left;">
+      <i>Created:</i> 9 years, 8 months ago
+    </div>
+    <div style="float: right;">
+      
+        Download
+          <a href=".//download/issue6061043_4001.diff/index.html" title="Patchset in text format">[raw]</a>
+          <a href=".//tarball/6061043/4001/index.html" title="Tarball containing the original and patched files">[tar.bz2]</a>
+      
+      
+        
+      
+    </div>
+    <div style="clear:both;"></div>
+  </div>
+
+  <table id="queues" style="clear:both;">
+    <tbody><tr align="left">
+      <th colspan="2"></th>
+      <th>Unified diffs</th>
+      <th>Side-by-side diffs</th>
+      <th>Delta from patch set</th>
+      <th colspan="3">Stats <font style="font-weight: normal">(<i>+71 lines, -30 lines</i>)</font></th>
+      <th>Patch</th>
+    </tr>
+
+    
+      <tr name="patch">
+        <td class="first" width="14"><img src="/static/closedtriangle.gif" style="visibility: hidden;" width="12" height="9"/></td>
+        <td style="white-space: nowrap">M</td>
+        <td>
+          <a class="noul" href=".//6061043/patch/4001/3/index.html">
+            src/cmd/gc/esc.c
+          </a>
+        </td>
+        <td>
+          <a class="noul" href=".//6061043/diff/4001/src/cmd/gc/esc.c/index.html">
+            View
+          </a>
+        </td>
+        <td style="white-space: nowrap">
+        
+          <a href=".//6061043/diff2/1:4001/src/cmd/gc/esc.c/index.html" title="Delta from patch set 1">1</a>
+        
+        </td>
+        
+          <td style="white-space: nowrap">9 chunks</td>
+          <td style="white-space: nowrap">+40 lines, -30 lines</td>
+        
+        <td style="white-space: nowrap">
+          
+            0 comments
+            
+            
+          
+        </td>
+        <td>
+          <a href=".//download/issue6061043_4001_3.diff/index.html" title="Download patch for src/cmd/gc/esc.c">
+            Download
+          </a>
+        </td>
+      </tr>
+    
+      <tr name="patch">
+        <td class="first" width="14"><img src="/static/closedtriangle.gif" style="visibility: hidden;" width="12" height="9"/></td>
+        <td style="white-space: nowrap">M</td>
+        <td>
+          <a class="noul" href=".//6061043/patch/4001/4/index.html">
+            test/escape2.go
+          </a>
+        </td>
+        <td>
+          <a class="noul" href=".//6061043/diff/4001/test/escape2.go/index.html">
+            View
+          </a>
+        </td>
+        <td style="white-space: nowrap">
+        
+          <a href=".//6061043/diff2/1:4001/test/escape2.go/index.html" title="Delta from patch set 1">1</a>
+        
+        </td>
+        
+          <td style="white-space: nowrap">1 chunk</td>
+          <td style="white-space: nowrap">+31 lines, -0 lines</td>
+        
+        <td style="white-space: nowrap">
+          <b>
+            3 comments
+            
+            
+          </b>
+        </td>
+        <td>
+          <a href=".//download/issue6061043_4001_4.diff/index.html" title="Download patch for test/escape2.go">
+            Download
+          </a>
+        </td>
+      </tr>
+    
+
+  </tbody></table>
+</div>
+
+  
+  </div>
+  
+    <script language="JavaScript" type="text/javascript">
+         <!--
+         var lastPSId = 4001;
+         // -->
+       </script>
+  
+
+
+
+
+  <h3>
+    <a id="messages-pointer" href=".//index.html" class="toggled-section opentriangle">
+      Messages
+    </a>
+  </h3>
+
+  <div><i>Total messages: 4</i></div>
+
+  <div id="messages">
+    <div style="margin-bottom: .5em;">
+      <a href=".//index.html">
+        Expand All Messages</a>
+      |
+      <a href=".//index.html">
+        Collapse All Messages</a>
+    </div>
+
+    
+      <div class="message   " id="msg1" name="0">
+        <div class="header">
+          <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <tbody><tr class="comment_title" onclick="M_switchChangelistComment(0)">
+              <td style="padding-left: 5px; white-space: nowrap;">
+                <b>lvd</b>
+              </td>
+              <td width="100%" style="overflow:hidden;">
+                <table style="table-layout:fixed; white-space: nowrap;" width="100%">
+                  <tbody><tr>
+                    <td>
+                      <span style="white-space: nowrap; overflow: hidden;" class="extra" id="cl-preview-0">
+                          Hello rsc@golang.org (cc: golang-dev@googlegroups.com), I&#39;d like you to review this change to https://go.googlecode.com/hg/
+                      </span>
+                    </td>
+                  </tr>
+                </tbody></table>
+              </td>
+              <td align="right" style="white-space: nowrap; padding-right: 5px; padding-left: 3px;">
+                9 years, 8 months ago
+		(2012-04-18 13:56:18 UTC)
+                <a href=".//6061043/index.html">#1</a>
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+        <div id="cl-comment-0" style="display: none;">
+          <div class="message-body">
+            
+            <pre name="cl-message-0">Hello <a href=".//index.html">rsc@golang.org</a> (cc: <a href=".//index.html">golang-dev@googlegroups.com</a>),
+
+I&#39;d like you to review this change to
+<a href=".//hg//index.html" rel="nofollow">https://go.googlecode.com/hg/</a></pre>
+          </div>
+          <div class="message-actions">
+            
+              <a href=".//ServiceLogin/index.html">Sign in</a> to reply to this message.
+            
+          </div>
+        </div>
+
+      </div>
+    
+      <div class="message  approval " id="msg2" name="1">
+        <div class="header">
+          <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <tbody><tr class="comment_title" onclick="M_switchChangelistComment(1)">
+              <td style="padding-left: 5px; white-space: nowrap;">
+                <b>rsc</b>
+              </td>
+              <td width="100%" style="overflow:hidden;">
+                <table style="table-layout:fixed; white-space: nowrap;" width="100%">
+                  <tbody><tr>
+                    <td>
+                      <span style="white-space: nowrap; overflow: hidden;" class="extra" id="cl-preview-1">
+                          LGTM I added a bunch more tests to escape2.go. Will submit.
+                      </span>
+                    </td>
+                  </tr>
+                </tbody></table>
+              </td>
+              <td align="right" style="white-space: nowrap; padding-right: 5px; padding-left: 3px;">
+                9 years, 8 months ago
+		(2012-04-23 19:15:21 UTC)
+                <a href=".//6061043/index.html">#2</a>
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+        <div id="cl-comment-1" style="display: none;">
+          <div class="message-body">
+            
+            <pre name="cl-message-1">LGTM
+
+I added a bunch more tests to escape2.go.
+Will submit.
+</pre>
+          </div>
+          <div class="message-actions">
+            
+              <a href=".//ServiceLogin/index.html">Sign in</a> to reply to this message.
+            
+          </div>
+        </div>
+
+      </div>
+    
+      <div class="message   " id="msg3" name="2">
+        <div class="header">
+          <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <tbody><tr class="comment_title" onclick="M_switchChangelistComment(2)">
+              <td style="padding-left: 5px; white-space: nowrap;">
+                <b>rsc</b>
+              </td>
+              <td width="100%" style="overflow:hidden;">
+                <table style="table-layout:fixed; white-space: nowrap;" width="100%">
+                  <tbody><tr>
+                    <td>
+                      <span style="white-space: nowrap; overflow: hidden;" class="extra" id="cl-preview-2">
+                          *** Submitted as http://code.google.com/p/go/source/detail?r=a890477d3dfb *** cmd/gc: fix addresses escaping through closures called in-place. Fixes issue ...
+                      </span>
+                    </td>
+                  </tr>
+                </tbody></table>
+              </td>
+              <td align="right" style="white-space: nowrap; padding-right: 5px; padding-left: 3px;">
+                9 years, 8 months ago
+		(2012-04-23 19:42:29 UTC)
+                <a href=".//6061043/index.html">#3</a>
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+        <div id="cl-comment-2" style="display: none;">
+          <div class="message-body">
+            
+            <pre name="cl-message-2">*** Submitted as <a href=".//p/go/source/detail/index.html" rel="nofollow">http://code.google.com/p/go/source/detail?r=a890477d3dfb</a> ***
+
+cmd/gc: fix addresses escaping through closures called in-place.
+
+Fixes issue 3545.
+
+R=rsc
+CC=golang-dev
+<a href=".//6061043/index.html" rel="nofollow">http://codereview.appspot.com/6061043</a>
+
+Committer: Russ Cox &lt;<a href=".//index.html">rsc@golang.org</a>&gt;
+
+<a href=".//6061043/diff/4001/test/escape2.go/index.html" rel="nofollow">http://codereview.appspot.com/6061043/diff/4001/test/escape2.go</a>
+File test/escape2.go (right):
+
+<a href=".//6061043/diff/4001/test/escape2.go/index.html" rel="nofollow">http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1069</a>
+test/escape2.go:1069: func foo124(x **int) {	// ERROR &#34;does not escape&#34;
+Please put the variable names in these patterns, like above.  In theory there is
+just one thing on each line, but it&#39;s safer to be explicit.
+
+Also, please make a foo124a with x = p where x is the global var x *int instead
+of a function parameter.
+
+<a href=".//6061043/diff/4001/test/escape2.go/index.html" rel="nofollow">http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1077</a>
+test/escape2.go:1077: func foo125(ch chan *int) {	// ERROR &#34;does not escape&#34;
+Please make a foo125a variant with defer func instead of just func.
+
+<a href=".//6061043/diff/4001/test/escape2.go/index.html" rel="nofollow">http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1090</a>
+test/escape2.go:1090: // px = &amp;i  // would escape i-&gt; should move to heap, as
+should the one below
+Confusing.  Delete.</pre>
+          </div>
+          <div class="message-actions">
+            
+              <a href=".//ServiceLogin/index.html">Sign in</a> to reply to this message.
+            
+          </div>
+        </div>
+
+      </div>
+    
+      <div class="message   " id="msg4" name="3">
+        <div class="header">
+          <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <tbody><tr class="comment_title" onclick="M_switchChangelistComment(3)">
+              <td style="padding-left: 5px; white-space: nowrap;">
+                <b>lvd</b>
+              </td>
+              <td width="100%" style="overflow:hidden;">
+                <table style="table-layout:fixed; white-space: nowrap;" width="100%">
+                  <tbody><tr>
+                    <td>
+                      <span style="white-space: nowrap; overflow: hidden; display: none;" class="extra" id="cl-preview-3">
+                          thanks On Mon, Apr 23, 2012 at 21:42, &lt;rsc@golang.org&gt; wrote: &gt; *** Submitted as &gt; ...
+                      </span>
+                    </td>
+                  </tr>
+                </tbody></table>
+              </td>
+              <td align="right" style="white-space: nowrap; padding-right: 5px; padding-left: 3px;">
+                9 years, 8 months ago
+		(2012-04-23 20:03:43 UTC)
+                <a href=".//6061043/index.html">#4</a>
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+        <div id="cl-comment-3">
+          <div class="message-body">
+            
+            <pre name="cl-message-3">thanks
+
+On Mon, Apr 23, 2012 at 21:42, &lt;<a href=".//index.html">rsc@golang.org</a>&gt; wrote:
+
+&gt; *** Submitted as
+&gt;
+<a href=".//p/go/**source/detail/index.html" rel="nofollow">http://code.google.com/p/go/**source/detail?r=a890477d3dfb&lt;http://code.google...</a>
+&gt;
+&gt;
+&gt; cmd/gc: fix addresses escaping through closures called in-place.
+&gt;
+&gt; Fixes issue 3545.
+&gt;
+&gt; R=rsc
+&gt; CC=golang-dev
+&gt; <a href=".//**6061043&lt;http://codereview.appspot.com/6061043&gt;/index.html" rel="nofollow">http://codereview.appspot.com/**6061043&lt;http://codereview.appspot.com/6061043&gt;</a>
+&gt;
+&gt; Committer: Russ Cox &lt;<a href=".//index.html">rsc@golang.org</a>&gt;
+&gt;
+&gt;
+&gt;
+&gt;
+<a href=".//**6061043/diff/4001/test/**escape2.go&lt;http://codereview.appspot.com/6061043/diff/4001/test/escape2.go&gt;/index.html" rel="nofollow">http://codereview.appspot.com/**6061043/diff/4001/test/**escape2.go&lt;http://co...</a>
+&gt; File test/escape2.go (right):
+&gt;
+&gt; <a href=".//**6061043/diff/4001/test/**/index.html" rel="nofollow">http://codereview.appspot.com/**6061043/diff/4001/test/**</a>
+&gt;
+escape2.go#newcode1069&lt;http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1069&gt;
+&gt; test/escape2.go:1069: func foo124(x **int) {    // ERROR &#34;does not escape&#34;
+&gt; Please put the variable names in these patterns, like above.  In theory
+&gt; there is just one thing on each line, but it&#39;s safer to be explicit.
+&gt;
+&gt; Also, please make a foo124a with x = p where x is the global var x *int
+&gt; instead of a function parameter.
+&gt;
+&gt; <a href=".//**6061043/diff/4001/test/**/index.html" rel="nofollow">http://codereview.appspot.com/**6061043/diff/4001/test/**</a>
+&gt;
+escape2.go#newcode1077&lt;http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1077&gt;
+&gt; test/escape2.go:1077: func foo125(ch chan *int) {       // ERROR &#34;does not
+&gt; escape&#34;
+&gt; Please make a foo125a variant with defer func instead of just func.
+&gt;
+&gt; <a href=".//**6061043/diff/4001/test/**/index.html" rel="nofollow">http://codereview.appspot.com/**6061043/diff/4001/test/**</a>
+&gt;
+escape2.go#newcode1090&lt;http://codereview.appspot.com/6061043/diff/4001/test/escape2.go#newcode1090&gt;
+&gt; test/escape2.go:1090: // px = &amp;i  // would escape i-&gt; should move to
+&gt; heap, as should the one below
+&gt; Confusing.  Delete.
+&gt;
+&gt;
+<a href=".//**6061043/&lt;http://codereview.appspot.com/6061043/&gt;/index.html" rel="nofollow">http://codereview.appspot.com/**6061043/&lt;http://codereview.appspot.com/6061043/&gt;</a>
+&gt;
+</pre>
+          </div>
+          <div class="message-actions">
+            
+              <a href=".//ServiceLogin/index.html">Sign in</a> to reply to this message.
+            
+          </div>
+        </div>
+
+      </div>
+    
+
+    <div>
+      <a href=".//index.html">
+      Expand All Messages</a>
+      |
+      <a href=".//index.html">
+        Collapse All Messages</a>
+    </div>
+
+  </div>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var lastMsgID = 4;
+// -->
+</script>
+
+
+
+
+<script language="JavaScript" type="text/javascript">
+  <!--
+    document.onkeydown = M_changelistKeyDown;
+    var dashboardState = new M_DashboardState(window, 'patch', 'M_CLPatchMarker');
+    var issueId = 6061043;
+    M_toggleIssueOverviewByAnchor();
+  // -->
+</script>
+
+
+
+
+
+      </td>
+    </tr>
+  </tbody></table>
+
+</div>
+
+  
+    <div class="popup" id="popup-issue">
+      <b>Issue 6061043: code review 6061043: cmd/gc: fix addresses escaping through closures called ...
+     (Closed) </b><br/>
+      Created 9 years, 8 months ago by lvd<br/>
+      Modified 9 years, 8 months ago<br/>
+      Reviewers: <br/>
+      Base URL: <br/>
+      Comments: 3
+      
+    </div>
+  
+
+
+<p></p>
+<div style="float: left;">
+  <a target="_blank" href=".//appengine//index.html"><img border="0" src="/static/appengine-noborder-120x30.gif" alt="Powered by Google App Engine"/></a>
+</div>
+
+<div class="extra" style="font-size: 9pt; float: right; text-align: right;">
+  <div style="height:14px;">
+  <img src="/static/rss.gif" alt="RSS Feeds" width="14" height="14" align="top"/>
+  <a href=".//rss/all/index.html">Recent Issues</a>
+  
+  
+  |
+  <a href=".//rss/issue/6061043/index.html">This issue</a>
+  
+  </div>
+  <div style="margin-top: .3em;">This is Rietveld <a href=".//rietveld-codereview/rietveld/index.html">f62528b
+</a></div>
+</div>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4803694-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+</body></html>

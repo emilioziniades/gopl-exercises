@@ -1,0 +1,1325 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Go 1.13 Release Notes - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Go 1.13 Release Notes</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+
+
+
+
+<!--
+NOTE: In this document and others in this directory, the convention is to
+set fixed-width phrases with non-fixed-width spaces, as in
+<code>hello</code> <code>world</code>.
+Do not send CLs removing the interior tags from such phrases.
+-->
+
+<style>
+  main ul li { margin: 0.5em 0; }
+</style>
+
+<h2 id="introduction">Introduction to Go 1.13</h2>
+
+<p>
+  The latest Go release, version 1.13, arrives six months after <a href=".//doc/go1.12/index.html">Go 1.12</a>.
+  Most of its changes are in the implementation of the toolchain, runtime, and libraries.
+  As always, the release maintains the Go 1 <a href=".//doc/go1compat.html/index.html">promise of compatibility</a>.
+  We expect almost all Go programs to continue to compile and run as before.
+</p>
+
+<p>
+  As of Go 1.13, the go command by default downloads and authenticates
+  modules using the Go module mirror and Go checksum database run by Google. See
+  <a href=".//privacy/index.html">https://proxy.golang.org/privacy</a>
+  for privacy information about these services and the
+  <a href=".//cmd/go//index.html">go command documentation</a>
+  for configuration details including how to disable the use of these servers or use
+  different ones. If you depend on non-public modules, see the
+  <a href=".//cmd/go//index.html">documentation for configuring your environment</a>.
+</p>
+
+<h2 id="language">Changes to the language</h2>
+
+<p>
+  Per the <a href=".//golang/proposal/blob/master/design/19308-number-literals.md/index.html">number literal proposal</a>,
+  Go 1.13 supports a more uniform and modernized set of number literal prefixes.
+  </p><ul>
+    <li>
+      <a href=".//ref/spec/index.html">Binary integer literals</a>:
+      The prefix <code>0b</code> or <code>0B</code> indicates a binary integer literal
+      such as <code>0b1011</code>.
+    </li>
+
+    <li>
+      <a href=".//ref/spec/index.html">Octal integer literals</a>:
+      The prefix <code>0o</code> or <code>0O</code> indicates an octal integer literal
+      such as <code>0o660</code>.
+      The existing octal notation indicated by a leading <code>0</code> followed by
+      octal digits remains valid.
+    </li>
+
+    <li>
+      <a href=".//ref/spec/index.html">Hexadecimal floating point literals</a>:
+      The prefix <code>0x</code> or <code>0X</code> may now be used to express the mantissa of a
+      floating-point number in hexadecimal format such as <code>0x1.0p-1021</code>.
+      A hexadecimal floating-point number must always have an exponent, written as the letter
+      <code>p</code> or <code>P</code> followed by an exponent in decimal. The exponent scales
+      the mantissa by 2 to the power of the exponent.
+    </li>
+
+    <li>
+      <a href=".//ref/spec/index.html">Imaginary literals</a>:
+      The imaginary suffix <code>i</code> may now be used with any (binary, decimal, hexadecimal)
+      integer or floating-point literal.
+    </li>
+
+    <li>
+      Digit separators:
+      The digits of any number literal may now be separated (grouped) using underscores, such as
+      in <code>1_000_000</code>, <code>0b_1010_0110</code>, or <code>3.1415_9265</code>.
+      An underscore may appear between any two digits or the literal prefix and the first digit.
+    </li>
+  </ul>
+<p></p>
+
+<p>
+  Per the <a href=".//golang/proposal/blob/master/design/19113-signed-shift-counts.md/index.html">signed shift counts proposal</a>
+  Go 1.13 removes the restriction that a <a href=".//ref/spec/index.html">shift count</a>
+  must be unsigned. This change eliminates the need for many artificial <code>uint</code> conversions,
+  solely introduced to satisfy this (now removed) restriction of the <code>&lt;&lt;</code> and <code>&gt;&gt;</code> operators.
+</p>
+
+<p>
+  These language changes were implemented by changes to the compiler, and corresponding internal changes to the library
+  packages <code><a href=".//doc/go1.13/index.html">go/scanner</a></code> and
+  <code><a href=".//doc/go1.13/index.html">text/scanner</a></code> (number literals),
+  and <code><a href=".//doc/go1.13/index.html">go/types</a></code> (signed shift counts).
+</p>
+
+<p>
+  If your code uses modules and your <code>go.mod</code> files specifies a language version, be sure
+  it is set to at least <code>1.13</code> to get access to these language changes.
+  You can do this by editing the <code>go.mod</code> file directly, or you can run
+  <code>go mod edit -go=1.13</code>.
+</p>
+
+<h2 id="ports">Ports</h2>
+
+<p id="nacl">
+  Go 1.13 is the last release that will run on Native Client (NaCl).
+</p>
+
+<p><!-- CL 170119, CL 168882 -->
+  For <code>GOARCH=wasm</code>, the new environment variable <code>GOWASM</code> takes a comma-separated list of experimental features that the binary gets compiled with.
+  The valid values are documented <a href=".//cmd/go//index.html">here</a>.
+</p>
+
+<h3 id="aix">AIX</h3>
+
+<p><!-- CL 164003, CL 169120 -->
+  AIX on PPC64 (<code>aix/ppc64</code>) now supports cgo, external
+  linking, and the <code>c-archive</code> and <code>pie</code> build
+  modes.
+</p>
+
+<h3 id="android">Android</h3>
+
+<p><!-- CL 170127 -->
+  Go programs are now compatible with Android 10.
+</p>
+
+<h3 id="darwin">Darwin</h3>
+
+<p>
+  As <a href=".//doc/go1.12/index.html">announced</a> in the Go 1.12 release notes,
+  Go 1.13 now requires macOS 10.11 El Capitan or later;
+  support for previous versions has been discontinued.
+</p>
+
+<h3 id="freebsd">FreeBSD</h3>
+
+<p>
+  As <a href=".//doc/go1.12/index.html">announced</a> in the Go 1.12 release notes,
+  Go 1.13 now requires FreeBSD 11.2 or later;
+  support for previous versions has been discontinued.
+  FreeBSD 12.0 or later requires a kernel with the <code>COMPAT_FREEBSD11</code>
+  option set (this is the default).
+</p>
+
+<h3 id="illumos">Illumos</h3>
+
+<p><!-- CL 174457 -->
+  Go now supports Illumos with <code>GOOS=illumos</code>.
+  The <code>illumos</code> build tag implies the <code>solaris</code>
+  build tag.
+</p>
+
+<h3 id="windows">Windows</h3>
+
+<p><!-- CL 178977 -->
+  The Windows version specified by internally-linked Windows binaries
+  is now Windows 7 rather than NT 4.0. This was already the minimum
+  required version for Go, but can affect the behavior of system calls
+  that have a backwards-compatibility mode. These will now behave as
+  documented. Externally-linked binaries (any program using cgo) have
+  always specified a more recent Windows version.
+</p>
+
+<h2 id="tools">Tools</h2>
+
+<h3 id="modules">Modules</h3>
+
+<h4 id="proxy-vars">Environment variables</h4>
+
+<p><!-- CL 176580 -->
+  The <a href=".//cmd/go//index.html"><code>GO111MODULE</code></a>
+  environment variable continues to default to <code>auto</code>, but
+  the <code>auto</code> setting now activates the module-aware mode of
+  the <code>go</code> command whenever the current working directory contains,
+  or is below a directory containing, a <code>go.mod</code> file — even if the
+  current directory is within <code>GOPATH/src</code>. This change simplifies
+  the migration of existing code within <code>GOPATH/src</code> and the ongoing
+  maintenance of module-aware packages alongside non-module-aware importers.
+</p>
+
+<p><!-- CL 181719 -->
+  The new
+  <a href=".//cmd/go//index.html"><code>GOPRIVATE</code></a>
+  environment variable indicates module paths that are not publicly available.
+  It serves as the default value for the lower-level <code>GONOPROXY</code>
+  and <code>GONOSUMDB</code> variables, which provide finer-grained control over
+  which modules are fetched via proxy and verified using the checksum database.
+</p>
+
+<p><!-- CL 173441, CL 177958 -->
+  The <a href=".//cmd/go//index.html"><code>GOPROXY</code>
+  environment variable</a> may now be set to a comma-separated list of proxy
+  URLs or the special token <code>direct</code>, and
+  its <a href=".//doc/go1.13/index.html">default value</a> is
+  now <code>https://proxy.golang.org,direct</code>. When resolving a package
+  path to its containing module, the <code>go</code> command will try all
+  candidate module paths on each proxy in the list in succession. An unreachable
+  proxy or HTTP status code other than 404 or 410 terminates the search without
+  consulting the remaining proxies.
+</p>
+
+<p>
+  The new
+  <a href=".//cmd/go//index.html"><code>GOSUMDB</code></a>
+  environment variable identifies the name, and optionally the public key and
+  server URL, of the database to consult for checksums of modules that are not
+  yet listed in the main module&#39;s <code>go.sum</code> file.
+  If <code>GOSUMDB</code> does not include an explicit URL, the URL is chosen by
+  probing the <code>GOPROXY</code> URLs for an endpoint indicating support for
+  the checksum database, falling back to a direct connection to the named
+  database if it is not supported by any proxy. If <code>GOSUMDB</code> is set
+  to <code>off</code>, the checksum database is not consulted and only the
+  existing checksums in the <code>go.sum</code> file are verified.
+</p>
+
+<p>
+  Users who cannot reach the default proxy and checksum database (for example,
+  due to a firewalled or sandboxed configuration) may disable their use by
+  setting <code>GOPROXY</code> to <code>direct</code>, and/or
+  <code>GOSUMDB</code> to <code>off</code>.
+  <a href=".//doc/go1.13/index.html"><code>go</code> <code>env</code> <code>-w</code></a>
+  can be used to set the default values for these variables independent of
+  platform:
+</p>
+<pre>go env -w GOPROXY=direct
+go env -w GOSUMDB=off
+</pre>
+
+<h4 id="go-get"><code>go</code> <code>get</code></h4>
+
+<p><!-- CL 174099 -->
+  In module-aware mode,
+  <a href=".//cmd/go//index.html"><code>go</code> <code>get</code></a>
+  with the <code>-u</code> flag now updates a smaller set of modules that is
+  more consistent with the set of packages updated by
+  <code>go</code> <code>get</code> <code>-u</code> in GOPATH mode.
+  <code>go</code> <code>get</code> <code>-u</code> continues to update the
+  modules and packages named on the command line, but additionally updates only
+  the modules containing the packages <em>imported by</em> the named packages,
+  rather than the transitive module requirements of the modules containing the
+  named packages.
+</p>
+
+<p>
+  Note in particular that <code>go</code> <code>get</code> <code>-u</code>
+  (without additional arguments) now updates only the transitive imports of the
+  package in the current directory. To instead update all of the packages
+  transitively imported by the main module (including test dependencies), use
+  <code>go</code> <code>get</code> <code>-u</code> <code>all</code>.
+</p>
+
+<p><!-- CL 177879 -->
+  As a result of the above changes to
+  <code>go</code> <code>get</code> <code>-u</code>, the
+  <code>go</code> <code>get</code> subcommand no longer supports
+  the <code>-m</code> flag, which caused <code>go</code> <code>get</code> to
+  stop before loading packages. The <code>-d</code> flag remains supported, and
+  continues to cause <code>go</code> <code>get</code> to stop after downloading
+  the source code needed to build dependencies of the named packages.
+</p>
+
+<p><!-- CL 177677 -->
+  By default, <code>go</code> <code>get</code> <code>-u</code> in module mode
+  upgrades only non-test dependencies, as in GOPATH mode. It now also accepts
+  the <code>-t</code> flag, which (as in GOPATH mode)
+  causes <code>go</code> <code>get</code> to include the packages imported
+  by <em>tests of</em> the packages named on the command line.
+</p>
+
+<p><!-- CL 167747 -->
+  In module-aware mode, the <code>go</code> <code>get</code> subcommand now
+  supports the version suffix <code>@patch</code>. The <code>@patch</code>
+  suffix indicates that the named module, or module containing the named
+  package, should be updated to the highest patch release with the same
+  major and minor versions as the version found in the build list.
+</p>
+
+<p><!-- CL 184440 -->
+  If a module passed as an argument to <code>go</code> <code>get</code>
+  without a version suffix is already required at a newer version than the
+  latest released version, it will remain at the newer version. This is
+  consistent with the behavior of the <code>-u</code> flag for module
+  dependencies. This prevents unexpected downgrades from pre-release versions.
+  The new version suffix <code>@upgrade</code> explicitly requests this
+  behavior. <code>@latest</code> explicitly requests the latest version
+  regardless of the current version.
+</p>
+
+<h4 id="version-validation">Version validation</h4><!-- CL 181881 -->
+
+<p>
+  When extracting a module from a version control system, the <code>go</code>
+  command now performs additional validation on the requested version string.
+</p>
+
+<p>
+  The <code>+incompatible</code> version annotation bypasses the requirement
+  of <a href=".//cmd/go//index.html">semantic
+  import versioning</a> for repositories that predate the introduction of
+  modules. The <code>go</code> command now verifies that such a version does not
+  include an explicit <code>go.mod</code> file.
+</p>
+
+<p>
+  The <code>go</code> command now verifies the mapping
+  between <a href=".//cmd/go//index.html">pseudo-versions</a> and
+  version-control metadata. Specifically:
+  </p><ul>
+    <li>The version prefix must be of the form <code>vX.0.0</code>, or derived
+    from a tag on an ancestor of the named revision, or derived from a tag that
+    includes <a href=".///index.html">build metadata</a> on
+    the named revision itself.</li>
+
+    <li>The date string must match the UTC timestamp of the revision.</li>
+
+    <li>The short name of the revision must use the same number of characters as
+    what the <code>go</code> command would generate. (For SHA-1 hashes as used
+    by <code>git</code>, a 12-digit prefix.)</li>
+  </ul>
+<p></p>
+
+<p>
+  If a <code>require</code> directive in the
+  <a href=".//cmd/go//index.html">main module</a> uses
+  an invalid pseudo-version, it can usually be corrected by redacting the
+  version to just the commit hash and re-running a <code>go</code> command, such
+  as <code>go</code> <code>list</code> <code>-m</code> <code>all</code>
+  or <code>go</code> <code>mod</code> <code>tidy</code>. For example,
+</p>
+<pre>require github.com/docker/docker v1.14.0-0.20190319215453-e7b5f7dbe98c</pre>
+<p>can be redacted to</p>
+<pre>require github.com/docker/docker e7b5f7dbe98c</pre>
+<p>which currently resolves to</p>
+<pre>require github.com/docker/docker v0.7.3-0.20190319215453-e7b5f7dbe98c</pre>
+
+<p>
+  If one of the transitive dependencies of the main module requires an invalid
+  version or pseudo-version, the invalid version can be replaced with a valid
+  one using a
+  <a href=".//cmd/go//index.html"><code>replace</code> directive</a> in
+  the <code>go.mod</code> file of the main module. If the replacement is a
+  commit hash, it will be resolved to the appropriate pseudo-version as above.
+  For example,
+</p>
+<pre>replace github.com/docker/docker v1.14.0-0.20190319215453-e7b5f7dbe98c =&gt; github.com/docker/docker e7b5f7dbe98c</pre>
+<p>currently resolves to</p>
+<pre>replace github.com/docker/docker v1.14.0-0.20190319215453-e7b5f7dbe98c =&gt; github.com/docker/docker v0.7.3-0.20190319215453-e7b5f7dbe98c</pre>
+
+<h3 id="go-command">Go command</h3>
+
+<p id="go-env-w"><!-- CL 171137 -->
+  The <a href=".//cmd/go//index.html"><code>go</code> <code>env</code></a>
+  command now accepts a <code>-w</code> flag to set the per-user default value
+  of an environment variable recognized by the
+  <code>go</code> command, and a corresponding <code>-u</code> flag to unset a
+  previously-set default. Defaults set via
+  <code>go</code> <code>env</code> <code>-w</code> are stored in the
+  <code>go/env</code> file within
+  <a href=".//pkg/os//index.html"><code>os.UserConfigDir()</code></a>.
+</p>
+
+<p id="go-version-exe"><!-- CL 173343 -->
+  The <a href=".//cmd/go//index.html">
+  <code>go</code> <code>version</code></a> command now accepts arguments naming
+  executables and directories. When invoked on an executable,
+  <code>go</code> <code>version</code> prints the version of Go used to build
+  the executable. If the <code>-m</code> flag is used,
+  <code>go</code> <code>version</code> prints the executable&#39;s embedded module
+  version information, if available. When invoked on a directory,
+  <code>go</code> <code>version</code> prints information about executables
+  contained in the directory and its subdirectories.
+</p>
+
+<p id="trimpath"><!-- CL 173345 -->
+  The new <a href=".//cmd/go//index.html"><code>go</code>
+  <code>build</code> flag</a> <code>-trimpath</code> removes all file system paths
+  from the compiled executable, to improve build reproducibility.
+</p>
+
+<p id="o-dir"><!-- CL 167679 -->
+  If the <code>-o</code> flag passed to <code>go</code> <code>build</code>
+  refers to an existing directory, <code>go</code> <code>build</code> will now
+  write executable files within that directory for <code>main</code> packages
+  matching its package arguments.
+</p>
+
+<p id="comma-separated-tags"><!-- CL 173438 -->
+  The <code>go</code> <code>build</code> flag <code>-tags</code> now takes a
+  comma-separated list of build tags, to allow for multiple tags in
+  <a href=".//cmd/go//index.html"><code>GOFLAGS</code></a>. The
+  space-separated form is deprecated but still recognized and will be maintained.
+</p>
+
+<p id="go-generate-tag"><!-- CL 175983 -->
+  <a href=".//cmd/go//index.html"><code>go</code>
+  <code>generate</code></a> now sets the <code>generate</code> build tag so that
+  files may be searched for directives but ignored during build.
+</p>
+
+<p id="binary-only"><!-- CL 165746 -->
+  As <a href=".//doc/go1.12/index.html">announced</a> in the Go 1.12 release
+  notes, binary-only packages are no longer supported. Building a binary-only
+  package (marked with a <code>//go:binary-only-package</code> comment) now
+  results in an error.
+</p>
+
+<h3 id="compiler">Compiler toolchain</h3>
+
+<p><!-- CL 170448 -->
+  The compiler has a new implementation of escape analysis that is
+  more precise. For most Go code should be an improvement (in other
+  words, more Go variables and expressions allocated on the stack
+  instead of heap). However, this increased precision may also break
+  invalid code that happened to work before (for example, code that
+  violates
+  the <a href=".//pkg/unsafe//index.html"><code>unsafe.Pointer</code>
+  safety rules</a>). If you notice any regressions that appear
+  related, the old escape analysis pass can be re-enabled
+  with <code>go</code> <code>build</code> <code>-gcflags=all=-newescape=false</code>.
+  The option to use the old escape analysis will be removed in a
+  future release.
+</p>
+
+<p><!-- CL 161904 -->
+  The compiler no longer emits floating point or complex constants
+  to <code>go_asm.h</code> files. These have always been emitted in a
+  form that could not be used as numeric constant in assembly code.
+</p>
+
+<h3 id="assembler">Assembler</h3>
+
+<p><!-- CL 157001 -->
+  The assembler now supports many of the atomic instructions
+  introduced in ARM v8.1.
+</p>
+
+<h3 id="gofmt">gofmt</h3>
+
+<p>
+  <code>gofmt</code> (and with that <code>go fmt</code>) now canonicalizes
+  number literal prefixes and exponents to use lower-case letters, but
+  leaves hexadecimal digits alone. This improves readability when using the new octal prefix
+  (<code>0O</code> becomes <code>0o</code>), and the rewrite is applied consistently.
+  <code>gofmt</code> now also removes unnecessary leading zeroes from a decimal integer
+  imaginary literal. (For backwards-compatibility, an integer imaginary literal
+  starting with <code>0</code> is considered a decimal, not an octal number.
+  Removing superfluous leading zeroes avoids potential confusion.)
+  For instance, <code>0B1010</code>, <code>0XabcDEF</code>, <code>0O660</code>,
+  <code>1.2E3</code>, and <code>01i</code> become <code>0b1010</code>, <code>0xabcDEF</code>,
+  <code>0o660</code>, <code>1.2e3</code>, and <code>1i</code> after applying <code>gofmt</code>.
+</p>
+
+<h3 id="godoc"><code>godoc</code> and <code>go</code> <code>doc</code></h3>
+
+<p><!-- CL 174322 -->
+  The <code>godoc</code> webserver is no longer included in the main binary distribution.
+  To run the <code>godoc</code> webserver locally, manually install it first:
+</p><pre>go get golang.org/x/tools/cmd/godoc
+godoc
+</pre>
+<p></p>
+
+<p><!-- CL 177797 -->
+  The
+  <a href=".//cmd/go//index.html"><code>go</code> <code>doc</code></a>
+  command now always includes the package clause in its output, except for
+  commands. This replaces the previous behavior where a heuristic was used,
+  causing the package clause to be omitted under certain conditions.
+</p>
+
+<h2 id="runtime">Runtime</h2>
+
+<p><!-- CL 161477 -->
+  Out of range panic messages now include the index that was out of
+  bounds and the length (or capacity) of the slice. For
+  example, <code>s[3]</code> on a slice of length 1 will panic with
+  &#34;runtime error: index out of range [3] with length 1&#34;.
+</p>
+
+<p><!-- CL 171758 -->
+  This release improves performance of most uses of <code>defer</code>
+  by 30%.
+</p>
+
+<p><!-- CL 142960 -->
+  The runtime is now more aggressive at returning memory to the
+  operating system to make it available to co-tenant applications.
+  Previously, the runtime could retain memory for five or more minutes
+  following a spike in the heap size. It will now begin returning it
+  promptly after the heap shrinks. However, on many OSes, including
+  Linux, the OS itself reclaims memory lazily, so process RSS will not
+  decrease until the system is under memory pressure.
+</p>
+
+<h2 id="library">Core library</h2>
+
+<h3 id="tls_1_3">TLS 1.3</h3>
+
+<p>
+  As announced in Go 1.12, Go 1.13 enables support for TLS 1.3 in the
+  <code>crypto/tls</code> package by default. It can be disabled by adding the
+  value <code>tls13=0</code> to the <code>GODEBUG</code>
+  environment variable. The opt-out will be removed in Go 1.14.
+</p>
+
+<p>
+  See <a href=".//doc/go1.12/index.html">the Go 1.12 release notes</a> for important
+  compatibility information.
+</p>
+
+<h3 id="crypto/ed25519"><a href=".//pkg/crypto/ed25519//index.html">crypto/ed25519</a></h3>
+
+<p><!-- CL 174945, 182698 -->
+  The new <a href=".//pkg/crypto/ed25519//index.html"><code>crypto/ed25519</code></a>
+  package implements the Ed25519 signature
+  scheme. This functionality was previously provided by the
+  <a href=".//golang.org/x/crypto/ed25519/index.html"><code>golang.org/x/crypto/ed25519</code></a>
+  package, which becomes a wrapper for
+  <code>crypto/ed25519</code> when used with Go 1.13+.
+</p>
+
+<h3 id="error_wrapping">Error wrapping</h3>
+
+<p><!-- CL 163558, 176998 -->
+  Go 1.13 contains support for error wrapping, as first proposed in
+  the <a href=".//proposal/+/master/design/29934-error-values.md/index.html">
+  Error Values proposal</a> and discussed on <a href=".//issue/29934/index.html">the
+  associated issue</a>.
+</p>
+<p>
+  An error <code>e</code> can <em>wrap</em> another error <code>w</code> by providing
+  an <code>Unwrap</code> method that returns <code>w</code>. Both <code>e</code>
+  and <code>w</code> are available to programs, allowing <code>e</code> to provide
+  additional context to <code>w</code> or to reinterpret it while still allowing
+  programs to make decisions based on <code>w</code>.
+</p>
+<p>
+  To support wrapping, <a href=".//doc/go1.13/index.html"><code>fmt.Errorf</code></a> now has a <code>%w</code>
+  verb for creating wrapped errors, and three new functions in
+  the <a href=".//doc/go1.13/index.html"><code>errors</code></a> package (
+  <a href=".//pkg/errors//index.html"><code>errors.Unwrap</code></a>,
+  <a href=".//pkg/errors//index.html"><code>errors.Is</code></a> and
+  <a href=".//pkg/errors//index.html"><code>errors.As</code></a>) simplify unwrapping
+  and inspecting wrapped errors.
+</p>
+<p>
+  For more information, read the <a href=".//pkg/errors//index.html"><code>errors</code> package
+  documentation</a>, or see
+  the <a href=".//wiki/ErrorValueFAQ/index.html">Error Value FAQ</a>.
+  There will soon be a blog post as well.
+</p>
+
+<h3 id="minor_library_changes">Minor changes to the library</h3>
+
+<p>
+  As always, there are various minor changes and updates to the library,
+  made with the Go 1 <a href=".//doc/go1compat/index.html">promise of compatibility</a>
+  in mind.
+</p>
+
+<dl id="bytes"><dt><a href=".//pkg/bytes//index.html">bytes</a></dt>
+  <dd>
+    <p>
+      The new <a href=".//pkg/bytes//index.html"><code>ToValidUTF8</code></a> function returns a
+      copy of a given byte slice with each run of invalid UTF-8 byte sequences replaced by a given slice.
+    </p>
+
+</dd></dl><!-- bytes -->
+
+<dl id="context"><dt><a href=".//pkg/context//index.html">context</a></dt>
+  <dd>
+    <p><!-- CL 169080 -->
+    The formatting of contexts returned by <a href=".//pkg/context//index.html"><code>WithValue</code></a> no longer depends on <code>fmt</code> and will not stringify in the same way. Code that depends on the exact previous stringification might be affected.
+    </p>
+
+</dd></dl><!-- context -->
+
+<dl id="crypto/tls"><dt><a href=".//pkg/crypto/tls//index.html">crypto/tls</a></dt>
+  <dd>
+    <p>
+      Support for SSL version 3.0 (SSLv3) <a href=".//issue/32716/index.html">
+      is now deprecated and will be removed in Go 1.14</a>. Note that SSLv3 is the
+      <a href=".//html/rfc7568/index.html">cryptographically broken</a>
+      protocol predating TLS.
+    </p>
+
+    <p>
+      SSLv3 was always disabled by default, other than in Go 1.12, when it was
+      mistakenly enabled by default server-side. It is now again disabled by
+      default. (SSLv3 was never supported client-side.)
+    </p>
+
+    <p><!-- CL 177698 -->
+      Ed25519 certificates are now supported in TLS versions 1.2 and 1.3.
+    </p>
+
+</dd></dl><!-- crypto/tls -->
+
+<dl id="crypto/x509"><dt><a href=".//pkg/crypto/x509//index.html">crypto/x509</a></dt>
+  <dd>
+    <p><!-- CL 175478 -->
+      Ed25519 keys are now supported in certificates and certificate requests
+      according to <a href=".//info/rfc8410/index.html">RFC 8410</a>, as well as by the
+      <a href=".//pkg/crypto/x509//index.html"><code>ParsePKCS8PrivateKey</code></a>,
+      <a href=".//pkg/crypto/x509//index.html"><code>MarshalPKCS8PrivateKey</code></a>,
+      and <a href=".//pkg/crypto/x509//index.html"><code>ParsePKIXPublicKey</code></a> functions.
+    </p>
+
+    <p><!-- CL 169238 -->
+      The paths searched for system roots now include <code>/etc/ssl/cert.pem</code>
+      to support the default location in Alpine Linux 3.7+.
+    </p>
+
+</dd></dl><!-- crypto/x509 -->
+
+<dl id="database/sql"><dt><a href=".//pkg/database/sql//index.html">database/sql</a></dt>
+  <dd>
+    <p><!-- CL 170699 -->
+      The new <a href=".//pkg/database/sql//index.html"><code>NullTime</code></a> type represents a <code>time.Time</code> that may be null.
+    </p>
+
+    <p><!-- CL 174178 -->
+      The new  <a href=".//pkg/database/sql//index.html"><code>NullInt32</code></a> type represents an <code>int32</code> that may be null.
+    </p>
+
+</dd></dl><!-- database/sql -->
+
+<dl id="debug/dwarf"><dt><a href=".//pkg/debug/dwarf//index.html">debug/dwarf</a></dt>
+  <dd>
+    <p><!-- CL 158797 -->
+      The <a href=".//pkg/debug/dwarf//index.html"><code>Data.Type</code></a>
+      method no longer panics if it encounters an unknown DWARF tag in
+      the type graph. Instead, it represents that component of the
+      type with
+      an <a href=".//pkg/debug/dwarf//index.html"><code>UnsupportedType</code></a>
+      object.
+    </p>
+
+</dd></dl><!-- debug/dwarf -->
+
+<dl id="errors"><dt><a href=".//pkg/errors//index.html">errors</a></dt>
+  <dd>
+    <!-- CL 163558 -->
+    <p>
+      The new function <a href=".//pkg/errors//index.html"><code>As</code></a> finds the first
+      error in a given error’s chain (sequence of wrapped errors)
+      that matches a given target’s type, and if so, sets the target to that error value.
+    </p>
+    <p>
+      The new function <a href=".//pkg/errors//index.html"><code>Is</code></a> reports whether a given error value matches an
+      error in another’s chain.
+    </p>
+    <p>
+      The new function <a href=".//pkg/errors//index.html"><code>Unwrap</code></a> returns the result of calling
+      <code>Unwrap</code> on a given error, if one exists.
+    </p>
+
+</dd></dl><!-- errors -->
+
+<dl id="fmt"><dt><a href=".//pkg/fmt//index.html">fmt</a></dt>
+  <dd>
+    <!-- CL 160245 -->
+    <p>
+      The printing verbs <code>%x</code> and <code>%X</code> now format floating-point and
+      complex numbers in hexadecimal notation, in lower-case and upper-case respectively.
+    </p>
+
+    <!-- CL 160246 -->
+    <p>
+      The new printing verb <code>%O</code> formats integers in base 8, emitting the <code>0o</code> prefix.
+    </p>
+
+    <!-- CL 160247 -->
+    <p>
+      The scanner now accepts hexadecimal floating-point values, digit-separating underscores
+      and leading <code>0b</code> and <code>0o</code> prefixes.
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+    <!-- CL 176998 -->
+    <p>The <a href=".//pkg/fmt//index.html"><code>Errorf</code></a> function
+      has a new verb, <code>%w</code>, whose operand must be an error.
+      The error returned from <code>Errorf</code> will have an
+      <code>Unwrap</code> method which returns the operand of <code>%w</code>.
+    </p>
+
+</dd></dl><!-- fmt -->
+
+
+<dl id="go/scanner"><dt><a href=".//pkg/go/scanner//index.html">go/scanner</a></dt>
+  <dd>
+    <p><!-- CL 175218 -->
+      The scanner has been updated to recognize the new Go number literals, specifically
+      binary literals with <code>0b</code>/<code>0B</code> prefix, octal literals with <code>0o</code>/<code>0O</code> prefix,
+      and floating-point numbers with hexadecimal mantissa. The imaginary suffix <code>i</code> may now be used with any number
+      literal, and underscores may used as digit separators for grouping.
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+  </p>
+
+  </dd></dl><!-- go/scanner -->
+
+<dl id="go/types"><dt><a href=".//pkg/go/types//index.html">go/types</a></dt>
+  <dd>
+    <p>
+      The type-checker has been updated to follow the new rules for integer shifts.
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+</dd></dl><!-- go/types -->
+
+
+
+<dl id="html/template"><dt><a href=".//pkg/html/template//index.html">html/template</a></dt>
+  <dd>
+    <p><!-- CL 175218 -->
+      When using a <code>&lt;script&gt;</code> tag with &#34;module&#34; set as the
+      type attribute, code will now be interpreted as <a href=".//multipage/scripting.html/index.html">JavaScript module script</a>.
+    </p>
+
+</dd></dl><!-- html/template -->
+
+<dl id="log"><dt><a href=".//pkg/log//index.html">log</a></dt>
+  <dd>
+    <p><!-- CL 168920 -->
+      The new <a href=".//pkg/log//index.html"><code>Writer</code></a> function returns the output destination for the standard logger.
+    </p>
+
+</dd></dl><!-- log -->
+
+<dl id="math/big"><dt><a href=".//pkg/math/big//index.html">math/big</a></dt>
+  <dd>
+    <p><!-- CL 160682 -->
+      The new <a href=".//pkg/math/big//index.html"><code>Rat.SetUint64</code></a> method sets the <code>Rat</code> to a <code>uint64</code> value.
+    </p>
+
+    <p><!-- CL 166157 -->
+      For <a href=".//pkg/math/big//index.html"><code>Float.Parse</code></a>, if base is 0, underscores
+      may be used between digits for readability.
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+    <p><!-- CL 166157 -->
+      For <a href=".//pkg/math/big//index.html"><code>Int.SetString</code></a>, if base is 0, underscores
+      may be used between digits for readability.
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+    <p><!-- CL 168237 -->
+      <a href=".//pkg/math/big//index.html"><code>Rat.SetString</code></a> now accepts non-decimal floating point representations.
+    </p>
+
+</dd></dl><!-- math/big -->
+
+<dl id="math/bits"><dt><a href=".//pkg/math/bits//index.html">math/bits</a></dt>
+  <dd>
+    <p><!-- CL 178177 -->
+      The execution time of <a href=".//pkg/math/bits//index.html"><code>Add</code></a>,
+      <a href=".//pkg/math/bits//index.html"><code>Sub</code></a>,
+      <a href=".//pkg/math/bits//index.html"><code>Mul</code></a>,
+      <a href=".//pkg/math/bits//index.html"><code>RotateLeft</code></a>, and
+      <a href=".//pkg/math/bits//index.html"><code>ReverseBytes</code></a> is now
+      guaranteed to be independent of the inputs.
+    </p>
+
+</dd></dl><!-- math/bits -->
+
+<dl id="net"><dt><a href=".//pkg/net//index.html">net</a></dt>
+  <dd>
+    <p><!-- CL 156366 -->
+      On Unix systems where <code>use-vc</code> is set in <code>resolv.conf</code>, TCP is used for DNS resolution.
+    </p>
+
+    <p><!-- CL 170678 -->
+      The new field <a href=".//pkg/net//index.html"><code>ListenConfig.KeepAlive</code></a>
+      specifies the keep-alive period for network connections accepted by the listener.
+      If this field is 0 (the default) TCP keep-alives will be enabled.
+      To disable them, set it to a negative value.
+    </p>
+    <p>
+      Note that the error returned from I/O on a connection that was
+      closed by a keep-alive timeout will have a
+      <code>Timeout</code> method that returns <code>true</code> if called.
+      This can make a keep-alive error difficult to distinguish from
+      an error returned due to a missed deadline as set by the
+      <a href=".//pkg/net//index.html"><code>SetDeadline</code></a>
+      method and similar methods.
+      Code that uses deadlines and checks for them with
+      the <code>Timeout</code> method or
+      with <a href=".//pkg/os//index.html"><code>os.IsTimeout</code></a>
+      may want to disable keep-alives, or
+      use <code>errors.Is(syscall.ETIMEDOUT)</code> (on Unix systems)
+      which will return true for a keep-alive timeout and false for a
+      deadline timeout.
+    </p>
+
+</dd></dl><!-- net -->
+
+<dl id="net/http"><dt><a href=".//pkg/net/http//index.html">net/http</a></dt>
+  <dd>
+    <p><!-- CL 76410 -->
+      The new fields <a href=".//pkg/net/http//index.html"><code>Transport.WriteBufferSize</code></a>
+      and <a href=".//pkg/net/http//index.html"><code>Transport.ReadBufferSize</code></a>
+      allow one to specify the sizes of the write and read buffers for a <a href=".//pkg/net/http//index.html"><code>Transport</code></a>.
+      If either field is zero, a default size of 4KB is used.
+    </p>
+
+    <p><!-- CL 130256 -->
+      The new field <a href=".//pkg/net/http//index.html"><code>Transport.ForceAttemptHTTP2</code></a>
+      controls whether HTTP/2 is enabled when a non-zero <code>Dial</code>, <code>DialTLS</code>, or <code>DialContext</code>
+      func or <code>TLSClientConfig</code> is provided.
+    </p>
+
+    <p><!-- CL 140357 -->
+      <a href=".//pkg/net/http//index.html"><code>Transport.MaxConnsPerHost</code></a> now works
+      properly with HTTP/2.
+    </p>
+
+    <p><!-- CL 154383 -->
+      <a href=".//pkg/net/http//index.html"><code>TimeoutHandler</code></a>&#39;s
+      <a href=".//pkg/net/http//index.html"><code>ResponseWriter</code></a> now implements the
+      <a href=".//pkg/net/http//index.html"><code>Pusher</code></a> interface.
+    </p>
+
+    <p><!-- CL 157339 -->
+      The <code>StatusCode</code> <code>103</code> <code>&#34;Early Hints&#34;</code> has been added.
+    </p>
+
+    <p><!-- CL 163599 -->
+    <a href=".//pkg/net/http//index.html"><code>Transport</code></a> now uses the <a href=".//pkg/net/http//index.html"><code>Request.Body</code></a>&#39;s
+    <a href=".//pkg/io//index.html"><code>io.ReaderFrom</code></a> implementation if available, to optimize writing the body.
+    </p>
+
+    <p><!-- CL 167017 -->
+      On encountering unsupported transfer-encodings, <a href=".//pkg/net/http//index.html"><code>http.Server</code></a> now
+      returns a &#34;501 Unimplemented&#34; status as mandated by the HTTP specification <a href=".//html/rfc7230/index.html">RFC 7230 Section 3.3.1</a>.
+    </p>
+
+    <p><!-- CL 167681 -->
+      The new <a href=".//pkg/net/http//index.html"><code>Server</code></a> fields
+      <a href=".//pkg/net/http//index.html"><code>BaseContext</code></a> and
+      <a href=".//pkg/net/http//index.html"><code>ConnContext</code></a>
+      allow finer control over the <a href=".//pkg/context//index.html"><code>Context</code></a> values provided to requests and connections.
+    </p>
+
+    <p><!-- CL 167781 -->
+      <a href=".//pkg/net/http//index.html"><code>http.DetectContentType</code></a> now correctly detects RAR signatures, and can now also detect RAR v5 signatures.
+    </p>
+
+    <p><!-- CL 173658 -->
+      The new <a href=".//pkg/net/http//index.html"><code>Header</code></a> method
+      <a href=".//pkg/net/http//index.html"><code>Clone</code></a> returns a copy of the receiver.
+    </p>
+
+    <p><!-- CL 174324 -->
+      A new function <a href=".//pkg/net/http//index.html"><code>NewRequestWithContext</code></a> has been added and it
+      accepts a <a href=".//pkg/context//index.html"><code>Context</code></a> that controls the entire lifetime of
+      the created outgoing <a href=".//pkg/net/http//index.html"><code>Request</code></a>, suitable for use with
+      <a href=".//pkg/net/http//index.html"><code>Client.Do</code></a> and <a href=".//pkg/net/http//index.html"><code>Transport.RoundTrip</code></a>.
+    </p>
+
+    <p><!-- CL 179457 -->
+      The <a href=".//pkg/net/http//index.html"><code>Transport</code></a> no longer logs errors when servers
+      gracefully shut down idle connections using a <code>&#34;408 Request Timeout&#34;</code> response.
+    </p>
+
+</dd></dl><!-- net/http -->
+
+<dl id="os"><dt><a href=".//pkg/os//index.html">os</a></dt>
+  <dd>
+    <p><!-- CL 160877 -->
+      The new <a href=".//pkg/os//index.html"><code>UserConfigDir</code></a> function
+      returns the default directory to use for user-specific configuration data.
+    </p>
+
+    <p><!-- CL 166578 -->
+      If a <a href=".//pkg/os//index.html"><code>File</code></a> is opened using the O_APPEND flag, its
+      <a href=".//pkg/os//index.html"><code>WriteAt</code></a> method will always return an error.
+    </p>
+
+</dd></dl><!-- os -->
+
+<dl id="os/exec"><dt><a href=".//pkg/os/exec//index.html">os/exec</a></dt>
+  <dd>
+    <p><!-- CL 174318 -->
+      On Windows, the environment for a <a href=".//pkg/os/exec//index.html"><code>Cmd</code></a> always inherits the
+      <code>%SYSTEMROOT%</code> value of the parent process unless the
+      <a href=".//pkg/os/exec//index.html"><code>Cmd.Env</code></a> field includes an explicit value for it.
+    </p>
+
+</dd></dl><!-- os/exec -->
+
+<dl id="reflect"><dt><a href=".//pkg/reflect//index.html">reflect</a></dt>
+  <dd>
+    <p><!-- CL 171337 -->
+      The new <a href=".//pkg/reflect//index.html"><code>Value.IsZero</code></a> method reports whether a <code>Value</code> is the zero value for its type.
+    </p>
+
+    <p><!-- CL 174531 -->
+      The <a href=".//pkg/reflect//index.html"><code>MakeFunc</code></a> function now allows assignment conversions on returned values, instead of requiring exact type match. This is particularly useful when the type being returned is an interface type, but the value actually returned is a concrete value implementing that type.
+    </p>
+
+</dd></dl><!-- reflect -->
+
+<dl id="pkg-runtime"><dt><a href=".//pkg/runtime//index.html">runtime</a></dt>
+  <dd>
+    <p> <!-- CL 167780 -->
+      Tracebacks, <a href=".//pkg/runtime//index.html"><code>runtime.Caller</code></a>,
+      and <a href=".//pkg/runtime//index.html"><code>runtime.Callers</code></a> now refer to the function that
+      initializes the global variables of <code>PKG</code>
+      as <code>PKG.init</code> instead of <code>PKG.init.ializers</code>.
+    </p>
+
+</dd></dl><!-- runtime -->
+
+<dl id="strconv"><dt><a href=".//pkg/strconv//index.html">strconv</a></dt>
+  <dd>
+    <p><!-- CL 160243 -->
+       For <a href=".//pkg/strconv//index.html"><code>strconv.ParseFloat</code></a>,
+       <a href=".//pkg/strconv//index.html"><code>strconv.ParseInt</code></a>
+       and <a href=".//pkg/strconv//index.html"><code>strconv.ParseUint</code></a>,
+       if base is 0, underscores may be used between digits for readability.
+       See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+</dd></dl><!-- strconv -->
+
+<dl id="strings"><dt><a href=".//pkg/strings//index.html">strings</a></dt>
+  <dd>
+    <p><!-- CL 142003 -->
+      The new <a href=".//pkg/strings//index.html"><code>ToValidUTF8</code></a> function returns a
+      copy of a given string with each run of invalid UTF-8 byte sequences replaced by a given string.
+    </p>
+
+</dd></dl><!-- strings -->
+
+<dl id="sync"><dt><a href=".//pkg/sync//index.html">sync</a></dt>
+  <dd>
+    <p><!-- CL 148958, CL 148959, CL 152697, CL 152698 -->
+      The fast paths of <a href=".//pkg/sync//index.html"><code>Mutex.Lock</code></a>, <a href=".//pkg/sync//index.html"><code>Mutex.Unlock</code></a>,
+      <a href=".//pkg/sync//index.html"><code>RWMutex.Lock</code></a>, <a href=".//pkg/sync//index.html"><code>RWMutex.RUnlock</code></a>, and
+      <a href=".//pkg/sync//index.html"><code>Once.Do</code></a> are now inlined in their callers.
+      For the uncontended cases on amd64, these changes make <a href=".//pkg/sync//index.html"><code>Once.Do</code></a> twice as fast, and the
+      <a href=".//pkg/sync//index.html"><code>Mutex</code></a>/<a href=".//pkg/sync//index.html"><code>RWMutex</code></a> methods up to 10% faster.
+    </p>
+
+    <p><!-- CL 166960 -->
+      Large <a href=".//pkg/sync//index.html"><code>Pool</code></a> no longer increase stop-the-world pause times.
+    </p>
+
+    <p><!-- CL 166961 -->
+      <code>Pool</code> no longer needs to be completely repopulated after every GC. It now retains some objects across GCs,
+      as opposed to releasing all objects, reducing load spikes for heavy users of <code>Pool</code>.
+    </p>
+
+</dd></dl><!-- sync -->
+
+<dl id="syscall"><dt><a href=".//pkg/syscall//index.html">syscall</a></dt>
+  <dd>
+    <p><!-- CL 168479 -->
+      Uses of <code>_getdirentries64</code> have been removed from
+      Darwin builds, to allow Go binaries to be uploaded to the macOS
+      App Store.
+    </p>
+
+    <p><!-- CL 174197 -->
+      The new <code>ProcessAttributes</code> and <code>ThreadAttributes</code> fields in
+      <a href=".//pkg/syscall//index.html"><code>SysProcAttr</code></a> have been introduced for Windows,
+      exposing security settings when creating new processes.
+    </p>
+
+    <p><!-- CL 174320 -->
+      <code>EINVAL</code> is no longer returned in zero
+      <a href=".//pkg/syscall//index.html"><code>Chmod</code></a> mode on Windows.
+    </p>
+
+    <p><!-- CL 191337 -->
+      Values of type <code>Errno</code> can be tested against error values in
+      the <code>os</code> package,
+      like <a href=".//pkg/os//index.html"><code>ErrExist</code></a>, using
+      <a href=".//pkg/errors//index.html"><code>errors.Is</code></a>.
+    </p>
+
+</dd></dl><!-- syscall -->
+
+<dl id="syscall/js"><dt><a href=".//pkg/syscall/js//index.html">syscall/js</a></dt>
+  <dd>
+    <p><!-- CL 177537 -->
+      <code>TypedArrayOf</code> has been replaced by
+      <a href=".//pkg/syscall/js//index.html"><code>CopyBytesToGo</code></a> and
+      <a href=".//pkg/syscall/js//index.html"><code>CopyBytesToJS</code></a> for copying bytes
+      between a byte slice and a <code>Uint8Array</code>.
+    </p>
+
+</dd></dl><!-- syscall/js -->
+
+<dl id="testing"><dt><a href=".//pkg/testing//index.html">testing</a></dt>
+  <dd>
+    <p><!-- CL 112155 -->
+      When running benchmarks, <a href=".//pkg/testing//index.html"><code>B.N</code></a> is no longer rounded.
+    </p>
+
+    <p><!-- CL 166717 -->
+      The new method <a href=".//pkg/testing//index.html"><code>B.ReportMetric</code></a> lets users report
+      custom benchmark metrics and override built-in metrics.
+    </p>
+
+    <p><!-- CL 173722 -->
+      Testing flags are now registered in the new <a href=".//pkg/testing//index.html"><code>Init</code></a> function,
+      which is invoked by the generated <code>main</code> function for the test.
+      As a result, testing flags are now only registered when running a test binary,
+      and packages that call <code>flag.Parse</code> during package initialization may cause tests to fail.
+    </p>
+
+</dd></dl><!-- testing -->
+
+<dl id="text/scanner"><dt><a href=".//pkg/text/scanner//index.html">text/scanner</a></dt>
+  <dd>
+    <p><!-- CL 183077 -->
+      The scanner has been updated to recognize the new Go number literals, specifically
+      binary literals with <code>0b</code>/<code>0B</code> prefix, octal literals with <code>0o</code>/<code>0O</code> prefix,
+      and floating-point numbers with hexadecimal mantissa.
+      Also, the new <a href=".//pkg/text/scanner//index.html"><code>AllowDigitSeparators</code></a>
+      mode allows number literals to contain underscores as digit separators (off by default for backwards-compatibility).
+      See the <a href=".//doc/go1.13/index.html">Changes to the language</a> for details.
+    </p>
+
+</dd></dl><!-- text/scanner -->
+
+<dl id="text/template"><dt><a href=".//pkg/text/template//index.html">text/template</a></dt>
+  <dd>
+    <p><!-- CL 161762 -->
+      The new <a href=".//pkg/text/template//index.html">slice function</a>
+      returns the result of slicing its first argument by the following arguments.
+    </p>
+
+</dd></dl><!-- text/template -->
+
+<dl id="time"><dt><a href=".//pkg/time//index.html">time</a></dt>
+  <dd>
+    <p><!-- CL 122876 -->
+      Day-of-year is now supported by <a href=".//pkg/time//index.html"><code>Format</code></a>
+      and <a href=".//pkg/time//index.html"><code>Parse</code></a>.
+    </p>
+
+    <p><!-- CL 167387 -->
+      The new <a href=".//pkg/time//index.html"><code>Duration</code></a> methods
+      <a href=".//pkg/time//index.html"><code>Microseconds</code></a> and
+      <a href=".//pkg/time//index.html"><code>Milliseconds</code></a> return
+      the duration as an integer count of their respectively named units.
+    </p>
+
+</dd></dl><!-- time -->
+
+<dl id="unicode"><dt><a href=".//pkg/unicode//index.html">unicode</a></dt>
+  <dd>
+    <p>
+      The <a href=".//pkg/unicode//index.html"><code>unicode</code></a> package and associated
+      support throughout the system has been upgraded from Unicode 10.0 to
+      <a href=".//versions/Unicode11.0.0//index.html">Unicode 11.0</a>,
+      which adds 684 new characters, including seven new scripts, and 66 new emoji.
+    </p>
+
+</dd></dl><!-- unicode -->
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

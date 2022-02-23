@@ -1,0 +1,914 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>C? Go? Cgo! - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/cgo">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>C? Go? Cgo!</h1>
+      
+      <p class="author">
+      Andrew Gerrand<br/>
+      17 March 2011
+      </p>
+      
+      <h2 id="introduction">Introduction</h2>
+<p>Cgo lets Go packages call C code. Given a Go source file written with some special features,
+cgo outputs Go and C files that can be combined into a single Go package.</p>
+<p>To lead with an example, here’s a Go package that provides two functions -
+<code>Random</code> and <code>Seed</code> - that wrap C’s <code>random</code> and <code>srandom</code> functions.</p>
+<pre><code>package rand
+
+/*
+#include &lt;stdlib.h&gt;
+*/
+import &#34;C&#34;
+
+func Random() int {
+    return int(C.random())
+}
+
+func Seed(i int) {
+    C.srandom(C.uint(i))
+}
+</code></pre>
+<p>Let’s look at what’s happening here, starting with the import statement.</p>
+<p>The <code>rand</code> package imports <code>&#34;C&#34;</code>, but you’ll find there’s no such package
+in the standard Go library.
+That’s because <code>C</code> is a “pseudo-package”,
+a special name interpreted by cgo as a reference to C’s name space.</p>
+<p>The <code>rand</code> package contains four references to the <code>C</code> package:
+the calls to <code>C.random</code> and <code>C.srandom</code>, the conversion <code>C.uint(i)</code>,
+and the <code>import</code> statement.</p>
+<p>The <code>Random</code> function calls the standard C library’s <code>random</code> function and returns the result.
+In C, <code>random</code> returns a value of the C type <code>long</code>,
+which cgo represents as the type <code>C.long</code>.
+It must be converted to a Go type before it can be used by Go code outside this package,
+using an ordinary Go type conversion:</p>
+<pre><code>func Random() int {
+    return int(C.random())
+}
+</code></pre>
+<p>Here’s an equivalent function that uses a temporary variable to illustrate the type conversion more explicitly:</p>
+<pre><code>func Random() int {
+    var r C.long = C.random()
+    return int(r)
+}
+</code></pre>
+<p>The <code>Seed</code> function does the reverse, in a way.
+It takes a regular Go <code>int</code>, converts it to the C <code>unsigned int</code> type,
+and passes it to the C function <code>srandom</code>.</p>
+<pre><code>func Seed(i int) {
+    C.srandom(C.uint(i))
+}
+</code></pre>
+<p>Note that cgo knows the <code>unsigned int</code> type as <code>C.uint</code>;
+see the <a href=".//cmd/cgo/index.html">cgo documentation</a> for a complete
+list of these numeric type names.</p>
+<p>The one detail of this example we haven’t examined yet is the comment above the <code>import</code> statement.</p>
+<pre><code>/*
+#include &lt;stdlib.h&gt;
+*/
+import &#34;C&#34;
+</code></pre>
+<p>Cgo recognizes this comment.  Any lines starting with <code>#cgo</code> followed by
+a space character are removed;
+these become directives for cgo.
+The remaining lines are used as a header when compiling the C parts of the package.
+In this case those lines are just a single <code>#include</code> statement,
+but they can be almost any C code.
+The <code>#cgo</code> directives are used to provide flags for the compiler and linker
+when building the C parts of the package.</p>
+<p>There is a limitation: if your program uses any <code>//export</code> directives,
+then the C code in the comment may only include declarations (<code>extern int f();</code>),
+not definitions (<code>int f() { return 1; }</code>).
+You can use <code>//export</code> directives to make Go functions accessible to C code.</p>
+<p>The <code>#cgo</code> and <code>//export</code> directives are documented in the <a href=".//cmd/cgo//index.html">cgo documentation</a>.</p>
+<h2 id="strings-and-things">Strings and things</h2>
+<p>Unlike Go, C doesn’t have an explicit string type. Strings in C are represented by a zero-terminated array of chars.</p>
+<p>Conversion between Go and C strings is done with the <code>C.CString</code>,
+<code>C.GoString</code>, and <code>C.GoStringN</code> functions.
+These conversions make a copy of the string data.</p>
+<p>This next example implements a <code>Print</code> function that writes a string to
+standard output using C’s <code>fputs</code> function from the <code>stdio</code> library:</p>
+<pre><code>package print
+
+// #include &lt;stdio.h&gt;
+// #include &lt;stdlib.h&gt;
+import &#34;C&#34;
+import &#34;unsafe&#34;
+
+func Print(s string) {
+    cs := C.CString(s)
+    C.fputs(cs, (*C.FILE)(C.stdout))
+    C.free(unsafe.Pointer(cs))
+}
+</code></pre>
+<p>Memory allocations made by C code are not known to Go’s memory manager.
+When you create a C string with <code>C.CString</code> (or any C memory allocation)
+you must remember to free the memory when you’re done with it by calling <code>C.free</code>.</p>
+<p>The call to <code>C.CString</code> returns a pointer to the start of the char array,
+so before the function exits we convert it to an <a href=".//pkg/unsafe//index.html"><code>unsafe.Pointer</code></a>
+and release the memory allocation with <code>C.free</code>.
+A common idiom in cgo programs is to <a href=".//doc/articles/defer_panic_recover.html/index.html"><code>defer</code></a>
+the free immediately after allocating (especially when the code that follows
+is more complex than a single function call),
+as in this rewrite of <code>Print</code>:</p>
+<pre><code>func Print(s string) {
+    cs := C.CString(s)
+    defer C.free(unsafe.Pointer(cs))
+    C.fputs(cs, (*C.FILE)(C.stdout))
+}
+</code></pre>
+<h2 id="building-cgo-packages">Building cgo packages</h2>
+<p>To build cgo packages, just use <a href=".//cmd/go//index.html"><code>go build</code></a>
+or <a href=".//cmd/go//index.html"><code>go install</code></a> as usual.
+The go tool recognizes the special <code>&#34;C&#34;</code> import and automatically uses cgo for those files.</p>
+<h2 id="more-cgo-resources">More cgo resources</h2>
+<p>The <a href=".//cmd/cgo//index.html">cgo command</a> documentation has more
+detail about the C pseudo-package and the build process.
+The <a href=".//misc/cgo//index.html">cgo examples</a> in the Go tree demonstrate
+more advanced concepts.</p>
+<p>Finally, if you’re curious as to how all this works internally,
+take a look at the introductory comment of the runtime package’s <a href=".//src/runtime/cgocall.go/index.html">cgocall.go</a>.</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/gob/index.html">Gobs of data</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/stable-releases/index.html">Go becomes more stable</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

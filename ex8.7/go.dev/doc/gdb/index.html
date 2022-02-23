@@ -1,0 +1,796 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Debugging Go Code with GDB - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Debugging Go Code with GDB</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+
+
+
+
+<!--
+NOTE: In this document and others in this directory, the convention is to
+set fixed-width phrases with non-fixed-width spaces, as in
+<code>hello</code> <code>world</code>.
+Do not send CLs removing the interior tags from such phrases.
+-->
+
+<p>
+<i>
+The following instructions apply to the standard toolchain
+(the <code>gc</code> Go compiler and tools).
+Gccgo has native gdb support.
+</i>
+</p>
+<p>
+<i>
+Note that
+<a href=".//go-delve/delve/index.html">Delve</a> is a better
+alternative to GDB when debugging Go programs built with the standard
+toolchain. It understands the Go runtime, data structures, and
+expressions better than GDB. Delve currently supports Linux, OSX,
+and Windows on <code>amd64</code>.
+For the most up-to-date list of supported platforms, please see
+<a href=".//go-delve/delve/tree/master/Documentation/installation/index.html">
+ the Delve documentation</a>.
+</i>
+</p>
+
+<p>
+GDB does not understand Go programs well.
+The stack management, threading, and runtime contain aspects that differ
+enough from the execution model GDB expects that they can confuse
+the debugger and cause incorrect results even when the program is
+compiled with gccgo.
+As a consequence, although GDB can be useful in some situations (e.g.,
+debugging Cgo code, or debugging the runtime itself), it is not
+a reliable debugger for Go programs, particularly heavily concurrent
+ones.  Moreover, it is not a priority for the Go project to address
+these issues, which are difficult.
+</p>
+
+<p>
+In short, the instructions below should be taken only as a guide to how
+to use GDB when it works, not as a guarantee of success.
+
+Besides this overview you might want to consult the
+<a href=".//gdb/current/onlinedocs/gdb//index.html">GDB manual</a>.
+</p>
+
+<p>
+</p>
+
+<h2 id="Introduction">Introduction</h2>
+
+<p>
+When you compile and link your Go programs with the <code>gc</code> toolchain
+on Linux, macOS, FreeBSD or NetBSD, the resulting binaries contain DWARFv4
+debugging information that recent versions (≥7.5) of the GDB debugger can
+use to inspect a live process or a core dump.
+</p>
+
+<p>
+Pass the <code>&#39;-w&#39;</code> flag to the linker to omit the debug information
+(for example, <code>go</code> <code>build</code> <code>-ldflags=-w</code> <code>prog.go</code>).
+</p>
+
+<p>
+The code generated by the <code>gc</code> compiler includes inlining of
+function invocations and registerization of variables. These optimizations
+can sometimes make debugging with <code>gdb</code> harder.
+If you find that you need to disable these optimizations,
+build your program using <code>go</code> <code>build</code> <code>-gcflags=all=&#34;-N -l&#34;</code>.
+</p>
+
+<p>
+If you want to use gdb to inspect a core dump, you can trigger a dump
+on a program crash, on systems that permit it, by setting
+<code>GOTRACEBACK=crash</code> in the environment (see the
+<a href=".//pkg/runtime//index.html"> runtime package
+documentation</a> for more info).
+</p>
+
+<h3 id="Common_Operations">Common Operations</h3>
+
+<ul>
+<li>
+Show file and line number for code, set breakpoints and disassemble:
+<pre>(gdb) <b>list</b>
+(gdb) <b>list <i>line</i></b>
+(gdb) <b>list <i>file.go</i>:<i>line</i></b>
+(gdb) <b>break <i>line</i></b>
+(gdb) <b>break <i>file.go</i>:<i>line</i></b>
+(gdb) <b>disas</b></pre>
+</li>
+<li>
+Show backtraces and unwind stack frames:
+<pre>(gdb) <b>bt</b>
+(gdb) <b>frame <i>n</i></b></pre>
+</li>
+<li>
+Show the name, type and location on the stack frame of local variables,
+arguments and return values:
+<pre>(gdb) <b>info locals</b>
+(gdb) <b>info args</b>
+(gdb) <b>p variable</b>
+(gdb) <b>whatis variable</b></pre>
+</li>
+<li>
+Show the name, type and location of global variables:
+<pre>(gdb) <b>info variables <i>regexp</i></b></pre>
+</li>
+</ul>
+
+
+<h3 id="Go_Extensions">Go Extensions</h3>
+
+<p>
+A recent extension mechanism to GDB allows it to load extension scripts for a
+given binary. The toolchain uses this to extend GDB with a handful of
+commands to inspect internals of the runtime code (such as goroutines) and to
+pretty print the built-in map, slice and channel types.
+</p>
+
+<ul>
+<li>
+Pretty printing a string, slice, map, channel or interface:
+<pre>(gdb) <b>p <i>var</i></b></pre>
+</li>
+<li>
+A $len() and $cap() function for strings, slices and maps:
+<pre>(gdb) <b>p $len(<i>var</i>)</b></pre>
+</li>
+<li>
+A function to cast interfaces to their dynamic types:
+<pre>(gdb) <b>p $dtype(<i>var</i>)</b>
+(gdb) <b>iface <i>var</i></b></pre>
+<p class="detail"><b>Known issue:</b> GDB can’t automatically find the dynamic
+type of an interface value if its long name differs from its short name
+(annoying when printing stacktraces, the pretty printer falls back to printing
+the short type name and a pointer).</p>
+</li>
+<li>
+Inspecting goroutines:
+<pre>(gdb) <b>info goroutines</b>
+(gdb) <b>goroutine <i>n</i> <i>cmd</i></b>
+(gdb) <b>help goroutine</b></pre>
+For example:
+<pre>(gdb) <b>goroutine 12 bt</b></pre>
+You can inspect all goroutines by passing <code>all</code> instead of a specific goroutine&#39;s ID.
+For example:
+<pre>(gdb) <b>goroutine all bt</b></pre>
+</li>
+</ul>
+
+<p>
+If you&#39;d like to see how this works, or want to extend it, take a look at <a href=".//src/runtime/runtime-gdb.py/index.html">src/runtime/runtime-gdb.py</a> in
+the Go source distribution. It depends on some special magic types
+(<code>hash&lt;T,U&gt;</code>) and variables (<code>runtime.m</code> and
+<code>runtime.g</code>) that the linker
+(<a href=".//src/cmd/link/internal/ld/dwarf.go/index.html">src/cmd/link/internal/ld/dwarf.go</a>) ensures are described in
+the DWARF code.
+</p>
+
+<p>
+If you&#39;re interested in what the debugging information looks like, run
+<code>objdump</code> <code>-W</code> <code>a.out</code> and browse through the <code>.debug_*</code>
+sections.
+</p>
+
+
+<h3 id="Known_Issues">Known Issues</h3>
+
+<ol>
+<li>String pretty printing only triggers for type string, not for types derived
+from it.</li>
+<li>Type information is missing for the C parts of the runtime library.</li>
+<li>GDB does not understand Go’s name qualifications and treats
+<code>&#34;fmt.Print&#34;</code> as an unstructured literal with a <code>&#34;.&#34;</code>
+that needs to be quoted.  It objects even more strongly to method names of
+the form <code>pkg.(*MyType).Meth</code>.
+</li><li>As of Go 1.11, debug information is compressed by default.
+Older versions of gdb, such as the one available by default on MacOS,
+do not understand the compression.
+You can generate uncompressed debug information by using <code>go
+build -ldflags=-compressdwarf=false</code>.
+(For convenience you can put the <code>-ldflags</code> option in
+the <a href=".//cmd/go//index.html"><code>GOFLAGS</code>
+environment variable</a> so that you don&#39;t have to specify it each time.)
+</li>
+</ol>
+
+<h2 id="Tutorial">Tutorial</h2>
+
+<p>
+In this tutorial we will inspect the binary of the
+<a href=".//pkg/regexp//index.html">regexp</a> package&#39;s unit tests. To build the binary,
+change to <code>$GOROOT/src/regexp</code> and run <code>go</code> <code>test</code> <code>-c</code>.
+This should produce an executable file named <code>regexp.test</code>.
+</p>
+
+
+<h3 id="Getting_Started">Getting Started</h3>
+
+<p>
+Launch GDB, debugging <code>regexp.test</code>:
+</p>
+
+<pre>$ <b>gdb regexp.test</b>
+GNU gdb (GDB) 7.2-gg8
+Copyright (C) 2010 Free Software Foundation, Inc.
+License GPLv  3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+Type &#34;show copying&#34; and &#34;show warranty&#34; for licensing/warranty details.
+This GDB was configured as &#34;x86_64-linux&#34;.
+
+Reading symbols from  /home/user/go/src/regexp/regexp.test...
+done.
+Loading Go Runtime support.
+(gdb)
+</pre>
+
+<p>
+The message &#34;Loading Go Runtime support&#34; means that GDB loaded the
+extension from <code>$GOROOT/src/runtime/runtime-gdb.py</code>.
+</p>
+
+<p>
+To help GDB find the Go runtime sources and the accompanying support script,
+pass your <code>$GOROOT</code> with the <code>&#39;-d&#39;</code> flag:
+</p>
+
+<pre>$ <b>gdb regexp.test -d $GOROOT</b>
+</pre>
+
+<p>
+If for some reason GDB still can&#39;t find that directory or that script, you can load
+it by hand by telling gdb (assuming you have the go sources in
+<code>~/go/</code>):
+</p>
+
+<pre>(gdb) <b>source ~/go/src/runtime/runtime-gdb.py</b>
+Loading Go Runtime support.
+</pre>
+
+<h3 id="Inspecting_the_source">Inspecting the source</h3>
+
+<p>
+Use the <code>&#34;l&#34;</code> or <code>&#34;list&#34;</code> command to inspect source code.
+</p>
+
+<pre>(gdb) <b>l</b>
+</pre>
+
+<p>
+List a specific part of the source parameterizing <code>&#34;list&#34;</code> with a
+function name (it must be qualified with its package name).
+</p>
+
+<pre>(gdb) <b>l main.main</b>
+</pre>
+
+<p>
+List a specific file and line number:
+</p>
+
+<pre>(gdb) <b>l regexp.go:1</b>
+(gdb) <i># Hit enter to repeat last command. Here, this lists next 10 lines.</i>
+</pre>
+
+
+<h3 id="Naming">Naming</h3>
+
+<p>
+Variable and function names must be qualified with the name of the packages
+they belong to. The <code>Compile</code> function from the <code>regexp</code>
+package is known to GDB as <code>&#39;regexp.Compile&#39;</code>.
+</p>
+
+<p>
+Methods must be qualified with the name of their receiver types. For example,
+the <code>*Regexp</code> type’s <code>String</code> method is known as
+<code>&#39;regexp.(*Regexp).String&#39;</code>.
+</p>
+
+<p>
+Variables that shadow other variables are magically suffixed with a number in the debug info.
+Variables referenced by closures will appear as pointers magically prefixed with &#39;&amp;&#39;.
+</p>
+
+<h3 id="Setting_breakpoints">Setting breakpoints</h3>
+
+<p>
+Set a breakpoint at the <code>TestFind</code> function:
+</p>
+
+<pre>(gdb) <b>b &#39;regexp.TestFind&#39;</b>
+Breakpoint 1 at 0x424908: file /home/user/go/src/regexp/find_test.go, line 148.
+</pre>
+
+<p>
+Run the program:
+</p>
+
+<pre>(gdb) <b>run</b>
+Starting program: /home/user/go/src/regexp/regexp.test
+
+Breakpoint 1, regexp.TestFind (t=0xf8404a89c0) at /home/user/go/src/regexp/find_test.go:148
+148	func TestFind(t *testing.T) {
+</pre>
+
+<p>
+Execution has paused at the breakpoint.
+See which goroutines are running, and what they&#39;re doing:
+</p>
+
+<pre>(gdb) <b>info goroutines</b>
+  1  waiting runtime.gosched
+* 13  running runtime.goexit
+</pre>
+
+<p>
+the one marked with the <code>*</code> is the current goroutine.
+</p>
+
+<h3 id="Inspecting_the_stack">Inspecting the stack</h3>
+
+<p>
+Look at the stack trace for where we’ve paused the program:
+</p>
+
+<pre>(gdb) <b>bt</b>  <i># backtrace</i>
+#0  regexp.TestFind (t=0xf8404a89c0) at /home/user/go/src/regexp/find_test.go:148
+#1  0x000000000042f60b in testing.tRunner (t=0xf8404a89c0, test=0x573720) at /home/user/go/src/testing/testing.go:156
+#2  0x000000000040df64 in runtime.initdone () at /home/user/go/src/runtime/proc.c:242
+#3  0x000000f8404a89c0 in ?? ()
+#4  0x0000000000573720 in ?? ()
+#5  0x0000000000000000 in ?? ()
+</pre>
+
+<p>
+The other goroutine, number 1, is stuck in <code>runtime.gosched</code>, blocked on a channel receive:
+</p>
+
+<pre>(gdb) <b>goroutine 1 bt</b>
+#0  0x000000000040facb in runtime.gosched () at /home/user/go/src/runtime/proc.c:873
+#1  0x00000000004031c9 in runtime.chanrecv (c=void, ep=void, selected=void, received=void)
+ at  /home/user/go/src/runtime/chan.c:342
+#2  0x0000000000403299 in runtime.chanrecv1 (t=void, c=void) at/home/user/go/src/runtime/chan.c:423
+#3  0x000000000043075b in testing.RunTests (matchString={void (struct string, struct string, bool *, error *)}
+ 0x7ffff7f9ef60, tests=  []testing.InternalTest = {...}) at /home/user/go/src/testing/testing.go:201
+#4  0x00000000004302b1 in testing.Main (matchString={void (struct string, struct string, bool *, error *)}
+ 0x7ffff7f9ef80, tests= []testing.InternalTest = {...}, benchmarks= []testing.InternalBenchmark = {...})
+at /home/user/go/src/testing/testing.go:168
+#5  0x0000000000400dc1 in main.main () at /home/user/go/src/regexp/_testmain.go:98
+#6  0x00000000004022e7 in runtime.mainstart () at /home/user/go/src/runtime/amd64/asm.s:78
+#7  0x000000000040ea6f in runtime.initdone () at /home/user/go/src/runtime/proc.c:243
+#8  0x0000000000000000 in ?? ()
+</pre>
+
+<p>
+The stack frame shows we’re currently executing the <code>regexp.TestFind</code> function, as expected.
+</p>
+
+<pre>(gdb) <b>info frame</b>
+Stack level 0, frame at 0x7ffff7f9ff88:
+ rip = 0x425530 in regexp.TestFind (/home/user/go/src/regexp/find_test.go:148);
+    saved rip 0x430233
+ called by frame at 0x7ffff7f9ffa8
+ source language minimal.
+ Arglist at 0x7ffff7f9ff78, args: t=0xf840688b60
+ Locals at 0x7ffff7f9ff78, Previous frame&#39;s sp is 0x7ffff7f9ff88
+ Saved registers:
+  rip at 0x7ffff7f9ff80
+</pre>
+
+<p>
+The command <code>info</code> <code>locals</code> lists all variables local to the function and their values, but is a bit
+dangerous to use, since it will also try to print uninitialized variables. Uninitialized slices may cause gdb to try
+to print arbitrary large arrays.
+</p>
+
+<p>
+The function’s arguments:
+</p>
+
+<pre>(gdb) <b>info args</b>
+t = 0xf840688b60
+</pre>
+
+<p>
+When printing the argument, notice that it’s a pointer to a
+<code>Regexp</code> value. Note that GDB has incorrectly put the <code>*</code>
+on the right-hand side of the type name and made up a &#39;struct&#39; keyword, in traditional C style.
+</p>
+
+<pre>(gdb) <b>p re</b>
+(gdb) p t
+$1 = (struct testing.T *) 0xf840688b60
+(gdb) p t
+$1 = (struct testing.T *) 0xf840688b60
+(gdb) p *t
+$2 = {errors = &#34;&#34;, failed = false, ch = 0xf8406f5690}
+(gdb) p *t-&gt;ch
+$3 = struct hchan&lt;*testing.T&gt;
+</pre>
+
+<p>
+That <code>struct</code> <code>hchan&lt;*testing.T&gt;</code> is the
+runtime-internal representation of a channel. It is currently empty,
+or gdb would have pretty-printed its contents.
+</p>
+
+<p>
+Stepping forward:
+</p>
+
+<pre>(gdb) <b>n</b>  <i># execute next line</i>
+149             for _, test := range findTests {
+(gdb)    <i># enter is repeat</i>
+150                     re := MustCompile(test.pat)
+(gdb) <b>p test.pat</b>
+$4 = &#34;&#34;
+(gdb) <b>p re</b>
+$5 = (struct regexp.Regexp *) 0xf84068d070
+(gdb) <b>p *re</b>
+$6 = {expr = &#34;&#34;, prog = 0xf840688b80, prefix = &#34;&#34;, prefixBytes =  []uint8, prefixComplete = true,
+  prefixRune = 0, cond = 0 &#39;\000&#39;, numSubexp = 0, longest = false, mu = {state = 0, sema = 0},
+  machine =  []*regexp.machine}
+(gdb) <b>p *re-&gt;prog</b>
+$7 = {Inst =  []regexp/syntax.Inst = {{Op = 5 &#39;\005&#39;, Out = 0, Arg = 0, Rune =  []int}, {Op =
+    6 &#39;\006&#39;, Out = 2, Arg = 0, Rune =  []int}, {Op = 4 &#39;\004&#39;, Out = 0, Arg = 0, Rune =  []int}},
+  Start = 1, NumCap = 2}
+</pre>
+
+
+<p>
+We can step into the <code>String</code>function call with <code>&#34;s&#34;</code>:
+</p>
+
+<pre>(gdb) <b>s</b>
+regexp.(*Regexp).String (re=0xf84068d070, noname=void) at /home/user/go/src/regexp/regexp.go:97
+97      func (re *Regexp) String() string {
+</pre>
+
+<p>
+Get a stack trace to see where we are:
+</p>
+
+<pre>(gdb) <b>bt</b>
+#0  regexp.(*Regexp).String (re=0xf84068d070, noname=void)
+    at /home/user/go/src/regexp/regexp.go:97
+#1  0x0000000000425615 in regexp.TestFind (t=0xf840688b60)
+    at /home/user/go/src/regexp/find_test.go:151
+#2  0x0000000000430233 in testing.tRunner (t=0xf840688b60, test=0x5747b8)
+    at /home/user/go/src/testing/testing.go:156
+#3  0x000000000040ea6f in runtime.initdone () at /home/user/go/src/runtime/proc.c:243
+....
+</pre>
+
+<p>
+Look at the source code:
+</p>
+
+<pre>(gdb) <b>l</b>
+92              mu      sync.Mutex
+93              machine []*machine
+94      }
+95
+96      // String returns the source text used to compile the regular expression.
+97      func (re *Regexp) String() string {
+98              return re.expr
+99      }
+100
+101     // Compile parses a regular expression and returns, if successful,
+</pre>
+
+<h3 id="Pretty_Printing">Pretty Printing</h3>
+
+<p>
+GDB&#39;s pretty printing mechanism is triggered by regexp matches on type names.  An example for slices:
+</p>
+
+<pre>(gdb) <b>p utf</b>
+$22 =  []uint8 = {0 &#39;\000&#39;, 0 &#39;\000&#39;, 0 &#39;\000&#39;, 0 &#39;\000&#39;}
+</pre>
+
+<p>
+Since slices, arrays and strings are not C pointers, GDB can&#39;t interpret the subscripting operation for you, but
+you can look inside the runtime representation to do that (tab completion helps here):
+</p>
+<pre>
+
+(gdb) <b>p slc</b>
+$11 =  []int = {0, 0}
+(gdb) <b>p slc-&gt;</b><i>&lt;TAB&gt;</i>
+array  slc    len
+(gdb) <b>p slc-&gt;array</b>
+$12 = (int *) 0xf84057af00
+(gdb) <b>p slc-&gt;array[1]</b>
+$13 = 0</pre>
+
+
+
+<p>
+The extension functions $len and $cap work on strings, arrays and slices:
+</p>
+
+<pre>(gdb) <b>p $len(utf)</b>
+$23 = 4
+(gdb) <b>p $cap(utf)</b>
+$24 = 4
+</pre>
+
+<p>
+Channels and maps are &#39;reference&#39; types, which gdb shows as pointers to C++-like types <code>hash&lt;int,string&gt;*</code>.  Dereferencing will trigger prettyprinting
+</p>
+
+<p>
+Interfaces are represented in the runtime as a pointer to a type descriptor and a pointer to a value.  The Go GDB runtime extension decodes this and automatically triggers pretty printing for the runtime type.  The extension function <code>$dtype</code> decodes the dynamic type for you (examples are taken from a breakpoint at <code>regexp.go</code> line 293.)
+</p>
+
+<pre>(gdb) <b>p i</b>
+$4 = {str = &#34;cbb&#34;}
+(gdb) <b>whatis i</b>
+type = regexp.input
+(gdb) <b>p $dtype(i)</b>
+$26 = (struct regexp.inputBytes *) 0xf8400b4930
+(gdb) <b>iface i</b>
+regexp.input: struct regexp.inputBytes *
+</pre>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

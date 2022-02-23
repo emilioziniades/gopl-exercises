@@ -1,0 +1,1282 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+<link rel="stylesheet" href="/css/blogfonts.css"/>
+<link rel="alternate" title="The Go Blog" type="application/atom+xml" href="/blog/feed.atom"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Using Go Modules - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+<div id="blog"><div id="content">
+  <div id="content">
+
+    <div class="Article" data-slug="/blog/using-go-modules">
+    
+    <h1 class="small"><a href=".//blog//index.html">The Go Blog</a></h1>
+    
+
+    <h1>Using Go Modules</h1>
+      
+      <p class="author">
+      Tyler Bui-Palsulich and Eno Compton<br/>
+      19 March 2019
+      </p>
+      
+      <h2 id="introduction">Introduction</h2>
+<p>This post is part 1 in a series.</p>
+<ul>
+<li><strong>Part 1 — Using Go Modules</strong> (this post)</li>
+<li>Part 2 — <a href=".//blog/migrating-to-go-modules/index.html">Migrating To Go Modules</a></li>
+<li>Part 3 — <a href=".//blog/publishing-go-modules/index.html">Publishing Go Modules</a></li>
+<li>Part 4 — <a href=".//blog/v2-go-modules/index.html">Go Modules: v2 and Beyond</a></li>
+<li>Part 5 — <a href=".//blog/module-compatibility/index.html">Keeping Your Modules Compatible</a></li>
+</ul>
+<p><strong>Note:</strong> For documentation on managing dependencies with modules, see
+<a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</p>
+<p>Go 1.11 and 1.12 include preliminary
+<a href=".//doc/go1.11/index.html">support for modules</a>,
+Go’s
+<a href=".//versioning-proposal/index.html" rel="noreferrer" target="_blank">new dependency management system</a>
+that makes dependency version information explicit
+and easier to manage.
+This blog post is an introduction to the basic operations needed
+to get started using modules.</p>
+<p>A module is a collection of
+<a href=".//ref/spec/index.html">Go packages</a>
+stored in a file tree with a <code>go.mod</code> file at its root.
+The <code>go.mod</code> file defines the module’s <em>module path</em>,
+which is also the import path used for the root directory,
+and its <em>dependency requirements</em>,
+which are the other modules needed for a successful build.
+Each dependency requirement is
+written as a module path and a specific
+<a href=".///index.html" rel="noreferrer" target="_blank">semantic version</a>.</p>
+<p>As of Go 1.11, the go command enables the use of modules
+when the current directory or any parent directory has a <code>go.mod</code>,
+provided the directory is <em>outside</em> <code>$GOPATH/src</code>.
+(Inside <code>$GOPATH/src</code>, for compatibility, the go command
+still runs in the old GOPATH mode, even if a <code>go.mod</code> is found.
+See the
+<a href=".//cmd/go//index.html">go command documentation</a>
+for details.)
+Starting in Go 1.13, module mode will be the default for all development.</p>
+<p>This post walks through a sequence of common operations
+that arise when developing Go code with modules:</p>
+<ul>
+<li>Creating a new module.</li>
+<li>Adding a dependency.</li>
+<li>Upgrading dependencies.</li>
+<li>Adding a dependency on a new major version.</li>
+<li>Upgrading a dependency to a new major version.</li>
+<li>Removing unused dependencies.</li>
+</ul>
+<h2 id="creating-a-new-module">Creating a new module</h2>
+<p>Let’s create a new module.</p>
+<p>Create a new, empty directory somewhere outside <code>$GOPATH/src</code>,
+<code>cd</code> into that directory, and then create a new source file, <code>hello.go</code>:</p>
+<pre><code>package hello
+
+func Hello() string {
+    return &#34;Hello, world.&#34;
+}
+</code></pre>
+<p>Let’s write a test, too, in <code>hello_test.go</code>:</p>
+<pre><code>package hello
+
+import &#34;testing&#34;
+
+func TestHello(t *testing.T) {
+    want := &#34;Hello, world.&#34;
+    if got := Hello(); got != want {
+        t.Errorf(&#34;Hello() = %q, want %q&#34;, got, want)
+    }
+}
+</code></pre>
+<p>At this point, the directory contains a package, but not a module,
+because there is no <code>go.mod</code> file.
+If we were working in <code>/home/gopher/hello</code> and ran <code>go test</code> now,
+we’d see:</p>
+<pre><code>$ go test
+PASS
+ok      _/home/gopher/hello 0.020s
+$
+</code></pre>
+<p>The last line summarizes the overall package test.
+Because we are working outside <code>$GOPATH</code>
+and also outside any module,
+the <code>go</code> command knows no import path for
+the current directory and makes up a fake one based
+on the directory name: <code>_/home/gopher/hello</code>.</p>
+<p>Let’s make the current directory the root of a module
+by using <code>go mod init</code> and then try <code>go test</code> again:</p>
+<pre><code>$ go mod init example.com/hello
+go: creating new go.mod: module example.com/hello
+$ go test
+PASS
+ok      example.com/hello   0.020s
+$
+</code></pre>
+<p>Congratulations! You’ve written and tested your first module.</p>
+<p>The <code>go mod init</code> command wrote a <code>go.mod</code> file:</p>
+<pre><code>$ cat go.mod
+module example.com/hello
+
+go 1.12
+$
+</code></pre>
+<p>The <code>go.mod</code> file only appears in the root of the module.
+Packages in subdirectories have import paths consisting of
+the module path plus the path to the subdirectory.
+For example, if we created a subdirectory <code>world</code>,
+we would not need to (nor want to) run <code>go mod init</code> there.
+The package would automatically be recognized as part of the
+<code>example.com/hello</code> module, with import path
+<code>example.com/hello/world</code>.</p>
+<h2 id="adding-a-dependency">Adding a dependency</h2>
+<p>The primary motivation for Go modules was to improve the
+experience of using (that is, adding a dependency on)
+code written by other developers.</p>
+<p>Let’s update our <code>hello.go</code> to import <code>rsc.io/quote</code>
+and use it to implement <code>Hello</code>:</p>
+<pre><code>package hello
+
+import &#34;rsc.io/quote&#34;
+
+func Hello() string {
+    return quote.Hello()
+}
+</code></pre>
+<p>Now let’s run the test again:</p>
+<pre><code>$ go test
+go: finding rsc.io/quote v1.5.2
+go: downloading rsc.io/quote v1.5.2
+go: extracting rsc.io/quote v1.5.2
+go: finding rsc.io/sampler v1.3.0
+go: finding golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+go: downloading rsc.io/sampler v1.3.0
+go: extracting rsc.io/sampler v1.3.0
+go: downloading golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+go: extracting golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+PASS
+ok      example.com/hello   0.023s
+$
+</code></pre>
+<p>The <code>go</code> command resolves imports by using the specific
+dependency module versions listed in <code>go.mod</code>.
+When it encounters an <code>import</code> of a package not provided
+by any module in <code>go.mod</code>, the <code>go</code> command automatically
+looks up the module containing that package and adds it to
+<code>go.mod</code>, using the latest version.
+(“Latest” is defined as the
+latest tagged stable (non-<a href=".///index.html" rel="noreferrer" target="_blank">prerelease</a>) version,
+or else the latest tagged prerelease version,
+or else the latest untagged version.)
+In our example, <code>go test</code> resolved the new import <code>rsc.io/quote</code>
+to the module <code>rsc.io/quote v1.5.2</code>.
+It also downloaded two dependencies used by <code>rsc.io/quote</code>,
+namely <code>rsc.io/sampler</code> and <code>golang.org/x/text</code>.
+Only direct dependencies are recorded in the <code>go.mod</code> file:</p>
+<pre><code>$ cat go.mod
+module example.com/hello
+
+go 1.12
+
+require rsc.io/quote v1.5.2
+$
+</code></pre>
+<p>A second <code>go test</code> command will not repeat this work,
+since the <code>go.mod</code> is now up-to-date and the downloaded
+modules are cached locally (in <code>$GOPATH/pkg/mod</code>):</p>
+<pre><code>$ go test
+PASS
+ok      example.com/hello   0.020s
+$
+</code></pre>
+<p>Note that while the <code>go</code> command makes adding a new dependency
+quick and easy, it is not without cost.
+Your module now literally <em>depends</em> on the new dependency
+in critical areas such as correctness, security, and proper licensing,
+just to name a few.
+For more considerations, see Russ Cox’s blog post,
+“<a href=".//deps/index.html" rel="noreferrer" target="_blank">Our Software Dependency Problem</a>.”</p>
+<p>As we saw above, adding one direct dependency often
+brings in other indirect dependencies too.
+The command <code>go list -m all</code> lists the current module
+and all its dependencies:</p>
+<pre><code>$ go list -m all
+example.com/hello
+golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+rsc.io/quote v1.5.2
+rsc.io/sampler v1.3.0
+$
+</code></pre>
+<p>In the <code>go list</code> output, the current module,
+also known as the <em>main module</em>,
+is always the first line,
+followed by dependencies sorted by module path.</p>
+<p>The <code>golang.org/x/text</code> version <code>v0.0.0-20170915032832-14c0d48ead0c</code>
+is an example of a
+<a href=".//cmd/go//index.html">pseudo-version</a>,
+which is the <code>go</code> command’s version syntax
+for a specific untagged commit.</p>
+<p>In addition to <code>go.mod</code>, the <code>go</code> command
+maintains a file named <code>go.sum</code> containing
+the expected <a href=".//cmd/go//index.html">cryptographic hashes</a> of the content of specific module versions:</p>
+<pre><code>$ cat go.sum
+golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c h1:qgOY6WgZO...
+golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:Nq...
+rsc.io/quote v1.5.2 h1:w5fcysjrx7yqtD/aO+QwRjYZOKnaM9Uh2b40tElTs3...
+rsc.io/quote v1.5.2/go.mod h1:LzX7hefJvL54yjefDEDHNONDjII0t9xZLPX...
+rsc.io/sampler v1.3.0 h1:7uVkIFmeBqHfdjD+gZwtXXI+RODJ2Wc4O7MPEh/Q...
+rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9...
+$
+</code></pre>
+<p>The <code>go</code> command uses the <code>go.sum</code> file to ensure that
+future downloads of these modules retrieve the same bits
+as the first download,
+to ensure the modules your project depends on
+do not change unexpectedly,
+whether for malicious, accidental, or other reasons.
+Both <code>go.mod</code> and <code>go.sum</code> should be checked into version control.</p>
+<h2 id="upgrading-dependencies">Upgrading dependencies</h2>
+<p>With Go modules, versions are referenced with semantic version tags.
+A semantic version has three parts: major, minor, and patch.
+For example, for <code>v0.1.2</code>, the major version is 0, the minor version is 1,
+and the patch version is 2.
+Let’s walk through a couple minor version upgrades.
+In the next section, we’ll consider a major version upgrade.</p>
+<p>From the output of <code>go list -m all</code>,
+we can see we’re using an untagged version of <code>golang.org/x/text</code>.
+Let’s upgrade to the latest tagged version and test that everything still works:</p>
+<pre><code>$ go get golang.org/x/text
+go: finding golang.org/x/text v0.3.0
+go: downloading golang.org/x/text v0.3.0
+go: extracting golang.org/x/text v0.3.0
+$ go test
+PASS
+ok      example.com/hello   0.013s
+$
+</code></pre>
+<p>Woohoo! Everything passes.
+Let’s take another look at <code>go list -m all</code> and the <code>go.mod</code> file:</p>
+<pre><code>$ go list -m all
+example.com/hello
+golang.org/x/text v0.3.0
+rsc.io/quote v1.5.2
+rsc.io/sampler v1.3.0
+$ cat go.mod
+module example.com/hello
+
+go 1.12
+
+require (
+    golang.org/x/text v0.3.0 // indirect
+    rsc.io/quote v1.5.2
+)
+$
+</code></pre>
+<p>The <code>golang.org/x/text</code> package has been upgraded to the latest tagged version (<code>v0.3.0</code>).
+The <code>go.mod</code> file has been updated to specify <code>v0.3.0</code> too.
+The <code>indirect</code> comment indicates a dependency is not used directly
+by this module, only indirectly by other module dependencies.
+See <code>go help modules</code> for details.</p>
+<p>Now let’s try upgrading the <code>rsc.io/sampler</code> minor version.
+Start the same way, by running <code>go get</code> and running tests:</p>
+<pre><code>$ go get rsc.io/sampler
+go: finding rsc.io/sampler v1.99.99
+go: downloading rsc.io/sampler v1.99.99
+go: extracting rsc.io/sampler v1.99.99
+$ go test
+--- FAIL: TestHello (0.00s)
+    hello_test.go:8: Hello() = &#34;99 bottles of beer on the wall, 99 bottles of beer, ...&#34;, want &#34;Hello, world.&#34;
+FAIL
+exit status 1
+FAIL    example.com/hello   0.014s
+$
+</code></pre>
+<p>Uh, oh! The test failure shows that the
+latest version of <code>rsc.io/sampler</code> is incompatible with our usage.
+Let’s list the available tagged versions of that module:</p>
+<pre><code>$ go list -m -versions rsc.io/sampler
+rsc.io/sampler v1.0.0 v1.2.0 v1.2.1 v1.3.0 v1.3.1 v1.99.99
+$
+</code></pre>
+<p>We had been using v1.3.0; v1.99.99 is clearly no good.
+Maybe we can try using v1.3.1 instead:</p>
+<pre><code>$ go get rsc.io/sampler@v1.3.1
+go: finding rsc.io/sampler v1.3.1
+go: downloading rsc.io/sampler v1.3.1
+go: extracting rsc.io/sampler v1.3.1
+$ go test
+PASS
+ok      example.com/hello   0.022s
+$
+</code></pre>
+<p>Note the explicit <code>@v1.3.1</code> in the <code>go get</code> argument.
+In general each argument passed to <code>go get</code> can take
+an explicit version; the default is <code>@latest</code>,
+which resolves to the latest version as defined earlier.</p>
+<h2 id="adding-a-dependency-on-a-new-major-version">Adding a dependency on a new major version</h2>
+<p>Let’s add a new function to our package:
+<code>func Proverb</code> returns a Go concurrency proverb,
+by calling <code>quote.Concurrency</code>, which is provided by
+the module <code>rsc.io/quote/v3</code>.
+First we update <code>hello.go</code> to add the new function:</p>
+<pre><code>package hello
+
+import (
+    &#34;rsc.io/quote&#34;
+    quoteV3 &#34;rsc.io/quote/v3&#34;
+)
+
+func Hello() string {
+    return quote.Hello()
+}
+
+func Proverb() string {
+    return quoteV3.Concurrency()
+}
+</code></pre>
+<p>Then we add a test to <code>hello_test.go</code>:</p>
+<pre><code>func TestProverb(t *testing.T) {
+    want := &#34;Concurrency is not parallelism.&#34;
+    if got := Proverb(); got != want {
+        t.Errorf(&#34;Proverb() = %q, want %q&#34;, got, want)
+    }
+}
+</code></pre>
+<p>Then we can test our code:</p>
+<pre><code>$ go test
+go: finding rsc.io/quote/v3 v3.1.0
+go: downloading rsc.io/quote/v3 v3.1.0
+go: extracting rsc.io/quote/v3 v3.1.0
+PASS
+ok      example.com/hello   0.024s
+$
+</code></pre>
+<p>Note that our module now depends on both <code>rsc.io/quote</code> and <code>rsc.io/quote/v3</code>:</p>
+<pre><code>$ go list -m rsc.io/q...
+rsc.io/quote v1.5.2
+rsc.io/quote/v3 v3.1.0
+$
+</code></pre>
+<p>Each different major version (<code>v1</code>, <code>v2</code>, and so on) of a Go module
+uses a different module path: starting at <code>v2</code>, the path must end in the major version.
+In the example, <code>v3</code> of <code>rsc.io/quote</code> is no longer <code>rsc.io/quote</code>: instead,
+it is identified by the module path <code>rsc.io/quote/v3</code>.
+This convention is called
+<a href=".//vgo-import/index.html" rel="noreferrer" target="_blank">semantic import versioning</a>,
+and it gives incompatible packages (those with different major versions)
+different names.
+In contrast, <code>v1.6.0</code> of <code>rsc.io/quote</code> should be backwards-compatible
+with <code>v1.5.2</code>, so it reuses the name <code>rsc.io/quote</code>.
+(In the previous section, <code>rsc.io/sampler</code> <code>v1.99.99</code>
+<em>should</em> have been backwards-compatible
+with <code>rsc.io/sampler</code> <code>v1.3.0</code>, but bugs or incorrect client assumptions about
+module behavior can both happen.)</p>
+<p>The <code>go</code> command allows a build to include at most one version of
+any particular module path, meaning at most one of each major
+version: one <code>rsc.io/quote</code>, one <code>rsc.io/quote/v2</code>, one <code>rsc.io/quote/v3</code>,
+and so on.
+This gives module authors a clear rule about possible duplication
+of a single module path: it is impossible for a program to build with both
+<code>rsc.io/quote v1.5.2</code> and <code>rsc.io/quote v1.6.0</code>.
+At the same time, allowing different major versions of a module
+(because they have different paths)
+gives module consumers the ability to
+upgrade to a new major version incrementally.
+In this example, we wanted to use <code>quote.Concurrency</code> from <code>rsc/quote/v3 v3.1.0</code>
+but are not yet ready to migrate our uses of <code>rsc.io/quote v1.5.2</code>.
+The ability to migrate incrementally
+is especially important in a large program or codebase.</p>
+<h2 id="upgrading-a-dependency-to-a-new-major-version">Upgrading a dependency to a new major version</h2>
+<p>Let’s complete our conversion from using <code>rsc.io/quote</code> to using only <code>rsc.io/quote/v3</code>.
+Because of the major version change, we should expect that some APIs may have
+been removed, renamed, or otherwise changed in incompatible ways.
+Reading the docs, we can see that <code>Hello</code> has become <code>HelloV3</code>:</p>
+<pre><code>$ go doc rsc.io/quote/v3
+package quote // import &#34;rsc.io/quote/v3&#34;
+
+Package quote collects pithy sayings.
+
+func Concurrency() string
+func GlassV3() string
+func GoV3() string
+func HelloV3() string
+func OptV3() string
+$
+</code></pre>
+<p>We can update our use of <code>quote.Hello()</code> in <code>hello.go</code> to use <code>quoteV3.HelloV3()</code>:</p>
+<pre><code>package hello
+
+import quoteV3 &#34;rsc.io/quote/v3&#34;
+
+func Hello() string {
+    return quoteV3.HelloV3()
+}
+
+func Proverb() string {
+    return quoteV3.Concurrency()
+}
+</code></pre>
+<p>And then at this point, there’s no need for the renamed import anymore,
+so we can undo that:</p>
+<pre><code>package hello
+
+import &#34;rsc.io/quote/v3&#34;
+
+func Hello() string {
+    return quote.HelloV3()
+}
+
+func Proverb() string {
+    return quote.Concurrency()
+}
+</code></pre>
+<p>Let’s re-run the tests to make sure everything is working:</p>
+<pre><code>$ go test
+PASS
+ok      example.com/hello       0.014s
+</code></pre>
+<h2 id="removing-unused-dependencies">Removing unused dependencies</h2>
+<p>We’ve removed all our uses of <code>rsc.io/quote</code>,
+but it still shows up in <code>go list -m all</code> and in our <code>go.mod</code> file:</p>
+<pre><code>$ go list -m all
+example.com/hello
+golang.org/x/text v0.3.0
+rsc.io/quote v1.5.2
+rsc.io/quote/v3 v3.1.0
+rsc.io/sampler v1.3.1
+$ cat go.mod
+module example.com/hello
+
+go 1.12
+
+require (
+    golang.org/x/text v0.3.0 // indirect
+    rsc.io/quote v1.5.2
+    rsc.io/quote/v3 v3.0.0
+    rsc.io/sampler v1.3.1 // indirect
+)
+$
+</code></pre>
+<p>Why? Because building a single package, like with <code>go build</code> or <code>go test</code>,
+can easily tell when something is missing and needs to be added,
+but not when something can safely be removed.
+Removing a dependency can only be done after
+checking all packages in a module,
+and all possible build tag combinations for those packages.
+An ordinary build command does not load this information,
+and so it cannot safely remove dependencies.</p>
+<p>The <code>go mod tidy</code> command cleans up these unused dependencies:</p>
+<pre><code>$ go mod tidy
+$ go list -m all
+example.com/hello
+golang.org/x/text v0.3.0
+rsc.io/quote/v3 v3.1.0
+rsc.io/sampler v1.3.1
+$ cat go.mod
+module example.com/hello
+
+go 1.12
+
+require (
+    golang.org/x/text v0.3.0 // indirect
+    rsc.io/quote/v3 v3.1.0
+    rsc.io/sampler v1.3.1 // indirect
+)
+
+$ go test
+PASS
+ok      example.com/hello   0.020s
+$
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Go modules are the future of dependency management in Go.
+Module functionality is now available in all supported Go versions
+(that is, in Go 1.11 and Go 1.12).</p>
+<p>This post introduced these workflows using Go modules:</p>
+<ul>
+<li><code>go mod init</code> creates a new module, initializing the <code>go.mod</code> file that describes it.</li>
+<li><code>go build</code>, <code>go test</code>, and other package-building commands add new dependencies to <code>go.mod</code> as needed.</li>
+<li><code>go list -m all</code> prints the current module’s dependencies.</li>
+<li><code>go get</code> changes the required version of a dependency (or adds a new dependency).</li>
+<li><code>go mod tidy</code> removes unused dependencies.</li>
+</ul>
+<p>We encourage you to start using modules in your local development
+and to add <code>go.mod</code> and <code>go.sum</code> files to your projects.
+To provide feedback and help shape the future of dependency management in Go,
+please send us
+<a href=".//issue/new/index.html">bug reports</a> or <a href=".//wiki/ExperienceReports/index.html">experience reports</a>.</p>
+<p>Thanks for all your feedback and help improving modules.</p>
+
+    </div>
+
+    
+    <div class="Article prevnext">
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <p>
+        
+          
+            <b>Next article: </b><a href=".//blog/debug-opt/index.html">Debugging what you deploy in Go 1.12</a><br/>
+          
+        
+        
+          
+            <b>Previous article: </b><a href=".//blog/go-developer-network/index.html">The New Go Developer Network</a><br/>
+          
+        
+        <b><a href=".//blog/all/index.html">Blog Index</a></b>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </p></div>
+    
+
+  </div>
+</div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/playground.js"></script>
+<script src="/js/play.js"></script>
+<script src="/js/godocs.js"></script>
+
+</div></main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="en"><head>
+
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<meta charset="utf-8"/>
+<meta name="description" content="Go is an open source programming language that makes it easy to build simple, reliable, and efficient software."/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#00add8"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Work+Sans:400,500,600|Roboto:400,500,700|Open+Sans:Source+Code+Pro|Material+Icons"/>
+<link rel="stylesheet" href="/css/styles.css"/>
+
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W8MVQXG');</script>
+  
+<script src="/js/site.js"></script>
+<title>Developing and publishing modules - The Go Programming Language</title>
+</head>
+<body class="Site">
+  
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+
+
+<header class="Site-header js-siteHeader">
+  <div class="Header Header--dark">
+    <nav class="Header-nav">
+      <a href=".///index.html">
+        <img class="js-headerLogo Header-logo" src="/images/go-logo-white.svg" alt="Go"/>
+      </a>
+      <div class="Header-rightContent">
+        <ul class="Header-menu">
+          <li class="Header-menuItem ">
+            <a href=".//solutions//index.html">Why Go</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//learn//index.html">Get Started</a>
+          </li>
+          <li class="Header-menuItem  Header-menuItem--active">
+            <a href=".//doc//index.html">Docs</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//index.html">Packages</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//play//index.html">Play</a>
+          </li>
+          <li class="Header-menuItem ">
+            <a href=".//blog//index.html">Blog</a>
+          </li>
+        </ul>
+        <button class="Header-navOpen js-headerMenuButton Header-navOpen--white" aria-label="Open navigation.">
+        </button>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href=".///index.html">
+        <img class="NavigationDrawer-logo" src="/images/go-logo-blue.svg" alt="Go."/>
+      </a>
+    </div>
+    <ul class="NavigationDrawer-list">
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//solutions//index.html">Why Go</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//learn//index.html">Get Started</a>
+        </li>
+        <li class="NavigationDrawer-listItem  NavigationDrawer-listItem--active">
+          <a href=".//doc//index.html">Docs</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//index.html">Packages</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//play//index.html">Play</a>
+        </li>
+        <li class="NavigationDrawer-listItem ">
+          <a href=".//blog//index.html">Blog</a>
+        </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation"></div>
+<main class="SiteContent SiteContent--default">
+  
+
+
+<article class="Doc Article">
+
+
+<h1>Developing and publishing modules</h1>
+
+
+
+
+
+
+<div id="nav" class="TOC"></div>
+
+
+<p>You can collect related packages into modules, then publish the modules for
+other developers to use. This topic gives an overview of developing and
+publishing modules.</p>
+<p>To support developing, publishing, and using modules, you use:</p>
+<ul>
+<li>A <strong>workflow</strong> through which you develop and publish modules, revising them
+with new versions over time. See <a href=".//doc/modules/developing/index.html">Workflow for developing and publishing
+modules</a>.</li>
+<li><strong>Design practices</strong> that help a module’s users understand it and upgrade
+to new versions in a stable way. See <a href=".//doc/modules/developing/index.html">Design and development</a>.</li>
+<li>A <strong>decentralized system for publishing</strong> modules and retrieving their code.
+You make your module available for other developers to use from your own
+repository and publish with a version number. See <a href=".//doc/modules/developing/index.html">Decentralized
+publishing</a>.</li>
+<li>A <strong>package search engine</strong> and documentation browser (pkg.go.dev) at which
+developers can find your module. See <a href=".//doc/modules/developing/index.html">Package discovery</a>.</li>
+<li>A module <strong>version numbering convention</strong> to communicate expectations of
+stability and backward compatibility to developers using your module. See
+<a href=".//doc/modules/developing/index.html">Versioning</a>.</li>
+<li><strong>Go tools</strong> that make it easier for other developers to manage
+dependencies, including getting your module’s source, upgrading, and so on.
+See <a href=".//doc/modules/managing-dependencies/index.html">Managing dependencies</a>.</li>
+</ul>
+<p><strong>See also</strong></p>
+<ul>
+<li>If you’re interested simply in using packages developed by others, this
+isn’t the topic for you. Instead, see <a href=".//doc/modules/managing-dependencies/index.html">Managing
+dependencies</a>.</li>
+<li>For a tutorial that includes a few module development basics, see
+<a href=".//doc/tutorial/create-module/index.html">Tutorial: Create a Go module</a>.</li>
+</ul>
+<h2 id="workflow">Workflow for developing and publishing modules</h2>
+<p>When you want to publish your modules for others, you adopt a few conventions to
+make using those modules easier.</p>
+<p>The following high-level steps are described in more detail in <a href=".//doc/modules/release-workflow/index.html">Module release
+and versioning workflow</a>.</p>
+<ol>
+<li>Design and code the packages that the module will include.</li>
+<li>Commit code to your repository using conventions that ensure it’s available
+to others via Go tools.</li>
+<li>Publish the module to make it discoverable by developers.</li>
+<li>Over time, revise the module with versions that use a version numbering
+convention that signals each version’s stability and backward compatibility.</li>
+</ol>
+<h2 id="design">Design and development</h2>
+<p>Your module will be easier for developers to find and use if the functions and
+packages in it form a coherent whole. When you’re designing a module’s public
+API, try to keep its functionality focused and discrete.</p>
+<p>Also, designing and developing your module with backward compatibility in mind
+helps its users upgrade while minimizing churn to their own code. You can use
+certain techniques in code to avoid releasing a version that breaks backward
+compatibility. For more about those techniques, see <a href=".//module-compatibility/index.html" rel="noreferrer" target="_blank">Keeping your modules
+compatible</a> on the Go blog.</p>
+<p>Before you publish a module, you can reference it on the local file system using
+the replace directive. This makes it easier to write client code that calls
+functions in the module while the module is still in development. For more
+information, see “Coding against an unpublished module” in <a href=".//doc/modules/release-workflow/index.html">Module release and
+versioning workflow</a>.</p>
+<h2 id="decentralized">Decentralized publishing</h2>
+<p>In Go, you publish your module by tagging its code in your repository to make it
+available for other developers to use. You don’t need to push your module to a
+centralized service because Go tools can download your module directly from your
+repository (located using the module’s path, which is a URL with the scheme
+omitted) or from a proxy server.</p>
+<p>After importing your package in their code, developers use Go tools (including
+the <code>go get</code> command) to download your module’s code to compile with. To support
+this model, you follow conventions and best practices that make it possible for
+Go tools (on behalf of another developer) to retrieve your module’s source from
+your repository. For example, Go tools use the module’s module path you specify,
+along with the module version number you use to tag the module for release, to
+locate and download the module for its users.</p>
+<p>For more about source and publishing conventions and best practices, see
+<a href=".//doc/modules/managing-source/index.html">Managing module source</a>.</p>
+<p>For step-by-step instructions on publishing a module, see <a href=".//doc/modules/publishing/index.html">Publishing a
+module</a>.</p>
+<h2 id="discovery">Package discovery</h2>
+<p>After you’ve published your module and someone has fetched it with Go tools, it
+will become visible on the Go package discovery site at
+<a href=".///index.html" rel="noreferrer" target="_blank">pkg.go.dev</a>. There, developers can search the site to find
+it and read its documentation.</p>
+<p>To begin using the module, a developer imports packages from the module, then
+runs the <code>go get</code> command to download its source code to compile with.</p>
+<p>For more about how developers find and use modules, see <a href=".//doc/modules/managing-dependencies/index.html">Managing
+dependencies</a>.</p>
+<h2 id="versioning">Versioning</h2>
+<p>As you revise and improve your module over time, you assign version numbers
+(based on the semantic versioning model) designed to signal each version’s
+stability and backward compatibility. This helps developers using your module
+determine when the module is stable and whether an upgrade may include
+significant changes in behavior. You indicate a module’s version number by
+tagging the module’s source in the repository with the number.</p>
+<p>For more on developing major version updates, see <a href=".//doc/modules/major-version/index.html">Developing a major version
+update</a>.</p>
+<p>For more about how you use the semantic versioning model for Go modules, see
+<a href=".//doc/modules/version-numbers/index.html">Module version numbering</a>.</p>
+
+
+</article>
+
+
+
+</main>
+<footer class="Site-footer">
+  <div class="Footer">
+    <div class="Container">
+      <div class="Footer-links">
+          <div class="Footer-linkColumn">
+            <a href=".//solutions//index.html" class="Footer-link Footer-link--primary">
+              Why Go
+            </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Use Cases
+              </a>
+              <a href=".//solutions//index.html" class="Footer-link">
+                Case Studies
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//learn//index.html" class="Footer-link Footer-link--primary">
+              Get Started
+            </a>
+              <a href=".//play/index.html" class="Footer-link">
+                Playground
+              </a>
+              <a href=".//tour//index.html" class="Footer-link">
+                Tour
+              </a>
+              <a href=".//questions/tagged/go/index.html" class="Footer-link">
+                Stack Overflow
+              </a>
+              <a href=".//help//index.html" class="Footer-link">
+                Help
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//index.html" class="Footer-link Footer-link--primary">
+              Packages
+            </a>
+              <a href=".//pkg//index.html" class="Footer-link">
+                Standard Library
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//project/index.html" class="Footer-link Footer-link--primary">
+              About
+            </a>
+              <a href=".//dl//index.html" class="Footer-link">
+                Download
+              </a>
+              <a href=".//blog//index.html" class="Footer-link">
+                Blog
+              </a>
+              <a href=".//golang/go/issues/index.html" class="Footer-link">
+                Issue Tracker
+              </a>
+              <a href=".//doc/devel/release/index.html" class="Footer-link">
+                Release Notes
+              </a>
+              <a href=".//go-brand/index.html" class="Footer-link">
+                Brand Guidelines
+              </a>
+              <a href=".//conduct/index.html" class="Footer-link">
+                Code of Conduct
+              </a>
+          </div>
+          <div class="Footer-linkColumn">
+            <a href=".//golang/index.html" class="Footer-link Footer-link--primary">
+              Connect
+            </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                Twitter
+              </a>
+              <a href=".//golang/index.html" class="Footer-link">
+                GitHub
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Slack
+              </a>
+              <a href=".//r/golang/index.html" class="Footer-link">
+                r/golang
+              </a>
+              <a href=".//pro/go/index.html" class="Footer-link">
+                Meetup
+              </a>
+              <a href=".///index.html" class="Footer-link">
+                Golang Weekly
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/images/gophers/pilot-bust.svg" alt="The Go Gopher"/>
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href=".//copyright/index.html">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//tos/index.html">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href=".//intl/en/policies/privacy//index.html" target="_blank" rel="noopener">
+              Privacy Policy
+            </a>
+            </li>
+          <li class="Footer-listItem">
+            <a href=".//s/website-issue/index.html" target="_blank" rel="noopener">
+              Report an Issue
+            </a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" target="_blank" href=".//index.html" rel="noopener">
+          <img class="Footer-googleLogoImg" src="/images/google-white.png" alt="Google logo"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/carousels.js"></script>
+  <script src="/js/searchBox.js"></script>
+  <script src="/js/misc.js"></script>
+  <script src="/js/hats.js"></script>
+  <script src="/js/playground.js"></script>
+  <script src="/js/godocs.js"></script>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
