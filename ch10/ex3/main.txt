@@ -1,0 +1,5 @@
+Looking at the meta tag:
+
+<meta name="go-import" content="gopl.io git https://github.com/adonovan/gopl.io">
+
+this indicates the code for GOPL is hosted on github.com

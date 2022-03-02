@@ -8,6 +8,7 @@ import (
 func main() {
 	ch1 := make(chan int)
 	ch2 := make(chan int)
+	t := 5
 	var n int
 	go func() {
 		ch1 <- 1
@@ -23,8 +24,8 @@ func main() {
 		}
 	}()
 
-	<-time.After(10 * time.Second)
-	fmt.Println(n)
+	<-time.After(time.Duration(t) * time.Second)
+	fmt.Printf("%d roundtrips in %d seconds (%d / s)\n", n, t, n/t)
 	close(ch1)
 	close(ch2)
 }
