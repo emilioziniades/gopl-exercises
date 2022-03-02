@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"sync"
+
+	"gopl.io/ch5/links"
 )
 
 var tokens = make(chan struct{}, 20)
@@ -33,7 +35,7 @@ func crawl(url string, depth int, wg *sync.WaitGroup) {
 		return
 	}
 	tokens <- struct{}{} // acquire token
-	list, err := Extract(url)
+	list, err := links.Extract(url)
 	<-tokens // release token
 	if err != nil {
 		log.Print(err)

@@ -1,10 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 254.
-//!+
-
-// Chat is a server that lets clients chat with each other.
 package main
 
 import (
@@ -15,7 +8,6 @@ import (
 	"time"
 )
 
-//!+broadcaster
 type client struct {
 	ch   chan<- string // an outgoing message channel
 	name string
@@ -54,18 +46,11 @@ func broadcaster() {
 	}
 }
 
-//!-broadcaster
-
-//!+handleConn
 func handleConn(conn net.Conn) {
-	ch := make(chan string, 10) // outgoing client messages
+	ch := make(chan string) // outgoing client messages
 	go clientWriter(conn, ch)
 
-	input := bufio.NewScanner(conn)
-	ch <- "enter name:"
-	input.Scan()
-	who := input.Text()
-
+	who := conn.RemoteAddr().String()
 	cli := client{ch, who}
 
 	ch <- "You are " + who
@@ -79,6 +64,7 @@ func handleConn(conn net.Conn) {
 		conn.Close()
 	}()
 
+	input := bufio.NewScanner(conn)
 	for input.Scan() {
 		messages <- who + ": " + input.Text()
 		timer.Reset(timeout)
@@ -95,9 +81,6 @@ func clientWriter(conn net.Conn, ch <-chan string) {
 	}
 }
 
-//!-handleConn
-
-//!+main
 func main() {
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {
@@ -114,5 +97,3 @@ func main() {
 		go handleConn(conn)
 	}
 }
-
-//!-main
