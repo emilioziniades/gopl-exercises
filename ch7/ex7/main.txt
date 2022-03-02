@@ -1,0 +1,1 @@
+The default value is of type Celsius, which is just a type of float. Internally, a Celsius is represented as an float (20.0 in the default case), but if it is printed, the its String() function is called, and the °C is included. When the help message is called, the flag package calls String() on the Celsius type.
