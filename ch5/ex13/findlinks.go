@@ -1,9 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 139.
-
-// Findlinks3 crawls the web, starting with the URLs on the command line.
 package main
 
 import (
@@ -18,10 +12,6 @@ import (
 
 var rootDir string
 
-//!+breadthFirst
-// breadthFirst calls f for each item in the worklist.
-// Any items returned by f are added to the worklist.
-// f is called at most once for each item.
 func breadthFirst(f func(item string) []string, worklist []string) {
 	seen := make(map[string]bool)
 	for len(worklist) > 0 {
@@ -36,9 +26,6 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 	}
 }
 
-//!-breadthFirst
-
-//!+crawl
 func crawl(url string) []string {
 	fmt.Println(url)
 	err := download(url)
@@ -53,8 +40,6 @@ func crawl(url string) []string {
 
 	return list
 }
-
-//!-crawl
 
 func download(s string) (err error) {
 
@@ -91,12 +76,7 @@ func download(s string) (err error) {
 
 }
 
-//!+main
 func main() {
-	// Crawl the web breadth-first,
-	// starting from the command-line arguments.
 	rootDir = os.Args[1]
 	breadthFirst(crawl, os.Args[1:])
 }
-
-//!-main

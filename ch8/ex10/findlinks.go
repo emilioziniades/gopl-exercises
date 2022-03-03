@@ -1,12 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 241.
-
-// Crawl2 crawls web links starting with the command-line arguments.
-//
-// This version uses a buffered channel as a counting semaphore
-// to limit the number of concurrent calls to links.Extract.
 package main
 
 import (
@@ -18,8 +9,6 @@ import (
 	"golang.org/x/net/html"
 )
 
-//!+sema
-// tokens is a counting semaphore used to
 // enforce a limit of 20 concurrent requests.
 var tokens = make(chan struct{}, 20)
 
@@ -35,9 +24,6 @@ func crawl(url string) []string {
 	return list
 }
 
-//!-sema
-
-//!+
 func main() {
 	worklist := make(chan []string)
 	var n int // number of pending sends to worklist
@@ -107,9 +93,6 @@ func Extract(url string) ([]string, error) {
 	return links, nil
 }
 
-//!-Extract
-
-// Copied from gopl.io/ch5/outline2.
 func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
 	if pre != nil {
 		pre(n)
@@ -121,5 +104,3 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
 		post(n)
 	}
 }
-
-//!-

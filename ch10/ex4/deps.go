@@ -31,10 +31,8 @@ func main() {
 			}
 		}
 		for _, e := range initialDependents {
-			// fmt.Printf("\t-> %s\n", e)
-			fmt.Printf("%s\n", e)
+			fmt.Printf("\t-> %s\n", e)
 		}
-		// pp.Println(initialDependents)
 	}
 }
 

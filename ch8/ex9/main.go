@@ -84,7 +84,6 @@ func printDiskUsage(dus []DuData) {
 
 // walkDir recursively walks the file tree rooted at dir
 // and sends the size of each found file on fileSizes.
-//!+walkDir
 func walkDir(dir string, n *sync.WaitGroup, du *DuData) {
 	//fmt.Printf("Walking %s\n", dir)
 	//fmt.Println(*du)
@@ -101,9 +100,6 @@ func walkDir(dir string, n *sync.WaitGroup, du *DuData) {
 	}
 }
 
-//!-walkDir
-
-//!+sema
 // sema is a counting semaphore for limiting concurrency in dirents.
 var sema = make(chan struct{}, 20)
 
@@ -111,8 +107,6 @@ var sema = make(chan struct{}, 20)
 func dirents(dir string) []os.FileInfo {
 	sema <- struct{}{}        // acquire token
 	defer func() { <-sema }() // release token
-	// ...
-	//!-sema
 
 	entries, err := ioutil.ReadDir(dir)
 	if err != nil {

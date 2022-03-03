@@ -1,10 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 58.
-//!+
-
-// Surface computes an SVG rendering of a 3-D surface function.
 package main
 
 import (
@@ -70,5 +63,3 @@ func areAnyInf(x ...float64) bool {
 	}
 	return false
 }
-
-//!-

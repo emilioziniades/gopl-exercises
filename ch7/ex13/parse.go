@@ -1,6 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
 package main
 
 import (
@@ -12,7 +9,6 @@ import (
 
 // ---- lexer ----
 
-// This lexer is similar to the one described in Chapter 13.
 type lexer struct {
 	scan  scanner.Scanner
 	token rune // current lookahead token

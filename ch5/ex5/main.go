@@ -13,7 +13,7 @@ func main() {
 	for _, url := range os.Args[1:] {
 		w, i, err := CountWordsAndImages(url)
 		if err != nil {
-			fmt.Printf("CountWordsAndImages: %v")
+			fmt.Printf("CountWordsAndImages: %v", err)
 		}
 		fmt.Printf("%v: %v words and %v images", url, w, i)
 	}

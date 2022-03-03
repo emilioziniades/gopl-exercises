@@ -1,6 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
 package main
 
 import (
@@ -8,8 +5,6 @@ import (
 	"fmt"
 )
 
-// Format formats an expression as a string.
-// It does not attempt to remove unnecessary parens.
 func Format(e Expr) string {
 	var buf bytes.Buffer
 	write(&buf, e)

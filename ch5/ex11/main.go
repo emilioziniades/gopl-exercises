@@ -1,9 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 136.
-
-// The toposort program prints the nodes of a DAG in topological order.
 package main
 
 import (
@@ -12,7 +6,6 @@ import (
 	"sort"
 )
 
-//!+table
 // prereqs maps computer science courses to their prerequisites.
 var prereqs = map[string][]string{
 	"algorithms":     {"data structures"},
@@ -33,9 +26,6 @@ var prereqs = map[string][]string{
 	"programming languages": {"data structures", "computer organization"},
 }
 
-//!-table
-
-//!+main
 func main() {
 	sortedList, err := topoSort(prereqs)
 	if err != nil {
@@ -87,5 +77,3 @@ func topoSort(m map[string][]string) ([]string, error) {
 	}
 	return order, nil
 }
-
-//!-main

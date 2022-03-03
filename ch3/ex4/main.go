@@ -1,10 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 58.
-//!+
-
-// Surface computes an SVG rendering of a 3-D surface function.
 package main
 
 import (
@@ -153,5 +146,3 @@ func zMaxMin(xyrange float64, f func(float64, float64) float64) (float64, float6
 	}
 	return maxZ, minZ
 }
-
-//!-

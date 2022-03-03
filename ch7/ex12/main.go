@@ -1,10 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 195.
-
-// Http4 is an e-commerce server that registers the /list and /price
-// endpoint by calling http.HandleFunc.
 package main
 
 import (
@@ -15,8 +8,6 @@ import (
 	"strconv"
 	"sync"
 )
-
-//!+main
 
 var priceTable = template.Must(template.New("pricetable").Parse(`
 	<html>
@@ -48,8 +39,6 @@ func main() {
 	http.HandleFunc("/create", prices.create)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
-
-//!-main
 
 type dollars float32
 
