@@ -16,12 +16,15 @@ type Package struct {
 	Deps []string `json:"Deps"`
 }
 
-type Packages []Package
-
 func main() {
+	fmt.Println(os.Args)
+	if len(os.Args) < 2 {
+		log.Fatal("usage: specify any number of packages as arguments.")
+	}
+
 	all := getAllPackages()
 	for _, e := range os.Args[1:] {
-		format := "(%s) is imported by\n"
+		format := "(%s) is transitively depended on by\n"
 		fmt.Printf(format, e)
 		initial := getPackage(e)
 		initialDependents := make([]string, 0)
@@ -44,7 +47,7 @@ func getPackage(s string) (pkg Package) {
 	return
 }
 
-func getAllPackages() (pkgs Packages) {
+func getAllPackages() (pkgs []Package) {
 	output := goList("...")
 	decoder := json.NewDecoder(bytes.NewReader(output))
 	for {
