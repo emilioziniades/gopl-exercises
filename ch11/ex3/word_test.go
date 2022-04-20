@@ -63,6 +63,9 @@ func TestRandomPalindromes(t *testing.T) {
 	}
 }
 
+// split the unicode range into two equal parts [0, 0x800) and [0x800, 0x1000)
+// for the first half of the string, draw from the first interval, and for
+// the second half, draw from the second interval
 func randomNonPalindrome(rng *rand.Rand) string {
 	n := rng.Intn(25) + 2 // random length [2,27)
 	runes := make([]rune, n)
@@ -79,6 +82,11 @@ func randomNonPalindrome(rng *rand.Rand) string {
 	return string(runes)
 }
 
+// used in randomNonPalindrome. We want to ensure that the rune
+// we obtain is valid unicode, otherwise the length of the
+// valid unicode characters in our random string is nondeterministic
+// you could get a string which is a single rune long, and that would be a palindrome,
+// so this is necessary to guarantee that the string is NOT a palindrome
 func getRandomLetter(rng *rand.Rand, limit, shift int) rune {
 	var r rune
 	for {
